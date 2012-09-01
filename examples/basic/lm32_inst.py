@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80
 from migen.fhdl.structure import *
-from migen.fhdl import verilog
+from migen.fhdl import convert
 
 class LM32:
 	def __init__(self):
@@ -35,7 +37,7 @@ class LM32:
 			clkport="clk_i",
 			rstport="rst_i",
 			name="lm32")
-	
+
 	def get_fragment(self):
 		return Fragment(instances=[self.inst])
 
@@ -43,4 +45,4 @@ cpus = [LM32() for i in range(4)]
 frag = Fragment()
 for cpu in cpus:
 	frag += cpu.get_fragment()
-print(verilog.convert(frag, set([cpus[0].inst.ins["interrupt"], cpus[0].inst.outs["I_WE_O"]])))
+convert(frag, set([cpus[0].inst.ins["interrupt"], cpus[0].inst.outs["I_WE_O"]])))

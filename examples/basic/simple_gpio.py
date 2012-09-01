@@ -1,5 +1,5 @@
 from migen.fhdl.structure import *
-from migen.fhdl import verilog
+from migen.fhdl import convert
 from migen.bank import description, csrgen
 from migen.bank.description import READ_ONLY, WRITE_ONLY
 
@@ -19,5 +19,5 @@ bank = csrgen.Bank([oreg, ireg])
 f = bank.get_fragment() + inf
 oreg.field.r.name_override = "gpio_out"
 i = bank.interface
-v = verilog.convert(f, {i.dat_r, oreg.field.r, i.adr, i.we, i.dat_w, gpio_in})
-print(v)
+convert(f, {i.dat_r, oreg.field.r, i.adr, i.we, i.dat_w, gpio_in})
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80

@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80
 from migen.fhdl.structure import *
-from migen.fhdl import verilog
+from migen.fhdl import convert
 
 d = 100
 d_b = bits_for(d-1)
@@ -19,5 +21,4 @@ p2 = MemoryPort(a2, d2, re=re2)
 
 mem = Memory(w, d, p1, p2, init=[5, 18, 32])
 f = Fragment(memories=[mem])
-v = verilog.convert(f, ios={a1, d1, we1, dw1, a2, d2, re2})
-print(v)
+convert(f, ios={a1, d1, we1, dw1, a2, d2, re2})
