@@ -26,10 +26,14 @@ def main():
 		const=vhdl_convert,
 		default=verilog_convert,
 		action='store_const',
-		help='Generate VHDL HDL (default: generate Verilog HDL')
+		help='Generate VHDL HDL (default: generate Verilog HDL)')
 	parser.add_argument('infile',
 		type=argparse.FileType('r'),
-		default=sys.stdin)
+		help='Input file')
+	parser.add_argument('--outfile',
+		type=argparse.FileType('w'),
+		default=sys.stdout,
+		help='Output file (default: stdout)')
 
 	globals()['_args'] = parser.parse_args()
 	globals()['__name__'] = os.path.split(_args.infile.name)[-1].split('.')[0]
@@ -43,6 +47,7 @@ def convert(*args, **kwargs):
 	Wrapper for either verilog.convert() or vhdl.convert()
 	'''
 	try:
-		print(_args.convert(*args, **kwargs))
+		with _args.outfile as out:
+			out.write(_args.convert(*args, **kwargs))
 	except NameError:
 		print(verilog_convert(*args, **kwargs))
