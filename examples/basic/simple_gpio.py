@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80
 from migen.fhdl.structure import *
 from migen.fhdl import convert
 from migen.bank import description, csrgen
@@ -20,4 +22,3 @@ f = bank.get_fragment() + inf
 oreg.field.r.name_override = "gpio_out"
 i = bank.interface
 convert(f, {i.dat_r, oreg.field.r, i.adr, i.we, i.dat_w, gpio_in})
-# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80

@@ -45,4 +45,4 @@ cpus = [LM32() for i in range(4)]
 frag = Fragment()
 for cpu in cpus:
 	frag += cpu.get_fragment()
-convert(frag, set([cpus[0].inst.ins["interrupt"], cpus[0].inst.outs["I_WE_O"]])))
+convert(frag, set([cpus[0].inst.ins["interrupt"], cpus[0].inst.outs["I_WE_O"]]))
