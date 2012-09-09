@@ -2,5 +2,14 @@ __pycache__
 *.pyc
 vpi/*.o
 vpi/migensim.vpi
-examples/*.vcd
 doc/_build
+dist
+build
+*.egg-info
+# ghdl
+examples/*.vcd
+examples/*/*.o
+examples/*/*.vhd
+examples/*/*.cf
+# vim
+*.swp

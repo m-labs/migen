@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80
 from migen.fhdl.structure import *
-from migen.fhdl import verilog
+from migen.fhdl import convert
 
 dx = 5
 dy = 5
@@ -22,4 +24,4 @@ sync = [
 ]
 
 f = Fragment(comb)
-print(verilog.convert(f))
+convert(f)

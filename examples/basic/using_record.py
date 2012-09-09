@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# vim:noexpandtab:ts=8:sw=8:si:smarttab:tw=80
 from migen.fhdl.structure import *
 from migen.corelogic.record import *
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # vim: noexpandtab:tabstop=8:softtabstop=8
 """ Migen's distutils distribution and installation script. """
 
@@ -36,4 +37,8 @@ setup(
 		"Operating System :: OS Independent",
 		"Programming Language :: Python",
 	],
+	entry_points = {"console_scripts": [
+	    "migen_fhdl_convert = migen.fhdl:main",
+	    ]
+	}
 )
