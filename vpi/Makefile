@@ -1,19 +1,19 @@
-CC=clang
-INSTDIR=/usr/lib/ivl
-INCDIRS=
+CC := clang
+INSTDIR := /usr/local/lib/ivl
+INCDIRS := /usr/include/iverilog
 
-OBJ=ipc.o main.o
+OBJ := ipc.o main.o
 
 all: migensim.vpi
 
 %.o: %.c
-	$(CC) -fPIC -Wall -O2 -c $(INCDIRS) -o $@ $<
+	$(CC) -fPIC -Wall -O2 -c -I$(INCDIRS) -o $@ $<
 
 migensim.vpi: $(OBJ)
 	$(CC) -shared -o $@ $(OBJ) -lvpi
 
 install: migensim.vpi
-	install -m755 -t $(INSTDIR) $^
+	install -D -m755  $^ $(INSTDIR)
 
 clean:
 	rm -f $(OBJ)
