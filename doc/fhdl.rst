@@ -33,7 +33,7 @@ The properties of a signal object are:
 * An integer or a (integer, boolean) pair that defines the number of bits and whether the bit of higher index of the signal is a sign bit (i.e. the signal is signed). The defaults are one bit and unsigned. Alternatively, the ``min`` and ``max`` parameters can be specified to define the range of the signal and determine its bit width and signedness. As with Python ranges, ``min`` is inclusive and defaults to 0, ``max`` is exclusive and defaults to 2.
 * A name, used as a hint for the V*HDL back-end name mangler.
 * The signal's reset value. It must be an integer, and defaults to 0. When the signal's value is modified with a synchronous statement, the reset value is the initialization value of the associated register. When the signal is assigned to in a conditional combinatorial statement (``If`` or ``Case``), the reset value is the value that the signal has when no condition that causes the signal to be driven is verified. This enforces the absence of latches in designs. If the signal is permanently driven using a combinatorial statement, the reset value has no effect.
-  
+
 The sole purpose of the name property is to make the generated V*HDL code easier to understand and debug. From a purely functional point of view, it is perfectly OK to have several signals with the same name property. The back-end will generate a unique name for each object. If no name property is specified, Migen will analyze the code that created the signal object, and try to extract the variable or member name from there. For example, the following statements will create one or several signals named "bar": ::
 
   bar = Signal()
@@ -106,6 +106,13 @@ Example: ::
 Case
 ====
 The ``Case`` object constructor takes as first parameter the expression to be tested, and a dictionary whose keys are the values to be matched, and values the statements to be executed in the case of a match. The special value ``"default"`` can be used as match value, which means the statements should be executed whenever there is no other match.
+
+Example: ::
+
+  mux_dict = { 'default' : mux_out.eq(0) }
+  for x in range(len(mux_in)):
+      mux_dict[x] = mux_out.eq(mux_in[x])
+  self.comb += Case(mux_sel, mux_dict)
 
 Arrays
 ======
