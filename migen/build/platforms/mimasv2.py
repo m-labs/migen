@@ -7,9 +7,9 @@ _io = [
     ("clk12", 0, Pins("D9"), IOStandard("LVCMOS33")),
 
     ("serial", 0,
-        Subsignal("tx", Pins("A8"), IOStandard("LVCMOS33"),
+        Subsignal("tx", Pins("B8"), IOStandard("LVCMOS33"),
                   Misc("SLEW=FAST")),
-        Subsignal("rx", Pins("B8"), IOStandard("LVCMOS33"),
+        Subsignal("rx", Pins("A8"), IOStandard("LVCMOS33"),
                   Misc("SLEW=FAST"))),
 
     ("spiflash", 0,
