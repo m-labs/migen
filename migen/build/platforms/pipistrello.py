@@ -126,7 +126,6 @@ _connectors = [
 
 
 class Platform(XilinxPlatform):
-    identifier = 0x5049
     default_clk_name = "clk50"
     default_clk_period = 20
 

@@ -51,7 +51,6 @@ _connectors = [
 
 
 class Platform(XilinxPlatform):
-    identifier = 0x5050
     default_clk_name = "clk32"
     default_clk_period = 31.25
 
