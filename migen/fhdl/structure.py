@@ -34,7 +34,7 @@ class _Value(DUID):
             if isinstance(a, Signal) and isinstance(b, Signal):
                 return a is b
             if (isinstance(a, Constant) and isinstance(b, Signal)
-                    or isinstance(a, Signal) and isinstance(a, Constant)):
+                    or isinstance(a, Signal) and isinstance(b, Constant)):
                 return False
         raise TypeError("Attempted to convert Migen value to boolean")
 
