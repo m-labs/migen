@@ -1,6 +1,7 @@
 import operator
 import collections
 import inspect
+from functools import wraps
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import (_Value, _Statement,
@@ -220,6 +221,7 @@ class Simulator:
         if not isinstance(generators, dict):
             generators = {"sys": generators}
         self.generators = dict()
+        self.passive_generators = set()
         for k, v in generators.items():
             if (isinstance(v, collections.Iterable)
                     and not inspect.isgenerator(v)):
@@ -297,6 +299,14 @@ class Simulator:
                     request = generator.send(reply)
                     if request is None:
                         break  # next cycle
+                    elif isinstance(request, str):
+                        if request == "passive":
+                            self.passive_generators.add(generator)
+                        elif request == "active":
+                            self.passive_generators.discard(generator)
+                        else:
+                            raise ValueError("Unknown simulator command: '{}'"
+                                             .format(request))
                     else:
                         reply = self._evalexec_nested_lists(request)
                 except StopIteration:
@@ -306,8 +316,10 @@ class Simulator:
             self.generators[cd].remove(generator)
 
     def _continue_simulation(self):
-        # TODO: passive generators
-        return any(self.generators.values())
+        for cd_generators in self.generators.values():
+            if set(cd_generators) - self.passive_generators:
+                return True
+        return False
 
     def run(self):
         self.evaluator.execute(self.fragment.comb)
@@ -333,3 +345,11 @@ class Simulator:
 def run_simulation(*args, **kwargs):
     with Simulator(*args, **kwargs) as s:
         s.run()
+
+
+def passive(generator):
+    @wraps(generator)
+    def wrapper(*args, **kwargs):
+        yield "passive"
+        yield from generator(*args, **kwargs)
+    return wrapper
