@@ -23,7 +23,7 @@ class ClockState:
 
 class TimeManager:
     def __init__(self, description):
-        self.clocks = dict()
+        self.clocks = collections.OrderedDict()
 
         for k, period_phase in description.items():
             if isinstance(period_phase, tuple):
@@ -229,6 +229,8 @@ class Simulator:
             else:
                 self.generators[k] = [v]
 
+        clocks = collections.OrderedDict(sorted(clocks.items(),
+                                                key=operator.itemgetter(0)))
         self.time = TimeManager(clocks)
         for clock in clocks.keys():
             if clock not in self.fragment.clock_domains:
