@@ -17,6 +17,10 @@ requirements:
   run:
     - python 3.5.*
 
+test:
+  imports:
+    - migen
+
 about:
   home: http://m-labs.hk/gateware.html
   license: 3-clause BSD
