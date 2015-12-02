@@ -8,11 +8,7 @@ def _make_test_method(name, foldername):
     def test_method(self):
         filename = name + ".py"
         example_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "examples"))
-        if not os.path.isdir(example_path):
-            # we're running from the source tree
-            example_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), "..", "..", "examples"))
+            os.path.join(os.path.dirname(__file__), "..", "..", "examples"))
         filepath = os.path.join(example_path, foldername, filename)
         subprocess.check_call(
             [sys.executable, filepath],
