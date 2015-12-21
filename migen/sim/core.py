@@ -138,6 +138,10 @@ class Evaluator:
                 r |= (self.eval(element, postcommit) & (2**nbits-1)) << shift
                 shift += nbits
             return r
+        elif isinstance(node, Replicate):
+            nbits = len(node.v)
+            v = self.eval(node.v, postcommit) & (2**nbits - 1)
+            return sum(v << i*nbits for i in range(node.n))
         elif isinstance(node, _ArrayProxy):
             return self.eval(node.choices[self.eval(node.key, postcommit)],
                              postcommit)
@@ -157,7 +161,7 @@ class Evaluator:
             else:
                 return self.eval(rst, postcommit)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(node)
 
     def assign(self, node, value):
         if isinstance(node, Signal):
@@ -183,7 +187,7 @@ class Evaluator:
             array = self.replaced_memories[node.memory]
             self.assign(array[self.eval(node.index)], value)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(node)
 
     def execute(self, statements):
         for s in statements:
