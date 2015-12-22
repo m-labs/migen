@@ -222,6 +222,10 @@ class Simulator:
             self.fragment = fragment_or_module
         else:
             self.fragment = fragment_or_module.get_fragment()
+
+        mta = MemoryToArray()
+        mta.transform_fragment(None, self.fragment)
+
         fs, lowered = lower_specials(overrides={}, specials=self.fragment.specials)
         self.fragment += fs
         self.fragment.specials -= lowered
@@ -248,8 +252,6 @@ class Simulator:
                 cd.clk.reset = C(self.time.clocks[clock].high)
                 self.fragment.clock_domains.append(cd)
 
-        mta = MemoryToArray()
-        mta.transform_fragment(None, self.fragment)
         insert_resets(self.fragment)
         # comb signals return to their reset value if nothing assigns them
         self.fragment.comb[0:0] = [s.eq(s.reset)
