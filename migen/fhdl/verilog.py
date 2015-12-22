@@ -5,7 +5,6 @@ import collections
 from migen.fhdl.structure import *
 from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment
 from migen.fhdl.tools import *
-from migen.fhdl.bitcontainer import bits_for
 from migen.fhdl.namer import build_namespace
 from migen.fhdl.conv_output import ConvOutput
 
@@ -262,51 +261,10 @@ def _printsync(f, ns):
     return r
 
 
-def _call_special_classmethod(overrides, obj, method, *args, **kwargs):
-    cl = obj.__class__
-    if cl in overrides:
-        cl = overrides[cl]
-    if hasattr(cl, method):
-        return getattr(cl, method)(obj, *args, **kwargs)
-    else:
-        return None
-
-
-def _lower_specials_step(overrides, specials):
-    f = _Fragment()
-    lowered_specials = set()
-    for special in sorted(specials, key=lambda x: x.duid):
-        impl = _call_special_classmethod(overrides, special, "lower")
-        if impl is not None:
-            f += impl.get_fragment()
-            lowered_specials.add(special)
-    return f, lowered_specials
-
-
-def _can_lower(overrides, specials):
-    for special in specials:
-        cl = special.__class__
-        if cl in overrides:
-            cl = overrides[cl]
-        if hasattr(cl, "lower"):
-            return True
-    return False
-
-
-def _lower_specials(overrides, specials):
-    f, lowered_specials = _lower_specials_step(overrides, specials)
-    while _can_lower(overrides, f.specials):
-        f2, lowered_specials2 = _lower_specials_step(overrides, f.specials)
-        f += f2
-        lowered_specials |= lowered_specials2
-        f.specials -= lowered_specials2
-    return f, lowered_specials
-
-
 def _printspecials(overrides, specials, ns, add_data_file):
     r = ""
     for special in sorted(specials, key=lambda x: x.duid):
-        pr = _call_special_classmethod(overrides, special, "emit_verilog", ns, add_data_file)
+        pr = call_special_classmethod(overrides, special, "emit_verilog", ns, add_data_file)
         if pr is None:
             raise NotImplementedError("Special " + str(special) + " failed to implement emit_verilog")
         r += pr
@@ -337,7 +295,7 @@ def convert(f, ios=None, name="top",
     f = lower_complex_slices(f)
     insert_resets(f)
     f = lower_basics(f)
-    fs, lowered_specials = _lower_specials(special_overrides, f.specials)
+    fs, lowered_specials = lower_specials(special_overrides, f.specials)
     f += lower_basics(fs)
 
     ns = build_namespace(list_signals(f) \

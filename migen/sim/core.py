@@ -2,13 +2,14 @@ import operator
 import collections
 import inspect
 from functools import wraps
+from warnings import warn
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import (_Value, _Statement,
                                   _Operator, _Slice, _ArrayProxy,
                                   _Assign, _Fragment)
 from migen.fhdl.bitcontainer import value_bits_sign
-from migen.fhdl.tools import list_targets, insert_resets
+from migen.fhdl.tools import list_targets, insert_resets, lower_specials
 from migen.fhdl.simplify import MemoryToArray
 from migen.fhdl.specials import _MemoryLocation
 from migen.sim.vcd import VCDWriter, DummyVCDWriter
@@ -222,6 +223,12 @@ class Simulator:
             self.fragment = fragment_or_module
         else:
             self.fragment = fragment_or_module.get_fragment()
+        fs, lowered = lower_specials(overrides={}, specials=self.fragment.specials)
+        self.fragment += fs
+        self.fragment.specials -= lowered
+        if self.fragment.specials:
+            warn("Could not lower all specials", self.fragment.specials)
+
         if not isinstance(generators, dict):
             generators = {"sys": generators}
         self.generators = dict()
