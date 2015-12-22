@@ -2,7 +2,6 @@ import operator
 import collections
 import inspect
 from functools import wraps
-from warnings import warn
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import (_Value, _Statement,
@@ -227,7 +226,7 @@ class Simulator:
         self.fragment += fs
         self.fragment.specials -= lowered
         if self.fragment.specials:
-            warn("Could not lower all specials", self.fragment.specials)
+            raise ValueError("Could not lower all specials", self.fragment.specials)
 
         if not isinstance(generators, dict):
             generators = {"sys": generators}
