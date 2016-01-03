@@ -1,8 +1,5 @@
 ### Migen (Milkymist generator)
 
-[![Build Status](https://travis-ci.org/m-labs/migen.svg)](
-https://travis-ci.org/m-labs/migen)
-
 #### A Python toolbox for building complex digital hardware
 
 Despite being faster than schematics entry, hardware design with Verilog and
