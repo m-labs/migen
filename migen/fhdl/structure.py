@@ -107,7 +107,7 @@ class _Value(DUID):
                 return Cat(self[i] for i in range(start, stop, step))
             return _Slice(self, start, stop)
         else:
-            raise TypeError("Can use type {} ({}) as key".format(
+            raise TypeError("Cannot use type {} ({}) as key".format(
                 type(key), repr(key)))
 
     def eq(self, r):
