@@ -39,7 +39,7 @@ System-on-chip design based on Migen:
 https://github.com/m-labs/misoc
 
 Online documentation:
-http://m-labs.hk/gateware.html
+https://m-labs.hk/gateware.html
 
 #### Quick intro
 
@@ -52,7 +52,7 @@ m = Module()
 counter = Signal(26)
 m.comb += led.eq(counter[25])
 m.sync += counter.eq(counter + 1)
-plat.build_cmdline(m)
+plat.build(m)
 ```
 
 #### License
