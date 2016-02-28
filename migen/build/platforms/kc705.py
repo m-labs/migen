@@ -190,8 +190,28 @@ _io = [
         Subsignal("rx_n", Pins("M5 P5 R3 T5 V5 W3 Y5 AA3")),
         Subsignal("tx_p", Pins("L4 M2 N4 P2 T2 U4 V2 Y2")),
         Subsignal("tx_n", Pins("L3 M1 N3 P1 T1 U3 V1 Y1"))
-    )
+    ),
+
+    ("xadc_gpio", 0, Pins("AB25"), IOStandard("LVCMOS25")),
+    ("xadc_gpio", 1, Pins("AA25"), IOStandard("LVCMOS25")),
+    ("xadc_gpio", 2, Pins("AB28"), IOStandard("LVCMOS25")),
+    ("xadc_gpio", 3, Pins("AA27"), IOStandard("LVCMOS25")),
+
+    ("xadc_vaux0", 0,
+        Subsignal("n", Pins("J24")),
+        Subsignal("p", Pins("J23")),
+        IOStandard("LVCMOS25"),
+    ),
+
+    ("xadc_vaux8", 0,
+        Subsignal("n", Pins("L23")),
+        Subsignal("p", Pins("L22")),
+        IOStandard("LVCMOS25"),
+    ),
+
+    ("vadj_on_b", 0, Pins("J27"), IOStandard("LVCMOS25")),
 ]
+
 
 _connectors = [
     ("HPC", {
