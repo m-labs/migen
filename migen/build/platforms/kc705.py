@@ -192,23 +192,6 @@ _io = [
         Subsignal("tx_n", Pins("L3 M1 N3 P1 T1 U3 V1 Y1"))
     ),
 
-    ("xadc_gpio", 0, Pins("AB25"), IOStandard("LVCMOS25")),
-    ("xadc_gpio", 1, Pins("AA25"), IOStandard("LVCMOS25")),
-    ("xadc_gpio", 2, Pins("AB28"), IOStandard("LVCMOS25")),
-    ("xadc_gpio", 3, Pins("AA27"), IOStandard("LVCMOS25")),
-
-    ("xadc_vaux0", 0,
-        Subsignal("n", Pins("J24")),
-        Subsignal("p", Pins("J23")),
-        IOStandard("LVCMOS25"),
-    ),
-
-    ("xadc_vaux8", 0,
-        Subsignal("n", Pins("L23")),
-        Subsignal("p", Pins("L22")),
-        IOStandard("LVCMOS25"),
-    ),
-
     ("vadj_on_b", 0, Pins("J27"), IOStandard("LVCMOS25")),
 ]
 
@@ -435,7 +418,18 @@ _connectors = [
         "LA33_P": "AC29",
         "LA33_N": "AC30",
         }
-    )
+    ),
+    ("XADC", {
+        "GPIO0": "AB25",
+        "GPIO1": "AA25",
+        "GPIO2": "AB28",
+        "GPIO3": "AA27",
+        "VAUX0_N": "J24",
+        "VAUX0_P": "J23",
+        "VAUX8_N": "L23",
+        "VAUX8_P": "L22",
+        }
+    ),
 ]
 
 
