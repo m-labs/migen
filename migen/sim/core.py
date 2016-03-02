@@ -8,7 +8,8 @@ from migen.fhdl.structure import (_Value, _Statement,
                                   _Operator, _Slice, _ArrayProxy,
                                   _Assign, _Fragment)
 from migen.fhdl.bitcontainer import value_bits_sign
-from migen.fhdl.tools import list_targets, insert_resets, lower_specials
+from migen.fhdl.tools import (list_targets, list_signals,
+                              insert_resets, lower_specials)
 from migen.fhdl.simplify import MemoryToArray
 from migen.fhdl.specials import _MemoryLocation
 from migen.sim.vcd import VCDWriter, DummyVCDWriter
@@ -263,6 +264,16 @@ class Simulator:
             self.vcd = DummyVCDWriter()
         else:
             self.vcd = VCDWriter(vcd_name)
+
+            signals = list_signals(self.fragment)
+            for cd in self.fragment.clock_domains:
+                signals.add(cd.clk)
+                if cd.rst is not None:
+                    signals.add(cd.rst)
+            for memory_array in mta.replacements.values():
+                signals |= set(memory_array)
+            for signal in sorted(signals, key=lambda x: x.duid):
+                self.vcd.set(signal, signal.reset.value)
 
     def __enter__(self):
         return self

@@ -44,11 +44,8 @@ class VCDWriter:
         f.write(fmtstr.format(value, code))
 
     def set(self, signal, value):
-        if signal in self.signal_values:
-            write = self.signal_values[signal] != value
-        else:
-            write = signal.reset.value != value
-        if write:
+        if (signal not in self.signal_values
+                or self.signal_values[signal] != value):
             self._write_value(self.buffer_file, signal, value)
             self.signal_values[signal] = value
 
