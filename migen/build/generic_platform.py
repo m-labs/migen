@@ -246,6 +246,15 @@ class GenericPlatform:
     def add_period_constraint(self, clk, period):
         raise NotImplementedError
 
+    def add_false_path_constraint(self, from_, to):
+        raise NotImplementedError
+
+    def add_false_path_constraints(self, *clk):
+        for a in clk:
+            for b in clk:
+                if a is not b:
+                    self.add_false_path_constraint(a, b)
+
     def add_platform_command(self, *args, **kwargs):
         return self.constraint_manager.add_platform_command(*args, **kwargs)
 
