@@ -93,11 +93,6 @@ _io = [
         IOStandard("LVTTL"),
     ),
 
-    ("pmod", 0,
-        Subsignal("d", Pins("D9 C8 D6 C4 B11 C9 D8 C6")),
-        IOStandard("LVTTL")
-    ),
-
     ("ddram_clock", 0,
         Subsignal("p", Pins("G3")),
         Subsignal("n", Pins("G1")),
@@ -122,6 +117,7 @@ _connectors = [
     ("A", "U18 T17 P17 P16 N16 N17 M16 L15 L17 K15 K17 J16 H15 H18 F18 D18"),
     ("B", "C18 E18 G18 H16 J18 K18 K16 L18 L16 M18 N18 N15 P15 P18 T18 U17"),
     ("C", "F17 F16 E16 G16 F15 G14 F14 H14 H13 J13 G13 H12 K14 K13 K12 L12"),
+    ("PMOD", "D9 C8 D6 C4 B11 C9 D8 C6"),
 ]
 
 
