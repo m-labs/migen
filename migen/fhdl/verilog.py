@@ -298,6 +298,11 @@ def convert(f, ios=None, name="top",
     fs, lowered_specials = lower_specials(special_overrides, f.specials)
     f += lower_basics(fs)
 
+    for io in sorted(ios, key=lambda x: x.duid):
+        if io.name_override is None:
+            name = io.backtrace[-1][0]
+            if name:
+                io.name_override = name
     ns = build_namespace(list_signals(f) \
         | list_special_ios(f, True, True, True) \
         | ios, _reserved_keywords)
