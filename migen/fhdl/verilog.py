@@ -300,9 +300,9 @@ def convert(f, ios=None, name="top",
 
     for io in sorted(ios, key=lambda x: x.duid):
         if io.name_override is None:
-            name = io.backtrace[-1][0]
-            if name:
-                io.name_override = name
+            io_name = io.backtrace[-1][0]
+            if io_name:
+                io.name_override = io_name
     ns = build_namespace(list_signals(f) \
         | list_special_ios(f, True, True, True) \
         | ios, _reserved_keywords)
