@@ -542,16 +542,21 @@ class Case(_Statement):
 
         Parameters
         ----------
-        key : int or None
+        key : int, Constant or None
             Key to use as default case if no other key matches.
             By default, the largest key is the default key.
         """
         if key is None:
             for choice in self.cases.keys():
-                if key is None or choice.value > key.value:
+                if (key is None
+                        or (isinstance(choice, str) and choice == "default")
+                        or choice.value > key.value):
                     key = choice
-        self.cases["default"] = self.cases[key]
+        if not isinstance(key, str) or key != "default":
+            key = wrap(key)
+        stmts = self.cases[key]
         del self.cases[key]
+        self.cases["default"] = stmts
         return self
 
 
