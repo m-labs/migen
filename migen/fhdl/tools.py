@@ -236,7 +236,7 @@ def _apply_lowerer(l, f):
     f = l.visit(f)
     f.comb += l.comb
 
-    for special in f.specials:
+    for special in sorted(f.specials, key=lambda s: s.duid):
         for obj, attr, direction in special.iter_expressions():
             if direction != SPECIAL_INOUT:
                 # inouts are only supported by Migen when connected directly to top-level
