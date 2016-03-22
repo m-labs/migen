@@ -136,7 +136,7 @@ def wrap(value):
     if isinstance(value, (bool, int)):
         value = Constant(value)
     if not isinstance(value, _Value):
-        raise TypeError("Object is not a Migen value")
+        raise TypeError("Object '" + str(value) + "'is not a Migen value")
     return value
 
 

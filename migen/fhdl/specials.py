@@ -111,7 +111,12 @@ class Instance(Special):
         self.items = list(items)
         self.synthesis_directive = synthesis_directive
         for k, v in sorted(kwargs.items(), key=itemgetter(0)):
-            item_type, item_name = k.split("_", maxsplit=1)
+            try:
+                item_type, item_name = k.split("_", maxsplit=1)
+            except ValueError:
+                raise TypeError("Wrong format for value '" + str(k) +
+                                "', format should be 'type_name'")
+
             item_class = {
                 "i": Instance.Input,
                 "o": Instance.Output,
