@@ -1,3 +1,7 @@
+"""
+Clock domain crossing module
+"""
+
 from migen.fhdl.structure import *
 from migen.fhdl.module import Module
 from migen.fhdl.specials import Special
