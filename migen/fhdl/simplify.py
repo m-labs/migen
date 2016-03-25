@@ -75,8 +75,6 @@ class MemoryToArray(ModuleTransformer):
                 storage.append(mem_storage)
 
             for port in mem.ports:
-                if port.we_granularity:
-                    raise NotImplementedError
                 try:
                     sync = f.sync[port.clock.cd]
                 except KeyError:
