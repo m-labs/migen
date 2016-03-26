@@ -6,7 +6,7 @@ from migen.util.misc import gcd_multiple
 
 class FullMemoryWE(ModuleTransformer):
     def __init__(self):
-        self.replacments = dict()
+        self.replacements = dict()
 
     def transform_fragment(self, i, f):
         newspecials = set()
@@ -44,7 +44,7 @@ class FullMemoryWE(ModuleTransformer):
                             clock_domain=port.clock.cd)
                         newmem.ports.append(newport)
                         newspecials.add(newport)
-                self.replacments[orig] = newmems
+                self.replacements[orig] = newmems
 
         f.specials = newspecials
 
@@ -75,8 +75,6 @@ class MemoryToArray(ModuleTransformer):
                 storage.append(mem_storage)
 
             for port in mem.ports:
-                if port.we_granularity:
-                    raise NotImplementedError
                 try:
                     sync = f.sync[port.clock.cd]
                 except KeyError:
