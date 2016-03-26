@@ -116,9 +116,7 @@ def _printexpr(ns, node):
 
 
 def _printnode(ns, at, level, node):
-    if node is None:
-        return ""
-    elif isinstance(node, _Assign):
+    if isinstance(node, _Assign):
         if at == _AT_BLOCKING:
             assignment = " = "
         elif at == _AT_NONBLOCKING:
