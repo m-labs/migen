@@ -53,6 +53,11 @@ def value_bits_sign(v):
     elif isinstance(v, f._Operator):
         obs = list(map(value_bits_sign, v.operands))
         if v.op == "+" or v.op == "-":
+            if len(obs) == 1:
+                if v.op == "-" and not obs[0][1]:
+                    return obs[0][0] + 1, True
+                else:
+                    return obs[0]
             if not obs[0][1] and not obs[1][1]:
                 # both operands unsigned
                 return max(obs[0][0], obs[1][0]) + 1, False
