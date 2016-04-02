@@ -201,10 +201,9 @@ class XilinxISEToolchain:
         platform.add_platform_command(
             """
 NET "{clk}" TNM_NET = "PRD{clk}";
-TIMESPEC "TS{clk}" = PERIOD "PRD{clk}" {period} ns HIGH 50%;
+TIMESPEC "TS{clk}" = PERIOD "PRD{clk}" """ + str(period) + """ ns HIGH 50%;
 """,
             clk=clk,
-            period=str(period),
             )
 
     def add_false_path_constraint(self, platform, from_, to):
