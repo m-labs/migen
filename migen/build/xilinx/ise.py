@@ -135,7 +135,7 @@ class XilinxISEToolchain:
         self.ise_commands = ""
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
-            toolchain_path=None, source=None, run=True, mode="xst"):
+            toolchain_path=None, source=True, run=True, mode="xst"):
         if not isinstance(fragment, _Fragment):
             fragment = fragment.get_fragment()
         if toolchain_path is None:
@@ -145,8 +145,6 @@ class XilinxISEToolchain:
                 toolchain_path = "/cygdrive/c/Xilinx"
             else:
                 toolchain_path = "/opt/Xilinx"
-        if source is None:
-            source = sys.platform != "win32"
 
         platform.finalize(fragment)
         ngdbuild_opt = self.ngdbuild_opt
