@@ -52,3 +52,10 @@ class LatticeProgrammer(GenericProgrammer):
         xcf_content = _xcf_template.format(bitstream_file=bitstream_file)
         tools.write_to_file(xcf_file, xcf_content)
         subprocess.call(["pgrcmd", "-infile", xcf_file])
+
+
+class IceStormProgrammer(GenericProgrammer):
+    needs_bitreverse = False
+
+    def flash(self, address, data_file):
+        subprocess.call(["iceprog", "-o", str(address), data_file])
