@@ -193,6 +193,19 @@ _io = [
     ),
 
     ("vadj_on_b", 0, Pins("J27"), IOStandard("LVCMOS25")),
+
+    ("sgmii_clock", 0,
+        Subsignal("p", Pins("G8")),
+        Subsignal("n", Pins("G7"))
+    ),
+    ("user_sma_mgt_tx", 0,
+        Subsignal("p", Pins("K2")),
+        Subsignal("n", Pins("K1"))
+    ),
+    ("user_sma_mgt_rx", 0,
+        Subsignal("p", Pins("K6")),
+        Subsignal("n", Pins("K5"))
+    ),
 ]
 
 
