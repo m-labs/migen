@@ -206,6 +206,15 @@ _io = [
         Subsignal("p", Pins("K6")),
         Subsignal("n", Pins("K5"))
     ),
+
+    ("si5324", 0,
+        Subsignal("rst_n", Pins("AE20"), IOStandard("LVCMOS25")),
+        Subsignal("int", Pins("AG24"), IOStandard("LVCMOS25")),
+        Subsignal("clkin_p", Pins("W27"), IOStandard("LVDS_25")),
+        Subsignal("clkin_n", Pins("W28"), IOStandard("LVDS_25")),
+        Subsignal("clkout_p", Pins("L8")),
+        Subsignal("clkout_n", Pins("L7"))
+    ),
 ]
 
 
