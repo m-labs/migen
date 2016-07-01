@@ -1,4 +1,4 @@
-# This file is Copyright (c) 2015 William D. Jones <thor0505@comcast.net>
+# This file is Copyright (c) 2016 William D. Jones <thor0505@comcast.net>
 # License: BSD
 
 import os
@@ -9,7 +9,6 @@ from migen.fhdl.structure import _Fragment
 
 from migen.build.generic_platform import *
 from migen.build import tools
-from migen.build.lattice import common
 
 
 def _format_constraint(c):
@@ -41,13 +40,15 @@ def _build_yosys(device, sources, vincpaths, build_name):
     for filename, language, library in sources:
         ys_contents += "read_{}{} {}\n".format(language, incflags, filename)
 
-    ys_contents += """synth_ice40 -top top -blif {build_name}.blif""".format(build_name=build_name)
+    ys_contents += """synth_ice40 -top top -blif {build_name}.blif""".format(
+        build_name=build_name)
 
     ys_name = build_name + ".ys"
     tools.write_to_file(ys_name, ys_contents)
 
 
-def _run_icestorm(build_name, source, yosys_opt, pnr_opt, icepack_opt):
+def _run_icestorm(build_name, source, yosys_opt, pnr_opt,
+                  icetime_opt, icepack_opt):
     if sys.platform == "win32" or sys.platform == "cygwin":
         source_cmd = "call "
         script_ext = ".bat"
@@ -62,15 +63,18 @@ def _run_icestorm(build_name, source, yosys_opt, pnr_opt, icepack_opt):
         fail_stmt = ""
 
     build_script_contents += """
-yosys {yosys_opt} {build_name}.ys
+yosys {yosys_opt} -l {build_name}.rpt {build_name}.ys{fail_stmt}
 arachne-pnr {pnr_opt} -p {build_name}.pcf {build_name}.blif -o {build_name}.txt{fail_stmt}
+icetime {icetime_opt} -t -p {build_name}.pcf -r {build_name}.tim {build_name}.txt{fail_stmt}
 icepack {icepack_opt} {build_name}.txt {build_name}.bin{fail_stmt}
 """
-    build_script_contents = build_script_contents.format(build_name=build_name,
+    build_script_contents = build_script_contents.format(
+        build_name=build_name,
         yosys_opt=yosys_opt, pnr_opt=pnr_opt, icepack_opt=icepack_opt,
-        fail_stmt=fail_stmt)
+        icetime_opt=icetime_opt, fail_stmt=fail_stmt)
     build_script_file = "build_" + build_name + script_ext
-    tools.write_to_file(build_script_file, build_script_contents, force_unix=False)
+    tools.write_to_file(build_script_file, build_script_contents,
+                        force_unix=False)
     command = shell + [build_script_file]
     r = subprocess.call(command)
     if r != 0:
@@ -80,12 +84,14 @@ icepack {icepack_opt} {build_name}.txt {build_name}.bin{fail_stmt}
 class LatticeIceStormToolchain:
     def __init__(self):
         self.yosys_opt = "-q"
-        self.pnr_opt = ""
+        self.pnr_opt = "-q"
+        self.icetime_opt = ""
         self.icepack_opt = ""
+        self.freq_constraints = dict()
 
     # platform.device should be of the form "ice40-{1k,8k}-{tq144, etc}""
     def build(self, platform, fragment, build_dir="build", build_name="top",
-        run=True):
+              run=True):
         tools.mkdir_noerror(build_dir)
         cwd = os.getcwd()
         os.chdir(build_dir)
@@ -99,14 +105,20 @@ class LatticeIceStormToolchain:
         v_file = build_name + ".v"
         v_output.write(v_file)
         sources = platform.sources | {(v_file, "verilog", "work")}
-        _build_yosys(platform.device, sources, platform.verilog_include_paths, build_name)
+        _build_yosys(platform.device, sources, platform.verilog_include_paths,
+                     build_name)
 
-        tools.write_to_file(build_name + ".pcf", _build_pcf(named_sc, named_pc))
+        tools.write_to_file(build_name + ".pcf",
+                            _build_pcf(named_sc, named_pc))
         if run:
             (family, size, package) = self.parse_device_string(platform.device)
-            new_pnr_opts = self.pnr_opt + " -d " + size + " -P " + package
-            _run_icestorm(build_name, False, self.yosys_opt, new_pnr_opts,
-                self.icepack_opt)
+            pnr_opt = self.pnr_opt + " -d " + size + " -P " + package
+            # TODO: PNR will probably eventually support LP devices.
+            icetime_opt = self.icetime_opt + " -P " + package + \
+                " -d " + "hx" + size + " -c " + \
+                str(max(self.freq_constraints.values(), default=0.0))
+            _run_icestorm(build_name, False, self.yosys_opt, pnr_opt,
+                          icetime_opt, self.icepack_opt)
 
         os.chdir(cwd)
 
@@ -122,5 +134,15 @@ class LatticeIceStormToolchain:
             raise ValueError("Invalid device package")
         return (family, size, package)
 
+    # icetime can only handle a single global constraint. Pending more
+    # finely-tuned analysis features in arachne-pnr and IceStorm, save
+    # all the constraints in a dictionary and test against the fastest clk.
+    # Though imprecise, if the global design satisfies the fastest clock,
+    # we can be sure all other constraints are satisfied.
     def add_period_constraint(self, platform, clk, period):
-        pass
+        new_freq = 1000.0/period
+
+        if clk not in self.freq_constraints.keys():
+            self.freq_constraints[clk] = new_freq
+        else:
+            raise ConstraintError("Period constraint already added to signal.")
