@@ -206,6 +206,14 @@ _io = [
         Subsignal("p", Pins("K6")),
         Subsignal("n", Pins("K5"))
     ),
+    ("sfp_tx", 0,
+        Subsignal("p", Pins("H2")),
+        Subsignal("n", Pins("H1"))
+    ),
+    ("sfp_rx", 0,
+        Subsignal("p", Pins("G4")),
+        Subsignal("n", Pins("G3"))
+    ),
 
     ("si5324", 0,
         Subsignal("rst_n", Pins("AE20"), IOStandard("LVCMOS25")),
