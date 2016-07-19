@@ -214,6 +214,7 @@ _io = [
         Subsignal("p", Pins("G4")),
         Subsignal("n", Pins("G3"))
     ),
+    ("sfp_tx_disable_n", 0, Pins("Y20"), IOStandard("LVCMOS25")),
 
     ("si5324", 0,
         Subsignal("rst_n", Pins("AE20"), IOStandard("LVCMOS25")),
