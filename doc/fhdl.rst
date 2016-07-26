@@ -38,7 +38,7 @@ The properties of a signal object are:
 * An integer or a (integer, boolean) pair that defines the number of bits and whether the bit of higher index of the signal is a sign bit (i.e. the signal is signed). The defaults are one bit and unsigned. Alternatively, the ``min`` and ``max`` parameters can be specified to define the range of the signal and determine its bit width and signedness. As with Python ranges, ``min`` is inclusive and defaults to 0, ``max`` is exclusive and defaults to 2.
 * A name, used as a hint for the V*HDL back-end name mangler.
 * The signal's reset value. It must be an integer, and defaults to 0. When the signal's value is modified with a synchronous statement, the reset value is the initialization value of the associated register. When the signal is assigned to in a conditional combinatorial statement (``If`` or ``Case``), the reset value is the value that the signal has when no condition that causes the signal to be driven is verified. This enforces the absence of latches in designs. If the signal is permanently driven using a combinatorial statement, the reset value has no effect.
-  
+
 The sole purpose of the name property is to make the generated V*HDL code easier to understand and debug. From a purely functional point of view, it is perfectly OK to have several signals with the same name property. The back-end will generate a unique name for each object. If no name property is specified, Migen will analyze the code that created the signal object, and try to extract the variable or member name from there. For example, the following statements will create one or several signals named "bar": ::
 
   bar = Signal()
@@ -241,7 +241,7 @@ For example, the module below implements a OR gate: ::
 
       ###
 
-      self.comb += x.eq(a | b)
+      self.comb += self.x.eq(self.a | self.b)
 
 To improve code readability, it is recommended to place the interface of the module at the beginning of the ``__init__`` function, and separate it from the implementation using three hash signs.
 
@@ -357,6 +357,6 @@ The clock domain management mechanism explained above happens during finalizatio
 Conversion for synthesis
 ************************
 
-Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``verilog`` module.
+Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``migen.fhdl.verilog`` module.
 
 The ``migen.build`` component provides scripts to interface third-party FPGA tools (from Xilinx, Altera and Lattice) to Migen, and a database of boards for the easy deployment of designs.
