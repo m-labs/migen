@@ -40,7 +40,7 @@ def _target_eq(a, b):
     elif ty == _Slice:
         return (_target_eq(a.value, b.value)
                     and a.start == b.start
-                    and a.end == b.end)
+                    and a.stop == b.stop)
     elif ty == _ArrayProxy:
         return (all(_target_eq(x, y) for x, y in zip(a.choices, b.choices))
                     and _target_eq(a.key, b.key))
