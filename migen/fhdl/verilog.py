@@ -278,6 +278,7 @@ def convert(f, ios=None, name="top",
         f = f.get_fragment()
     if ios is None:
         ios = set()
+    ios = set(ios)
 
     for cd_name in sorted(list_clock_domains(f)):
         try:
