@@ -1,5 +1,6 @@
 from migen.fhdl.structure import *
 from migen.fhdl.module import *
+from migen.fhdl.module2 import *
 from migen.fhdl.specials import *
 from migen.fhdl.bitcontainer import *
 from migen.fhdl.decorators import *
