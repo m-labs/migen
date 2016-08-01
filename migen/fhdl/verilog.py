@@ -274,11 +274,14 @@ def convert(f, ios=None, name="top",
   create_clock_domains=True,
   display_run=False, asic_syntax=False):
     r = ConvOutput()
+    if ios is None:
+        if hasattr(f, "get_ports"):
+            ios = f.get_ports()
+        else:
+            ios = set()
+    ios = set(ios)
     if not isinstance(f, _Fragment):
         f = f.get_fragment()
-    if ios is None:
-        ios = set()
-    ios = set(ios)
 
     for cd_name in sorted(list_clock_domains(f)):
         try:
