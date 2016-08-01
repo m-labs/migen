@@ -8,7 +8,7 @@ from migen.fhdl.structure import *
 from migen.fhdl.structure import _Assign, _Operator, _Fragment
 
 
-__all__ = ["Module2", "ports", "sync"]
+__all__ = ["Module2", "ports", "comb", "sync"]
 
 
 class PortManager:
@@ -107,6 +107,12 @@ def ast_stmt_to_fhdl(node, globs, locs):
             assert t.attr == "next"
             r.append(_Assign(eval_ast(t.value, globs, locs), value))
         return r
+    elif isinstance(node, ast.If):
+        return If(ast_expr_to_fhdl(node.test, globs, locs),
+                  *ast_stmt_to_fhdl(node.body, globs, locs)).Else(
+                  *ast_stmt_to_fhdl(node.orelse, globs, locs))
+    elif isinstance(node, ast.Expr):
+        return eval_ast(node.value, globs, locs)
     else:
         raise NotImplementedError
         
