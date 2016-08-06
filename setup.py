@@ -11,7 +11,7 @@ if sys.version_info[:3] < (3, 3):
 
 setup(
     name="migen",
-    version="0.2",
+    version="0.4",
     description="Python toolbox for building complex digital hardware",
     long_description=open("README.md").read(),
     author="Sebastien Bourdeauducq",
