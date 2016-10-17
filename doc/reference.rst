@@ -35,3 +35,10 @@ API reference
 .. automodule:: migen.genlib.sort
         :members:
         :show-inheritance:
+
+:mod:`genlib.fsm` module
+-------------------------
+
+.. automodule:: migen.genlib.fsm
+        :members:
+        :show-inheritance:

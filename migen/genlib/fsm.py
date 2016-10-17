@@ -82,8 +82,45 @@ class _LowerNext(NodeTransformer):
         else:
             return node
 
-
 class FSM(Module):
+    """
+    Finite state machine
+
+    Parameters
+    ----------
+    reset_state : str
+        Reset state. Defaults to the first added state.
+
+    Examples
+    --------
+
+    >>> self.active = Signal()
+    >>> self.bitno = Signal(3)
+    >>>
+    >>> fsm = FSM(reset_state="START")
+    >>> self.submodules += fsm
+    >>>
+    >>> fsm.act("START",
+    ...     self.active.eq(1),
+    ...     If(strobe,
+    ...         NextState("DATA")
+    ...     )
+    ... )
+    >>> fsm.act("DATA",
+    ...     self.active.eq(1),
+    ...     If(strobe,
+    ...         NextValue(self.bitno, self.bitno + 1)
+    ...         If(self.bitno == 7,
+    ...             NextState("END")
+    ...         )
+    ...     )
+    ... )
+    >>> fsm.act("END",
+    ...     self.active.eq(0),
+    ...     NextState("STOP")
+    ... )
+
+    """
     def __init__(self, reset_state=None):
         self.actions = OrderedDict()
         self.state_aliases = dict()
@@ -95,6 +132,16 @@ class FSM(Module):
         self.after_leaving_signals = OrderedDict()
 
     def act(self, state, *statements):
+        """
+        Schedules `statements` to be executed in `state`. Statements may include:
+
+            * combinatorial statements of form `a.eq(b)`, equivalent to
+              `self.comb += a.eq(b)` when the FSM is in the given `state`;
+            * synchronous statements of form `NextValue(a, b)`, equivalent to
+              `self.sync += a.eq(b)` when the FSM is in the given `state`;
+            * a statement of form `NextState("STATE")`, selecting the next state;
+            * `If`, `Case`, etc.
+        """
         if self.finalized:
             raise FinalizeError
         if self.reset_state is None:
@@ -119,6 +166,10 @@ class FSM(Module):
             self.state_aliases[name] = target
 
     def ongoing(self, state):
+        """
+        Returns a signal that has the value 1 when the FSM is in the given `state`,
+        and 0 otherwise.
+        """
         is_ongoing = Signal()
         self.act(state, is_ongoing.eq(1))
         return is_ongoing
