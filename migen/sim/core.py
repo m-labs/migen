@@ -218,7 +218,8 @@ class Evaluator:
 
 # TODO: instances via Iverilog/VPI
 class Simulator:
-    def __init__(self, fragment_or_module, generators, clocks={"sys": 10}, vcd_name=None):
+    def __init__(self, fragment_or_module, generators, clocks={"sys": 10}, vcd_name=None,
+                 special_overrides={}):
         if isinstance(fragment_or_module, _Fragment):
             self.fragment = fragment_or_module
         else:
@@ -227,7 +228,7 @@ class Simulator:
         mta = MemoryToArray()
         mta.transform_fragment(None, self.fragment)
 
-        fs, lowered = lower_specials(overrides={}, specials=self.fragment.specials)
+        fs, lowered = lower_specials(overrides=special_overrides, specials=self.fragment.specials)
         self.fragment += fs
         self.fragment.specials -= lowered
         if self.fragment.specials:
