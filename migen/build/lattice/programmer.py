@@ -57,5 +57,8 @@ class LatticeProgrammer(GenericProgrammer):
 class IceStormProgrammer(GenericProgrammer):
     needs_bitreverse = False
 
-    def flash(self, address, data_file):
-        subprocess.call(["iceprog", "-o", str(address), data_file])
+    def flash(self, address, bitstream_file):
+        subprocess.call(["iceprog", "-o", str(address), bitstream_file])
+
+    def load_bitstream(self, bitstream_file):
+        subprocess.call(["iceprog", "-S", bitstream_file])
