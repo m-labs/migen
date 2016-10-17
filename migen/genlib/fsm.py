@@ -86,9 +86,11 @@ class FSM(Module):
     """
     Finite state machine
 
+    Any Python objects can be used as states, e.g. strings.
+
     Parameters
     ----------
-    reset_state : str
+    reset_state
         Reset state. Defaults to the first added state.
 
     Examples
@@ -139,7 +141,7 @@ class FSM(Module):
               `self.comb += a.eq(b)` when the FSM is in the given `state`;
             * synchronous statements of form `NextValue(a, b)`, equivalent to
               `self.sync += a.eq(b)` when the FSM is in the given `state`;
-            * a statement of form `NextState("STATE")`, selecting the next state;
+            * a statement of form `NextState(new_state)`, selecting the next state;
             * `If`, `Case`, etc.
         """
         if self.finalized:
