@@ -9,6 +9,10 @@ if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
 
 
+requirements = [
+    "sphinx", "sphinx_rtd_theme"
+]
+
 setup(
     name="migen",
     version="0.4",
@@ -19,6 +23,7 @@ setup(
     url="https://m-labs.hk",
     download_url="https://github.com/m-labs/migen",
     packages=find_packages(),
+    install_requires=requirements,
     test_suite="migen.test",
     license="BSD",
     platforms=["Any"],

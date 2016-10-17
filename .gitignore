@@ -5,3 +5,4 @@ vpi/*.o
 vpi/migensim.vpi
 examples/*.vcd
 doc/_build
+/build/
