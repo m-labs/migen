@@ -1,5 +1,11 @@
 import os
 import sys
+try:
+    import colorama
+    colorama.init()  # install escape sequence translation on Windows
+    _have_colorama = True
+except ImportError:
+    _have_colorama = False
 
 from migen.fhdl.structure import *
 from migen.fhdl.specials import Instance
@@ -10,6 +16,20 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 from migen.genlib.io import *
 
 from migen.build import tools
+
+
+colors = []
+if _have_colorama:
+    colors += [
+        ("^ERROR:.*$", colorama.Fore.RED + colorama.Style.BRIGHT +
+         r"\g<0>" + colorama.Style.RESET_ALL),
+        ("^CRITICAL WARNING:.*$", colorama.Fore.RED +
+         r"\g<0>" + colorama.Style.RESET_ALL),
+        ("^WARNING:.*$", colorama.Fore.YELLOW +
+         r"\g<0>" + colorama.Style.RESET_ALL),
+        ("^INFO:.*$", colorama.Fore.GREEN +
+         r"\g<0>" + colorama.Style.RESET_ALL),
+    ]
 
 
 def settings(path, ver=None, sub=None):
