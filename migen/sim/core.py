@@ -39,7 +39,7 @@ class TimeManager:
             else:
                 high = False
             self.clocks[k] = ClockState(high, half_period, half_period - phase)
-
+    
     def tick(self):
         rising = set()
         falling = set()
@@ -62,15 +62,14 @@ str2op = {
     "+": operator.add,
     "-": operator.sub,
     "*": operator.mul,
-    "%": operator.mod,
-
+    
     ">>>": operator.rshift,
     "<<<": operator.lshift,
-
+    
     "&": operator.and_,
     "^": operator.xor,
     "|": operator.or_,
-
+    
     "<": operator.lt,
     "<=": operator.le,
     "==": operator.eq,

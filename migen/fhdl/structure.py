@@ -55,10 +55,6 @@ class _Value(DUID):
         return _Operator("*", [self, other])
     def __rmul__(self, other):
         return _Operator("*", [other, self])
-    def __mod__(self, other):
-        return _Operator("%", [self, other])
-    def __rmod__(self, other):
-        return _Operator("%", [other, self])
     def __lshift__(self, other):
         return _Operator("<<<", [self, other])
     def __rlshift__(self, other):
@@ -529,7 +525,7 @@ class Case(_Statement):
         for k, v in cases.items():
             if isinstance(k, (bool, int)):
                 k = Constant(k)
-            if (not isinstance(k, Constant)
+            if (not isinstance(k, Constant) 
                     and not (isinstance(k, str) and k == "default")):
                 raise TypeError("Case object is not a Migen constant")
             if not isinstance(v, _collections.Iterable):
