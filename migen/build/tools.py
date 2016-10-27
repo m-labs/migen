@@ -58,7 +58,8 @@ def sub_rules(lines, rules, max_matches=1):
 
 def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
     proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                            universal_newlines=True, **kwargs)
+                            universal_newlines=True, bufsize=1,
+                            **kwargs)
     with proc:
         for line in sub_rules(iter(proc.stdout.readline, ""),
                               rules, max_matches):
