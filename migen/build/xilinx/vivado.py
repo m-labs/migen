@@ -148,5 +148,5 @@ class XilinxVivadoToolchain:
 
     def add_false_path_constraint(self, platform, from_, to):
         platform.add_platform_command(
-            "set_false_path -from [get_clocks {from_}] -to [get_clocks {to}]",
+            "set_false_path -from [get_nets {from_}] -to [get_nets {to}]",
             from_=from_, to=to)
