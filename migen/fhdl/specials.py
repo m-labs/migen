@@ -345,21 +345,3 @@ class Memory(Special):
             r += "end\n\n"
 
         return r
-
-
-class SynthesisDirective(Special):
-    def __init__(self, template, **signals):
-        Special.__init__(self)
-        self.template = template
-        self.signals = signals
-
-    @staticmethod
-    def emit_verilog(directive, ns, add_data_file):
-        name_dict = dict((k, ns.get_name(sig)) for k, sig in directive.signals.items())
-        formatted = directive.template.format(**name_dict)
-        return "// synthesis " + formatted + "\n"
-
-
-class Keep(SynthesisDirective):
-    def __init__(self, signal):
-        SynthesisDirective.__init__(self, "attribute keep of {s} is true", s=signal)

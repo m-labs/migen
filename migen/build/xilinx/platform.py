@@ -1,4 +1,3 @@
-from migen.fhdl.specials import Keep
 from migen.build.generic_platform import GenericPlatform
 from migen.build.xilinx import common, vivado, ise
 
@@ -19,10 +18,9 @@ class XilinxPlatform(GenericPlatform):
         so = dict(common.xilinx_special_overrides)
         if self.device[:3] == "xc7":
             so.update(common.xilinx_s7_special_overrides)
-        if isinstance(self.toolchain, vivado.XilinxVivadoToolchain):
-            so[Keep] = vivado.VivadoKeep
         so.update(special_overrides)
-        return GenericPlatform.get_verilog(self, *args, special_overrides=so, **kwargs)
+        return GenericPlatform.get_verilog(self, *args,
+            special_overrides=so, attr_translate=self.toolchain.attr_translate, **kwargs)
 
     def get_edif(self, fragment, **kwargs):
         return GenericPlatform.get_edif(self, fragment, "UNISIMS", "Xilinx", self.device, **kwargs)

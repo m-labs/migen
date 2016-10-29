@@ -165,8 +165,29 @@ def _list_comb_wires(f):
             r |= g[0]
     return r
 
+def _printattr(sig, attr_translate):
+    r = ""
+    firsta = True
+    for attr in sig.attr:
+        if isinstance(attr, tuple):
+            # platform-dependent attribute
+            attr_name, attr_value = attr
+        else:
+            # translated attribute
+            at = attr_translate[attr]
+            if at is None:
+                continue
+            attr_name, attr_value = at
+        if not firsta:
+            r += ", "
+        firsta = False
+        r += attr_name + " = \"" + attr_value + "\""
+    if r:
+        r = "(* " + r + " *)"
+    return r
 
-def _printheader(f, ios, name, ns,
+
+def _printheader(f, ios, name, ns, attr_translate,
                  reg_initialization):
     sigs = list_signals(f) | list_special_ios(f, True, True, True)
     special_outs = list_special_ios(f, False, True, True)
@@ -179,6 +200,9 @@ def _printheader(f, ios, name, ns,
         if not firstp:
             r += ",\n"
         firstp = False
+        attr = _printattr(sig, attr_translate)
+        if attr:
+            r += "\t" + attr
         if sig in inouts:
             r += "\tinout " + _printsig(ns, sig)
         elif sig in targets:
@@ -190,6 +214,9 @@ def _printheader(f, ios, name, ns,
             r += "\tinput " + _printsig(ns, sig)
     r += "\n);\n\n"
     for sig in sorted(sigs - ios, key=lambda x: x.duid):
+        attr = _printattr(sig, attr_translate)
+        if attr:
+            r += attr + " "
         if sig in wires:
             r += "wire " + _printsig(ns, sig) + ";\n"
         else:
@@ -271,6 +298,7 @@ def _printspecials(overrides, specials, ns, add_data_file):
 
 def convert(f, ios=None, name="top",
   special_overrides=dict(),
+  attr_translate=dict(),
   create_clock_domains=True,
   display_run=False, asic_syntax=False):
     r = ConvOutput()
@@ -308,7 +336,7 @@ def convert(f, ios=None, name="top",
     r.ns = ns
 
     src = "/* Machine-generated using Migen */\n"
-    src += _printheader(f, ios, name, ns,
+    src += _printheader(f, ios, name, ns, attr_translate,
                         reg_initialization=not asic_syntax)
     src += _printcomb(f, ns,
                       display_run=display_run,

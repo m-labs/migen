@@ -3,7 +3,7 @@ from migen.fhdl.module import Module
 from migen.fhdl.specials import Memory
 from migen.fhdl.bitcontainer import log2_int
 from migen.fhdl.decorators import ClockDomainsRenamer
-from migen.genlib.cdc import NoRetiming, MultiReg, GrayCounter
+from migen.genlib.cdc import MultiReg, GrayCounter
 
 
 def _inc(signal, modulo):
@@ -177,15 +177,11 @@ class AsyncFIFO(Module, _FIFOInterface):
         ]
 
         produce_rdomain = Signal(depth_bits+1)
-        self.specials += [
-            NoRetiming(produce.q),
-            MultiReg(produce.q, produce_rdomain, "read")
-        ]
+        produce.q.attr.add("no_retiming")
+        self.specials += MultiReg(produce.q, produce_rdomain, "read")
         consume_wdomain = Signal(depth_bits+1)
-        self.specials += [
-            NoRetiming(consume.q),
-            MultiReg(consume.q, consume_wdomain, "write")
-        ]
+        consume.q.attr.add("no_retiming")
+        self.specials += MultiReg(consume.q, consume_wdomain, "write")
         if depth_bits == 1:
             self.comb += self.writable.eq((produce.q[-1] == consume_wdomain[-1])
                 | (produce.q[-2] == consume_wdomain[-2]))

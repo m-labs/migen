@@ -310,8 +310,9 @@ class Signal(_Value):
         determined by the integer range given by `min` (inclusive,
         defaults to 0) and `max` (exclusive, defaults to 2).
     related : Signal or None
+    attr : set of synthesis attributes
     """
-    def __init__(self, bits_sign=None, name=None, variable=False, reset=0, name_override=None, min=None, max=None, related=None):
+    def __init__(self, bits_sign=None, name=None, variable=False, reset=0, name_override=None, min=None, max=None, related=None, attr=None):
         from migen.fhdl.bitcontainer import bits_for
 
         _Value.__init__(self)
@@ -334,12 +335,15 @@ class Signal(_Value):
                 self.nbits, self.signed = bits_sign, False
         if not isinstance(self.nbits, int) or self.nbits <= 0:
             raise ValueError("Signal width must be a strictly positive integer")
+        if attr is None:
+            attr = set()
 
         self.variable = variable  # deprecated
         self.reset = reset
         self.name_override = name_override
         self.backtrace = _tracer.trace_back(name)
         self.related = related
+        self.attr = attr
 
     def __setattr__(self, k, v):
         if k == "reset":

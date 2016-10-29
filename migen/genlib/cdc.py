@@ -10,17 +10,6 @@ from migen.genlib.misc import WaitTimer
 from migen.genlib.resetsync import AsyncResetSynchronizer
 
 
-class NoRetiming(Special):
-    def __init__(self, reg):
-        Special.__init__(self)
-        self.reg = reg
-
-    # do nothing
-    @staticmethod
-    def lower(dr):
-        return Module()
-
-
 class MultiRegImpl(Module):
     def __init__(self, i, o, odomain, n):
         self.i = i
@@ -38,7 +27,8 @@ class MultiRegImpl(Module):
             sd += reg.eq(src)
             src = reg
         self.comb += self.o.eq(src)
-        self.specials += [NoRetiming(reg) for reg in self.regs]
+        for reg in self.regs:
+            reg.attr.add("no_retiming")
 
 
 class MultiReg(Special):

@@ -10,7 +10,6 @@ except ImportError:
 from migen.fhdl.structure import *
 from migen.fhdl.specials import Instance
 from migen.fhdl.module import Module
-from migen.fhdl.specials import SynthesisDirective
 from migen.genlib.cdc import *
 from migen.genlib.resetsync import AsyncResetSynchronizer
 from migen.genlib.io import *
@@ -61,22 +60,12 @@ def settings(path, ver=None, sub=None):
     raise OSError("no Xilinx tools settings file found")
 
 
-class XilinxNoRetimingImpl(Module):
-    def __init__(self, reg):
-        self.specials += SynthesisDirective("attribute register_balancing of {r} is no", r=reg)
-
-
-class XilinxNoRetiming:
-    @staticmethod
-    def lower(dr):
-        return XilinxNoRetimingImpl(dr.reg)
-
-
 class XilinxMultiRegImpl(MultiRegImpl):
     def __init__(self, *args, **kwargs):
         MultiRegImpl.__init__(self, *args, **kwargs)
-        self.specials += [SynthesisDirective("attribute shreg_extract of {r} is no", r=r)
-            for r in self.regs]
+        for r in self.regs:
+            r.attr.add("async_reg")
+            r.attr.add("no_shreg_extract")
 
 
 class XilinxMultiReg:
@@ -94,6 +83,8 @@ class XilinxAsyncResetSynchronizerImpl(Module):
             Instance("FDPE", p_INIT=1, i_D=rst1, i_PRE=async_reset,
                 i_CE=1, i_C=cd.clk, o_Q=cd.rst)
         ]
+        rst1.attr.add("async_reg")
+        cd.rst.attr.add("async_reg")
 
 
 class XilinxAsyncResetSynchronizer:
@@ -140,7 +131,6 @@ class XilinxDDROutput:
 
 
 xilinx_special_overrides = {
-    NoRetiming:             XilinxNoRetiming,
     MultiReg:               XilinxMultiReg,
     AsyncResetSynchronizer: XilinxAsyncResetSynchronizer,
     DifferentialInput:      XilinxDifferentialInput,

@@ -6,7 +6,6 @@ import subprocess
 import sys
 
 from migen.fhdl.structure import _Fragment
-from migen.fhdl.specials import SynthesisDirective
 from migen.build.generic_platform import *
 from migen.build import tools
 from migen.build.xilinx import common
@@ -71,14 +70,14 @@ def _run_vivado(build_name, vivado_path, source, ver=None):
         raise OSError("Subprocess failed")
 
 
-class VivadoKeep:
-    @staticmethod
-    def emit_verilog(directive, ns, add_data_file):
-        sig_name = ns.get_name(directive.signals["s"])
-        return "// synthesis attribute dont_touch of " + sig_name + " is true\n"
-
-
 class XilinxVivadoToolchain:
+    attr_translate = {
+        "keep": ("dont_touch", "true"),
+        "no_retiming": ("dont_touch", "true"),
+        "async_reg": ("async_reg", "true"),
+        "no_shreg_extract": None
+    }
+
     def __init__(self):
         self.bitstream_commands = []
         self.additional_commands = []
