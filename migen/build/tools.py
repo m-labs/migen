@@ -1,6 +1,9 @@
 import os
 import struct
 from distutils.version import StrictVersion
+import re
+import subprocess
+import sys
 
 
 def mkdir_noerror(d):
@@ -40,3 +43,25 @@ def versions(path):
             yield StrictVersion(n)
         except ValueError:
             continue
+
+
+def sub_rules(lines, rules, max_matches=1):
+    for line in lines:
+        n = max_matches
+        for pattern, color in rules:
+            line, m = re.subn(pattern, color, line, n)
+            n -= m
+            if not n:
+                break
+        yield line
+
+
+def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE,
+                            universal_newlines=True, bufsize=1,
+                            **kwargs)
+    with proc:
+        for line in sub_rules(iter(proc.stdout.readline, ""),
+                              rules, max_matches):
+            sys.stdout.write(line)
+    return proc.returncode

@@ -74,6 +74,13 @@ Replications
 ============
 
 The ``Replicate`` object represents the equivalent of {count{expression}} in Verilog.
+For example, the expression: ::
+
+  Replicate(0, 4)
+
+is equivalent to::
+
+  Cat(0, 0, 0, 0)
 
 Statements
 **********

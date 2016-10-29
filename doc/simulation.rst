@@ -10,7 +10,10 @@ Migen lets you write testbenches using Python's generator functions. Such testbe
     #. Clocking: simulation can be advanced by one clock cycle using ``yield``;
     #. Composition: control can be transferred to another testbench function using ``yield from run_other()``.
 
-A testbench can be run using the ``run_simulation`` function from ``migen.sim``; ``run_simulation(mod, bench)`` runs the generator function ``bench`` against the logic defined in an FHDL module ``mod``.
+A testbench can be run using the ``run_simulation`` function from ``migen.sim``; ``run_simulation(dut, bench)`` runs the generator function ``bench`` against the logic defined in an FHDL module ``dut``.
+
+Passing the ``vcd_name="file.vcd"`` argument to ``run_simulation`` will cause it to write a VCD
+dump of the signals inside ``dut`` to ``file.vcd``.
 
 Examples
 ********

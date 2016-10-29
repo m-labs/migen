@@ -10,7 +10,7 @@ if sys.version_info[:3] < (3, 3):
 
 
 requirements = [
-    "sphinx", "sphinx_rtd_theme"
+    "sphinx", "sphinx_rtd_theme", "colorama"
 ]
 
 setup(

@@ -16,8 +16,10 @@ requirements:
     - python 3.5.*
     - sphinx
     - sphinx_rtd_theme
+    - colorama
   run:
     - python 3.5.*
+    - colorama
 
 test:
   imports:

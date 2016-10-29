@@ -119,7 +119,7 @@ bitgen {bitgen_opt} {build_name}.ncd {build_name}.bit{fail_stmt}
     build_script_file = "build_" + build_name + script_ext
     tools.write_to_file(build_script_file, build_script_contents, force_unix=False)
     command = shell + [build_script_file]
-    r = subprocess.call(command)
+    r = tools.subprocess_call_filtered(command, common.colors)
     if r != 0:
         raise OSError("Subprocess failed")
 
