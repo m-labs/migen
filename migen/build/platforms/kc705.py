@@ -502,6 +502,10 @@ class Platform(XilinxPlatform):
             self.add_period_constraint(self.lookup_request("eth_clocks").rx, 8.0)
         except ConstraintError:
             pass
+        try:
+            self.add_period_constraint(self.lookup_request("eth_clocks").tx, 8.0)
+        except ConstraintError:
+            pass
         if isinstance(self.toolchain, XilinxISEToolchain):
             self.add_platform_command("CONFIG DCI_CASCADE = \"33 32 34\";")
         else:
