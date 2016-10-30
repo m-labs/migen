@@ -83,6 +83,8 @@ class XilinxVivadoToolchain:
         self.additional_commands = []
         self.pre_synthesis_commands = []
         self.with_phys_opt = False
+        self.clocks = dict()
+        self.false_paths = set()
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
@@ -118,6 +120,25 @@ class XilinxVivadoToolchain:
         tcl.append("quit")
         tools.write_to_file(build_name + ".tcl", "\n".join(tcl))
 
+    def _convert_clocks(self, platform):
+        for clk, period in sorted(self.clocks.items(), key=lambda x: x[0].duid):
+            if period is None:
+                platform.add_platform_command(
+                    "create_clock -name {clk} [get_nets {clk}]", clk=clk)
+            else:
+                platform.add_platform_command(
+                    "create_clock -name {clk} -period " + str(period) +
+                    " [get_nets {clk}]", clk=clk)
+        for from_, to in sorted(self.false_paths,
+                                key=lambda x: (x[0].duid, x[1].duid)):
+            platform.add_platform_command(
+                        "set_false_path -from [get_clocks {from_}] -to [get_clocks {to}]",
+                        from_=from_, to=to)
+
+        # make sure add_*_constraint cannot be used again
+        del self.clocks
+        del self.false_paths
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
             toolchain_path="/opt/Xilinx/Vivado", source=True, run=True):
         tools.mkdir_noerror(build_dir)
@@ -127,6 +148,7 @@ class XilinxVivadoToolchain:
         if not isinstance(fragment, _Fragment):
             fragment = fragment.get_fragment()
         platform.finalize(fragment)
+        self._convert_clocks(platform)
         v_output = platform.get_verilog(fragment)
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
         v_file = build_name + ".v"
@@ -142,11 +164,13 @@ class XilinxVivadoToolchain:
         return v_output.ns
 
     def add_period_constraint(self, platform, clk, period):
-        platform.add_platform_command(
-            "create_clock -name {clk} -period " + str(period) +
-            " [get_nets {clk}]", clk=clk)
+        if self.clocks.get(clk, None) is not None:
+            raise ValueError("A period constraint already exists")
+        self.clocks[clk] = period
 
     def add_false_path_constraint(self, platform, from_, to):
-        platform.add_platform_command(
-            "set_false_path -from [get_nets {from_}] -to [get_nets {to}]",
-            from_=from_, to=to)
+        if from_ not in self.clocks:
+            self.clocks[from_] = None
+        if to not in self.clocks:
+            self.clocks[to] = None
+        self.false_paths.add((from_, to))
