@@ -122,18 +122,18 @@ class XilinxVivadoToolchain:
 
     def _convert_clocks(self, platform):
         for clk, period in sorted(self.clocks.items(), key=lambda x: x[0].duid):
-            if period is None:
-                platform.add_platform_command(
-                    "create_clock -name {clk} [get_nets {clk}]", clk=clk)
-            else:
-                platform.add_platform_command(
-                    "create_clock -name {clk} -period " + str(period) +
-                    " [get_nets {clk}]", clk=clk)
+            platform.add_platform_command(
+                "create_clock -name {clk} -period " + str(period) +
+                " [get_nets {clk}]", clk=clk)
         for from_, to in sorted(self.false_paths,
                                 key=lambda x: (x[0].duid, x[1].duid)):
+            if (from_ not in self.clocks
+                    or to not in self.clocks):
+                raise ValueError("Vivado requires period "
+                                 "constraints on all clocks used in false paths")
             platform.add_platform_command(
-                        "set_false_path -from [get_clocks {from_}] -to [get_clocks {to}]",
-                        from_=from_, to=to)
+                "set_false_path -from [get_clocks {from_}] -to [get_clocks {to}]",
+                from_=from_, to=to)
 
         # make sure add_*_constraint cannot be used again
         del self.clocks
@@ -164,13 +164,9 @@ class XilinxVivadoToolchain:
         return v_output.ns
 
     def add_period_constraint(self, platform, clk, period):
-        if self.clocks.get(clk, None) is not None:
+        if clk in self.clocks:
             raise ValueError("A period constraint already exists")
         self.clocks[clk] = period
 
     def add_false_path_constraint(self, platform, from_, to):
-        if from_ not in self.clocks:
-            self.clocks[from_] = None
-        if to not in self.clocks:
-            self.clocks[to] = None
         self.false_paths.add((from_, to))
