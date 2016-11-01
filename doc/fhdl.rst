@@ -149,6 +149,8 @@ and write it with: ::
 
 Since they have no direct equivalent in Verilog, ``Array`` objects are lowered into multiplexers and conditional statements before the actual conversion takes place. Such lowering happens automatically without any user intervention.
 
+Any out-of-bounds access performed on an ``Array`` object will refer to the last element.
+
 Specials
 ********
 
