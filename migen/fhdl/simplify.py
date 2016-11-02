@@ -2,6 +2,7 @@ from migen.fhdl.structure import *
 from migen.fhdl.specials import Memory, _MemoryPort, WRITE_FIRST, NO_CHANGE
 from migen.fhdl.decorators import ModuleTransformer
 from migen.util.misc import gcd_multiple
+from migen.fhdl.bitcontainer import log2_int
 
 
 class FullMemoryWE(ModuleTransformer):
@@ -114,3 +115,72 @@ class MemoryToArray(ModuleTransformer):
 
         newspecials -= processed_ports
         f.specials = newspecials
+
+
+class SplitMemory(ModuleTransformer):
+    """Split memories with depths that are not powers of two into smaller
+    power-of-two memories.
+
+    This prevents toolchains from rounding up and wasting resources."""
+
+    def transform_fragment(self, i, f):
+        old_specials, f.specials = f.specials, set()
+
+        for old in old_specials:
+            if not isinstance(old, Memory):
+                f.specials.add(old)
+                continue
+            try:
+                log2_int(old.depth, need_pow2=True)
+                f.specials.add(old)
+            except ValueError:
+                new, glue = self._split_mem(old)
+                f.specials.update(new)
+                f.comb += glue
+
+    def _split_mem(self, mem):
+        depths = [1 << i for i in range(log2_int(mem.depth, need_pow2=False))
+                  if mem.depth & (1 << i)]
+        depths.reverse()
+        inits = None
+        if mem.init is not None:
+            inits = list(mem.init)
+        mems = []
+        for i, depth in enumerate(depths):
+            init = None
+            if inits is not None:
+                init = inits[:depth]
+                del inits[:depth]
+            name = "{}_part{}".format(mem.name_override, i)
+            mems.append(Memory(width=mem.width, depth=depth,
+                               init=init, name=name))
+        ports = []
+        comb = []
+        for port in mem.ports:
+            p, c = self._split_port(port, mems)
+            ports += p
+            comb += c
+        return mems + ports, comb
+
+    def _split_port(self, port, mems):
+        ports = [mem.get_port(write_capable=port.we is not None,
+                              async_read=port.async_read,
+                              has_re=port.re is not None,
+                              we_granularity=port.we_granularity,
+                              mode=port.mode,
+                              clock_domain=port.clock.cd)
+                 for mem in mems]
+
+        sel = Signal(max=len(ports), reset=len(ports) - 1)
+        comb = []
+        comb += reversed([If(~port.adr[len(p.adr)], sel.eq(i))
+                          for i, p in enumerate(ports)])
+        comb += [p.adr.eq(port.adr) for p in ports]
+        comb.append(port.dat_r.eq(Array([p.dat_r for p in ports])[sel]))
+        if port.we is not None:
+            comb.append(Array([p.we for p in ports])[sel].eq(port.we))
+            comb += [p.dat_w.eq(port.dat_w) for p in ports]
+        if port.re is not None:
+            raise NotImplementedError("memory port with read-enable")
+            comb += [p.re.eq(port.re) for p in ports]
+        return ports, comb
