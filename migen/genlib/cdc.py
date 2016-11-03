@@ -108,6 +108,7 @@ class BusSynchronizer(Module):
             ibuffer = Signal(width)
             obuffer = Signal(width)
             sync_i += If(self._pong.o, ibuffer.eq(self.i))
+            ibuffer.attr.add("no_retiming")
             self.specials += MultiReg(ibuffer, obuffer, odomain)
             sync_o += If(self._ping.o, self.o.eq(obuffer))
 
