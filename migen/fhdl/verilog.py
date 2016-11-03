@@ -296,9 +296,14 @@ def _printspecials(overrides, specials, ns, add_data_file):
     return r
 
 
+class DummyAttrTranslate:
+    def __getitem__(self, k):
+        return (k, "true")
+
+
 def convert(f, ios=None, name="top",
   special_overrides=dict(),
-  attr_translate=dict(),
+  attr_translate=DummyAttrTranslate(),
   create_clock_domains=True,
   display_run=False, asic_syntax=False):
     r = ConvOutput()
