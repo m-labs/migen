@@ -5,12 +5,10 @@ __all__ = ["log2_int", "bits_for", "value_bits_sign"]
 
 
 def log2_int(n, need_pow2=True):
-    l = 1
-    r = 0
-    while l < n:
-        l *= 2
-        r += 1
-    if need_pow2 and l != n:
+    if n == 0:
+        return 0
+    r = (n - 1).bit_length()
+    if need_pow2 and (1 << r) != n:
         raise ValueError("Not a power of 2")
     return r
 
