@@ -48,6 +48,8 @@ class FullMemoryWE(ModuleTransformer):
                 self.replacements[orig] = newmems
 
         f.specials = newspecials
+        for oldmem in self.replacements.keys():
+            f.specials -= set(oldmem.ports)
 
 
 class MemoryToArray(ModuleTransformer):
@@ -125,6 +127,7 @@ class SplitMemory(ModuleTransformer):
 
     def transform_fragment(self, i, f):
         old_specials, f.specials = f.specials, set()
+        old_ports = set()
 
         for old in old_specials:
             if not isinstance(old, Memory):
@@ -135,8 +138,11 @@ class SplitMemory(ModuleTransformer):
                 f.specials.add(old)
             except ValueError:
                 new, glue = self._split_mem(old)
+                old_ports |= set(old.ports)
                 f.specials.update(new)
                 f.comb += glue
+
+        f.specials -= old_ports
 
     def _split_mem(self, mem):
         depths = [1 << i for i in range(log2_int(mem.depth, need_pow2=False))
