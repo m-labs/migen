@@ -92,7 +92,7 @@ class LatticeIceStormToolchain:
     # platform.device should be of the form "ice40-{1k,8k}-{tq144, etc}""
     def build(self, platform, fragment, build_dir="build", build_name="top",
               run=True):
-        tools.mkdir_noerror(build_dir)
+        os.makedirs(build_dir, exist_ok=True)
         cwd = os.getcwd()
         os.chdir(build_dir)
 

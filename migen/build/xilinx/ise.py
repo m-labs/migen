@@ -159,7 +159,7 @@ class XilinxISEToolchain:
         ngdbuild_opt = self.ngdbuild_opt
         vns = None
 
-        tools.mkdir_noerror(build_dir)
+        os.makedirs(build_dir, exist_ok=True)
         cwd = os.getcwd()
         os.chdir(build_dir)
         try:

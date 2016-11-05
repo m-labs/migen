@@ -116,7 +116,7 @@ class AlteraQuartusToolchain:
     def build(self, platform, fragment, build_dir="build", build_name="top",
               toolchain_path="/opt/Altera", run=True):
         cwd = os.getcwd()
-        tools.mkdir_noerror(build_dir)
+        os.makedirs(build_dir, exist_ok=True)
         os.chdir(build_dir)
 
         if not isinstance(fragment, _Fragment):

@@ -141,7 +141,7 @@ class XilinxVivadoToolchain:
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
             toolchain_path="/opt/Xilinx/Vivado", source=True, run=True):
-        tools.mkdir_noerror(build_dir)
+        os.makedirs(build_dir, exist_ok=True)
         cwd = os.getcwd()
         os.chdir(build_dir)
 
