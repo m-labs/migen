@@ -137,11 +137,13 @@ class SplitMemory(ModuleTransformer):
                 log2_int(old.depth, need_pow2=True)
                 f.specials.add(old)
             except ValueError:
-                new, glue = self._split_mem(old)
+                new, comb, sync = self._split_mem(old)
                 old_ports |= set(old.ports)
                 f.specials.update(new)
-                f.comb += glue
-
+                f.comb += comb
+                for cd, sy in sync.items():
+                    s = f.sync.setdefault(cd, [])
+                    s += sy
         f.specials -= old_ports
 
     def _split_mem(self, mem):
@@ -162,11 +164,14 @@ class SplitMemory(ModuleTransformer):
                                init=init, name=name))
         ports = []
         comb = []
+        sync = {}
         for port in mem.ports:
-            p, c = self._split_port(port, mems)
+            p, c, s = self._split_port(port, mems)
             ports += p
             comb += c
-        return mems + ports, comb
+            sy = sync.setdefault(port.clock.cd, [])
+            sy += s
+        return mems + ports, comb, sync
 
     def _split_port(self, port, mems):
         ports = [mem.get_port(write_capable=port.we is not None,
@@ -178,15 +183,22 @@ class SplitMemory(ModuleTransformer):
                  for mem in mems]
 
         sel = Signal(max=len(ports), reset=len(ports) - 1)
-        comb = []
+        sel_r = Signal.like(sel)
+        eq = sel_r.eq(sel)
+        if port.re is not None:
+            eq = If(port.re, eq)
+        comb, sync = [], []
+        if port.async_read:
+            comb += [eq]
+        else:
+            sync += [eq]
         comb += reversed([If(~port.adr[len(p.adr)], sel.eq(i))
                           for i, p in enumerate(ports)])
         comb += [p.adr.eq(port.adr) for p in ports]
-        comb.append(port.dat_r.eq(Array([p.dat_r for p in ports])[sel]))
+        comb.append(port.dat_r.eq(Array([p.dat_r for p in ports])[sel_r]))
         if port.we is not None:
             comb.append(Array([p.we for p in ports])[sel].eq(port.we))
             comb += [p.dat_w.eq(port.dat_w) for p in ports]
         if port.re is not None:
-            raise NotImplementedError("memory port with read-enable")
             comb += [p.re.eq(port.re) for p in ports]
-        return ports, comb
+        return ports, comb, sync
