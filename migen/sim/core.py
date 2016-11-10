@@ -144,8 +144,8 @@ class Evaluator:
             v = self.eval(node.v, postcommit) & (2**nbits - 1)
             return sum(v << i*nbits for i in range(node.n))
         elif isinstance(node, _ArrayProxy):
-            return self.eval(node.choices[self.eval(node.key, postcommit)],
-                             postcommit)
+            idx = min(len(node.choices) - 1, self.eval(node.key, postcommit))
+            return self.eval(node.choices[idx], postcommit)
         elif isinstance(node, _MemoryLocation):
             array = self.replaced_memories[node.memory]
             return self.eval(array[self.eval(node.index, postcommit)], postcommit)
@@ -183,7 +183,8 @@ class Evaluator:
             full_value |= value << node.start
             self.assign(node.value, full_value)
         elif isinstance(node, _ArrayProxy):
-            self.assign(node.choices[self.eval(node.key)], value)
+            idx = min(len(node.choices) - 1, self.eval(node.key))
+            self.assign(node.choices[idx], value)
         elif isinstance(node, _MemoryLocation):
             array = self.replaced_memories[node.memory]
             self.assign(array[self.eval(node.index)], value)
