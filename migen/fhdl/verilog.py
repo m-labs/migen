@@ -168,7 +168,7 @@ def _list_comb_wires(f):
 def _printattr(sig, attr_translate):
     r = ""
     firsta = True
-    for attr in sig.attr:
+    for attr in sorted(sig.attr):
         if isinstance(attr, tuple):
             # platform-dependent attribute
             attr_name, attr_value = attr
