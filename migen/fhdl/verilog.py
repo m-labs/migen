@@ -235,15 +235,19 @@ def _printcomb(f, ns,
     r = ""
     if f.comb:
         if dummy_signal:
-            # Generate a dummy event to get the simulator
-            # to run the combinatorial process once at the beginning.
+            explanation = """
+// Adding a dummy event (using a dummy signal 'dummy_s') to get the simulator
+// to run the combinatorial process once at the beginning.
+"""
             syn_off = "// synthesis translate_off\n"
             syn_on = "// synthesis translate_on\n"
             dummy_s = Signal(name_override="dummy_s")
+            r += explanation
             r += syn_off
             r += "reg " + _printsig(ns, dummy_s) + ";\n"
             r += "initial " + ns.get_name(dummy_s) + " <= 1'd0;\n"
             r += syn_on
+            r += "\n"
 
         groups = group_by_targets(f.comb)
 
