@@ -334,6 +334,8 @@ class Signal(_Value):
                 self.nbits, self.signed = bits_sign
             else:
                 self.nbits, self.signed = bits_sign, False
+        if isinstance(reset, (bool, int)):
+            reset = Constant(reset, (self.nbits, self.signed))
         if not isinstance(self.nbits, int) or self.nbits <= 0:
             raise ValueError("Signal width must be a strictly positive integer")
         if attr is None:
