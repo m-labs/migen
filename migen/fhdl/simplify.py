@@ -108,7 +108,7 @@ class MemoryToArray(ModuleTransformer):
                             m = i*port.we_granularity
                             M = (i+1)*port.we_granularity
                             sync.append(If(port.we[i],
-                                        storage[port.adr][m:M].eq(port.dat_w)))
+                                        storage[port.adr][m:M].eq(port.dat_w[m:M])))
                     else:
                         sync.append(If(port.we,
                                        storage[port.adr].eq(port.dat_w)))
