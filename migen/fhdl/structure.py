@@ -304,6 +304,10 @@ class Signal(_Value):
         given value. When this `Signal` is unassigned in combinatorial
         context (due to conditional assignments not being taken),
         the `Signal` assumes its `reset` value. Defaults to 0.
+    reset_less : bool
+        If `True`, do not generate reset logic for this `Signal` in
+        synchronous statements. The `reset` value is only used as a
+        combinatorial default or as the initial value. Defaults to `False`.
     name_override : str or None
         Do not use the inferred name but the given one.
     min : int or None
@@ -316,7 +320,9 @@ class Signal(_Value):
     """
     _name_re = _re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
-    def __init__(self, bits_sign=None, name=None, variable=False, reset=0, name_override=None, min=None, max=None, related=None, attr=None):
+    def __init__(self, bits_sign=None, name=None, variable=False, reset=0,
+                 reset_less=False, name_override=None, min=None, max=None,
+                 related=None, attr=None):
         from migen.fhdl.bitcontainer import bits_for
 
         _Value.__init__(self)
@@ -351,6 +357,7 @@ class Signal(_Value):
 
         self.variable = variable  # deprecated
         self.reset = reset
+        self.reset_less = reset_less
         self.name_override = name_override
         self.backtrace = _tracer.trace_back(name)
         self.related = related
