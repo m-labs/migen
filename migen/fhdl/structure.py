@@ -1,5 +1,6 @@
 import builtins as _builtins
 import collections as _collections
+import re as _re
 
 from migen.fhdl import tracer as _tracer
 from migen.util.misc import flat_iteration as _flat_iteration
@@ -313,10 +314,17 @@ class Signal(_Value):
     related : Signal or None
     attr : set of synthesis attributes
     """
+    _name_re = _re.compile(r"^[a-zA-Z_]+$")
+
     def __init__(self, bits_sign=None, name=None, variable=False, reset=0, name_override=None, min=None, max=None, related=None, attr=None):
         from migen.fhdl.bitcontainer import bits_for
 
         _Value.__init__(self)
+
+        for n in [name, name_override]:
+            if n is not None and not self._name_re.match(n):
+                raise ValueError("Signal name {} is not a valid Python identifier"
+                                 .format(repr(n)))
 
         # determine number of bits and signedness
         if bits_sign is None:
@@ -532,7 +540,7 @@ class Case(_Statement):
         for k, v in cases.items():
             if isinstance(k, (bool, int)):
                 k = Constant(k)
-            if (not isinstance(k, Constant) 
+            if (not isinstance(k, Constant)
                     and not (isinstance(k, str) and k == "default")):
                 raise TypeError("Case object is not a Migen constant")
             if not isinstance(v, _collections.Iterable):

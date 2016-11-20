@@ -27,12 +27,12 @@ _io = [
     ("user_led", 9, Pins("L1"), IOStandard("3.3-V LVTTL")),
 
 
-    ("7seg", 0, Pins("U21 V21 W22 W21 Y22 Y21 AA22"), IOStandard("3.3-V LVTTL")),
-    ("7seg", 1, Pins("AA20 AB20 AA19 AA18 AB18 AA17 U22"), IOStandard("3.3-V LVTTL")),
-    ("7seg", 2, Pins("Y19 AB17 AA10 Y14 V14 AB22 AB21"), IOStandard("3.3-V LVTTL")),
-    ("7seg", 3, Pins("Y16 W16 Y17 V16 U17 V18 V19"), IOStandard("3.3-V LVTTL")),
-    ("7seg", 4, Pins("U20 Y20 V20 U16 U15 Y15 P9"), IOStandard("3.3-V LVTTL")),
-    ("7seg", 5, Pins("N9 M8 T14 P14 C1 C2 W19"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 0, Pins("U21 V21 W22 W21 Y22 Y21 AA22"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 1, Pins("AA20 AB20 AA19 AA18 AB18 AA17 U22"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 2, Pins("Y19 AB17 AA10 Y14 V14 AB22 AB21"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 3, Pins("Y16 W16 Y17 V16 U17 V18 V19"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 4, Pins("U20 Y20 V20 U16 U15 Y15 P9"), IOStandard("3.3-V LVTTL")),
+    ("seven_seg", 5, Pins("N9 M8 T14 P14 C1 C2 W19"), IOStandard("3.3-V LVTTL")),
 
 
     ("key", 0, Pins("U7"), IOStandard("3.3-V LVTTL")),
