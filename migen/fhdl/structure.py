@@ -314,7 +314,7 @@ class Signal(_Value):
     related : Signal or None
     attr : set of synthesis attributes
     """
-    _name_re = _re.compile(r"^[a-zA-Z_]+$")
+    _name_re = _re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
     def __init__(self, bits_sign=None, name=None, variable=False, reset=0, name_override=None, min=None, max=None, related=None, attr=None):
         from migen.fhdl.bitcontainer import bits_for
