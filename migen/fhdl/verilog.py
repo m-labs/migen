@@ -1,6 +1,7 @@
 from functools import partial
 from operator import itemgetter
 import collections
+import re
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment
@@ -31,6 +32,16 @@ _reserved_keywords = {
 }
 
 
+_name_re = re.compile("^[a-zA-Z_]")
+
+def _printname(ns, s):
+    n = ns.get_name(s)
+    if _name_re.match(n):
+        return n
+    else:
+        return "\\" + n + " "
+
+
 def _printsig(ns, s):
     if s.signed:
         n = "signed "
@@ -38,7 +49,7 @@ def _printsig(ns, s):
         n = ""
     if len(s) > 1:
         n += "[" + str(len(s)-1) + ":0] "
-    n += ns.get_name(s)
+    n += _printname(ns, s)
     return n
 
 
@@ -54,7 +65,7 @@ def _printexpr(ns, node):
     if isinstance(node, Constant):
         return _printconstant(node)
     elif isinstance(node, Signal):
-        return ns.get_name(node), node.signed
+        return _printname(ns, node), node.signed
     elif isinstance(node, _Operator):
         arity = len(node.operands)
         r1, s1 = _printexpr(ns, node.operands[0])
@@ -246,7 +257,7 @@ def _printcomb(f, ns,
             r += explanation
             r += syn_off
             r += "reg " + _printsig(ns, dummy_s) + ";\n"
-            r += "initial " + ns.get_name(dummy_s) + " <= 1'd0;\n"
+            r += "initial " + _printname(ns, dummy_s) + " <= 1'd0;\n"
             r += syn_on
             r += "\n"
 
@@ -267,15 +278,15 @@ def _printcomb(f, ns,
                     r += "\t$display(\"Running comb block #" + str(n) + "\");\n"
                 if blocking_assign:
                     for t in g[0]:
-                        r += "\t" + ns.get_name(t) + " = " + _printexpr(ns, t.reset)[0] + ";\n"
+                        r += "\t" + _printname(ns, t) + " = " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_BLOCKING, 1, g[1])
                 else:
                     for t in g[0]:
-                        r += "\t" + ns.get_name(t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
+                        r += "\t" + _printname(ns, t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_NONBLOCKING, 1, g[1])
                 if dummy_signal:
                     r += syn_off
-                    r += "\t" + ns.get_name(dummy_d) + " <= " + ns.get_name(dummy_s) + ";\n"
+                    r += "\t" + _printname(ns, dummy_d) + " <= " + _printname(ns, dummy_s) + ";\n"
                     r += syn_on
                 r += "end\n"
     r += "\n"
@@ -285,7 +296,7 @@ def _printcomb(f, ns,
 def _printsync(f, ns):
     r = ""
     for k, v in sorted(f.sync.items(), key=itemgetter(0)):
-        r += "always @(posedge " + ns.get_name(f.clock_domains[k].clk) + ") begin\n"
+        r += "always @(posedge " + _printname(ns, f.clock_domains[k].clk) + ") begin\n"
         r += _printnode(ns, _AT_SIGNAL, 1, v)
         r += "end\n\n"
     return r
