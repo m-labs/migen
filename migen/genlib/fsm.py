@@ -52,10 +52,14 @@ class _LowerNext(NodeTransformer):
 
 
 class FSM(Module):
-    def __init__(self, reset_state=None):
+    def __init__(self, reset_state=None, clock=None):
         self.actions = OrderedDict()
         self.state_aliases = dict()
         self.reset_state = reset_state
+        if clock:
+            self.fsmsync = clock
+        else:
+            self.fsmsync = self.sync
 
         self.before_entering_signals = OrderedDict()
         self.before_leaving_signals = OrderedDict()
@@ -109,12 +113,12 @@ class FSM(Module):
 
     def after_entering(self, state):
         signal = self._get_signal(self.after_entering_signals, state)
-        self.sync += signal.eq(self.before_entering(state))
+        self.fsmsync += signal.eq(self.before_entering(state))
         return signal
 
     def after_leaving(self, state):
         signal = self._get_signal(self.after_leaving_signals, state)
-        self.sync += signal.eq(self.before_leaving(state))
+        self.fsmsync += signal.eq(self.before_leaving(state))
         return signal
 
     def do_finalize(self):
@@ -129,9 +133,9 @@ class FSM(Module):
             self.next_state.eq(self.state),
             Case(self.state, cases).makedefault(self.encoding[self.reset_state])
         ]
-        self.sync += self.state.eq(self.next_state)
+        self.fsmsync += self.state.eq(self.next_state)
         for register, (next_value_ce, next_value) in ln.registers.items():
-            self.sync += If(next_value_ce, register.eq(next_value))
+            self.fsmsync += If(next_value_ce, register.eq(next_value))
 
         # drive entering/leaving signals
         for state, signal in self.before_leaving_signals.items():
