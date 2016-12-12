@@ -12,6 +12,8 @@ from migen.fhdl.tools import (list_targets, list_signals,
                               insert_resets, lower_specials)
 from migen.fhdl.simplify import MemoryToArray
 from migen.fhdl.specials import _MemoryLocation
+from migen.fhdl.module import Module
+from migen.genlib.resetsync import AsyncResetSynchronizer
 from migen.sim.vcd import VCDWriter, DummyVCDWriter
 
 
@@ -217,6 +219,20 @@ class Evaluator:
                 raise NotImplementedError
 
 
+class DummyAsyncResetSynchronizerImpl(Module):
+    def __init__(self, cd, async_reset):
+        # TODO: asynchronous set
+        # This naive implementation has a minimum reset pulse
+        # width requirement of one clock period in cd.
+        self.comb += cd.rst.eq(async_reset)
+
+
+class DummyAsyncResetSynchronizer:
+    @staticmethod
+    def lower(dr):
+        return DummyAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
+
+
 # TODO: instances via Iverilog/VPI
 class Simulator:
     def __init__(self, fragment_or_module, generators, clocks={"sys": 10}, vcd_name=None,
@@ -229,7 +245,9 @@ class Simulator:
         mta = MemoryToArray()
         mta.transform_fragment(None, self.fragment)
 
-        fs, lowered = lower_specials(overrides=special_overrides, specials=self.fragment.specials)
+        overrides = {AsyncResetSynchronizer: DummyAsyncResetSynchronizer}
+        overrides.update(special_overrides)
+        fs, lowered = lower_specials(overrides=overrides, specials=self.fragment.specials)
         self.fragment += fs
         self.fragment.specials -= lowered
         if self.fragment.specials:
