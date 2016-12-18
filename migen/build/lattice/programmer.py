@@ -62,3 +62,14 @@ class IceStormProgrammer(GenericProgrammer):
 
     def load_bitstream(self, bitstream_file):
         subprocess.call(["iceprog", "-S", bitstream_file])
+
+
+class IceBurnProgrammer(GenericProgrammer):
+    def __init__(self, iceburn_path):
+        GenericProgrammer.__init__(self)
+        self.iceburn = iceburn_path
+
+    needs_bitreverse = False
+
+    def load_bitstream(self, bitstream_file):
+        subprocess.call([self.iceburn, "-evw", bitstream_file])

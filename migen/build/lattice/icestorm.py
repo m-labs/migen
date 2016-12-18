@@ -130,7 +130,7 @@ class LatticeIceStormToolchain:
             raise ValueError("Unknown device family")
         if size not in ["1k", "8k"]:
             raise ValueError("Invalid device size")
-        if package not in ["tq144", "ct256"]:
+        if package not in ["tq144", "ct256", "vq100"]:
             raise ValueError("Invalid device package")
         return (family, size, package)
 
