@@ -96,7 +96,11 @@ class XilinxVivadoToolchain:
 
         tcl.append("read_xdc {}.xdc".format(build_name))
         tcl.extend(c.format(build_name=build_name) for c in self.pre_synthesis_commands)
-        tcl.append("synth_design -top top -part {} -include_dirs {{{}}}".format(platform.device, " ".join(platform.verilog_include_paths)))
+        # "-include_dirs {}" crashes Vivado 2016.4
+        if platform.verilog_include_paths:
+            tcl.append("synth_design -top top -part {} -include_dirs {{{}}}".format(platform.device, " ".join(platform.verilog_include_paths)))
+        else:
+            tcl.append("synth_design -top top -part {}".format(platform.device))
         tcl.append("report_utilization -hierarchical -file {}_utilization_hierarchical_synth.rpt".format(build_name))
         tcl.append("report_utilization -file {}_utilization_synth.rpt".format(build_name))
         tcl.append("place_design")
