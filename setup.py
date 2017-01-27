@@ -15,7 +15,7 @@ requirements = [
 
 setup(
     name="migen",
-    version="0.4",
+    version="0.5.dev",
     description="Python toolbox for building complex digital hardware",
     long_description=open("README.md").read(),
     author="Sebastien Bourdeauducq",
