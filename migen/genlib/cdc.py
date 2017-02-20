@@ -6,6 +6,7 @@ from migen.fhdl.structure import *
 from migen.fhdl.module import Module
 from migen.fhdl.specials import Special, Memory
 from migen.fhdl.bitcontainer import value_bits_sign
+from migen.fhdl.decorators import ClockDomainsRenamer
 from migen.genlib.misc import WaitTimer
 from migen.genlib.resetsync import AsyncResetSynchronizer
 
@@ -98,7 +99,8 @@ class BusSynchronizer(Module):
             sync_i += starter.eq(0)
             self.submodules._ping = PulseSynchronizer(idomain, odomain)
             self.submodules._pong = PulseSynchronizer(odomain, idomain)
-            self.submodules._timeout = WaitTimer(timeout)
+            self.submodules._timeout = ClockDomainsRenamer(idomain)(
+                WaitTimer(timeout))
             self.comb += [
                 self._timeout.wait.eq(~self._ping.i),
                 self._ping.i.eq(starter | self._pong.o | self._timeout.done),
