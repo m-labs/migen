@@ -30,7 +30,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.autosummary',
-    'numpydoc',  # to preprocess docstrings
+    'sphinx.ext.napoleon'  # to preprocess docstrings (in numpy and Google format)
     ]
 
 # Add any paths that contain templates here, relative to this directory.

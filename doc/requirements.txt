@@ -1,6 +1,5 @@
 Pygments
 docutils
-numpydoc
 setuptools
 sphinx
 sphinx_rtd_theme
