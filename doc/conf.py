@@ -17,6 +17,7 @@
 #sys.path.insert(0, os.path.abspath('.'))
 
 import re
+import os, sys
 
 import sphinx_rtd_theme
 
@@ -109,7 +110,21 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+
+# Enable github links when not on readthedocs
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+if not on_rtd:
+    html_theme_options = {
+        "canonical_url": "https://m-labs.hk/migen/manual/",
+    }
+
+    html_context = {
+        "display_github": True, # Integrate GitHub
+        "github_user": "m-labs", # Username
+        "github_repo": "migen", # Repo name
+        "github_version": "master", # Version
+        "conf_py_path": "/doc/",
+    }
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
