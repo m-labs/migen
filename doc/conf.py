@@ -223,3 +223,67 @@ man_pages = [
     ('index', 'migen', u'Migen manual',
      [u'Sebastien Bourdeauducq'], 1)
 ]
+
+
+# -- Options for links to the code ---------------------------------------------
+# Taken from numpy - https://github.com/numpy/numpy/blob/master/doc/source/conf.py#L273
+import inspect
+from os.path import relpath, dirname
+
+for name in ['sphinx.ext.linkcode', 'numpydoc.linkcode']:
+    try:
+        __import__(name)
+        extensions.append(name)
+        break
+    except ImportError:
+        pass
+else:
+    print("NOTE: linkcode extension not found -- no links to source generated")
+
+
+def linkcode_resolve(domain, info):
+    """
+    Determine the URL corresponding to Python object
+    """
+    if domain != 'py':
+        return None
+
+    modname = info['module']
+    fullname = info['fullname']
+
+    submod = sys.modules.get(modname)
+    if submod is None:
+        return None
+
+    obj = submod
+    for part in fullname.split('.'):
+        try:
+            obj = getattr(obj, part)
+        except:
+            return None
+
+    try:
+        fn = inspect.getsourcefile(obj)
+    except:
+        fn = None
+    if not fn:
+        return None
+
+    try:
+        source, lineno = inspect.getsourcelines(obj)
+    except:
+        lineno = None
+
+    if lineno:
+        linespec = "#L%d-L%d" % (lineno, lineno + len(source) - 1)
+    else:
+        linespec = ""
+
+    fn = relpath(fn, start=dirname(numpy.__file__))
+
+    if 'dev' in numpy.__version__:
+        return "http://github.com/m-labs/migen/blob/master/migen/%s%s" % (
+           fn, linespec)
+    else:
+        return "http://github.com/m-labs/migen/blob/v%s/migen/%s%s" % (
+           numpy.__version__, fn, linespec)
