@@ -28,7 +28,7 @@ written in Python.
 
 See the doc/ folder for more technical information.
 
-Migen is designed for Python 3.3. Note that Migen is **not** spelled MiGen.
+Migen is designed for Python 3.5. Note that Migen is **not** spelled MiGen.
 
 #### Quick Links
 
