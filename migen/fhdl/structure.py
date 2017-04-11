@@ -695,6 +695,15 @@ class _ClockDomainList(list):
         else:
             return list.__getitem__(self, key)
 
+    def __contains__(self, cd_or_name):
+        if isinstance(cd_or_name, str):
+            for cd in self:
+                if cd.name == cd_or_name:
+                    return True
+            return False
+        else:
+            return list.__contains__(self, cd_or_name)
+
 
 (SPECIAL_INPUT, SPECIAL_OUTPUT, SPECIAL_INOUT) = range(3)
 
