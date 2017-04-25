@@ -200,7 +200,7 @@ class ElasticBuffer(Module):
 
 def lcm(a, b):
     """Compute the lowest common multiple of a and b"""
-    return int(a * b / gcd(a, b))
+    return (a*b)//gcd(a, b)
 
 
 class Gearbox(Module):
