@@ -126,6 +126,13 @@ Case
 
 The ``Case`` object constructor takes as first parameter the expression to be tested, and a dictionary whose keys are the values to be matched, and values the statements to be executed in the case of a match. The special value ``"default"`` can be used as match value, which means the statements should be executed whenever there is no other match.
 
+Example: ::
+
+  mux_dict = { 'default' : mux_out.eq(0) }
+  for x in range(len(mux_in)):
+      mux_dict[x] = mux_out.eq(mux_in[x])
+  self.comb += Case(mux_sel, mux_dict)
+
 Arrays
 ======
 
