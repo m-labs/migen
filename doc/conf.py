@@ -316,4 +316,4 @@ def linkcode_resolve(domain, info):
            fn, linespec)
     else:
         return "http://github.com/m-labs/migen/blob/%s/migen/%s%s" % (
-           migen.__version__, fn, linespec)
+           migen_version, fn, linespec)
