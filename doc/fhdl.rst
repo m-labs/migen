@@ -359,6 +359,12 @@ The clock domain management mechanism explained above happens during finalizatio
 Conversion for synthesis
 ************************
 
-Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``migen.fhdl.verilog`` module.
+Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``migen.fhdl.verilog`` module:
+
+  # define FHDL module MyDesign here
+
+  if __name__ == "__main__":
+    from migen.fhdl.verilog import convert
+    convert(MyDesign()).write("my_design.v")
 
 The ``migen.build`` component provides scripts to interface third-party FPGA tools (from Xilinx, Altera and Lattice) to Migen, and a database of boards for the easy deployment of designs.
