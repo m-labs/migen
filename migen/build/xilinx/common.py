@@ -83,6 +83,7 @@ class XilinxAsyncResetSynchronizerImpl(Module):
             Instance("FDPE", p_INIT=1, i_D=rst1, i_PRE=async_reset,
                 i_CE=1, i_C=cd.clk, o_Q=cd.rst)
         ]
+        rst1.attr.add("asr_false_path")
         rst1.attr.add("async_reg")
         cd.rst.attr.add("async_reg")
 

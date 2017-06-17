@@ -75,6 +75,7 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
+        "asr_false_path": ("asr_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
 
@@ -144,6 +145,12 @@ class XilinxVivadoToolchain:
         del self.clocks
         del self.false_paths
 
+    def _constrain(self, platform):
+        platform.add_platform_command(
+            "set_false_path -to [get_cells -of_objects "
+            "[get_nets -hier -filter {{asr_false_path==true}}]]"
+        )
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
             toolchain_path="/opt/Xilinx/Vivado", source=True, run=True):
         os.makedirs(build_dir, exist_ok=True)
@@ -154,6 +161,7 @@ class XilinxVivadoToolchain:
             fragment = fragment.get_fragment()
         platform.finalize(fragment)
         self._convert_clocks(platform)
+        self._constrain(platform)
         v_output = platform.get_verilog(fragment)
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
         v_file = build_name + ".v"
