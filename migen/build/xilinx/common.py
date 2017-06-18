@@ -75,19 +75,18 @@ class XilinxMultiReg:
 
 
 class XilinxAsyncResetSynchronizerImpl(Module):
-    def __init__(self, cd, reset_in):
-        rst_async = Signal()
+    def __init__(self, cd, async_reset):
+        if not hasattr(async_reset, "attr"):
+            i, async_reset = async_reset, Signal()
+            self.comb += async_reset.eq(i)
         rst_meta = Signal()
         self.specials += [
-            Instance("FDPE", p_INIT=1, i_D=0, i_PRE=rst_async,
+            Instance("FDPE", p_INIT=1, i_D=0, i_PRE=async_reset,
                 i_CE=1, i_C=cd.clk, o_Q=rst_meta),
-            Instance("FDPE", p_INIT=1, i_D=rst_meta, i_PRE=rst_async,
+            Instance("FDPE", p_INIT=1, i_D=rst_meta, i_PRE=async_reset,
                 i_CE=1, i_C=cd.clk, o_Q=cd.rst)
         ]
-        self.comb += [
-            rst_async.eq(reset_in)
-        ]
-        rst_async.attr.add("ars_false_path")
+        async_reset.attr.add("ars_false_path")
         rst_meta.attr.add("ars_meta")
         rst_meta.attr.add("async_reg")
         cd.rst.attr.add("async_reg")
