@@ -295,7 +295,9 @@ def _printspecials(overrides, specials, ns, add_data_file, attr_translate):
     r = ""
     for special in sorted(specials, key=lambda x: x.duid):
         if hasattr(special, "attr"):
-          r += _printattr(special.attr, attr_translate)
+            attr = _printattr(special.attr, attr_translate)
+            if attr:
+                r += attr + " "
         pr = call_special_classmethod(overrides, special, "emit_verilog", ns, add_data_file)
         if pr is None:
             raise NotImplementedError("Special " + str(special) + " failed to implement emit_verilog")
