@@ -131,7 +131,6 @@ class XilinxISEToolchain:
         "async_reg": None,
         "ars_false_path": None,
         "ars_meta": None,
-        "ars_async_reg": None,
         "no_shreg_extract": ("shreg_extract", "no")
     }
 
