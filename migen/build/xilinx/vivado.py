@@ -160,6 +160,12 @@ class XilinxVivadoToolchain:
             "set_max_delay 2 -quiet -through "
             "[get_nets -hier -filter {{asr_meta==true}}]"
         )
+        # copy async_reg from wires to cell inputs
+        platform.add_platform_command(
+            "set_property -quiet ASYNC_REG 1 [get_cells -of [get_pins -of "
+            "[get_nets -hier -filter {{async_reg==true}}] -filter "
+            "{{DIRECTION==IN}}]]"
+        )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
             toolchain_path="/opt/Xilinx/Vivado", source=True, run=True):
