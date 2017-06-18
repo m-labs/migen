@@ -77,6 +77,7 @@ class XilinxVivadoToolchain:
         "async_reg": ("async_reg", "true"),
         "ars_meta": ("ars_meta", "true"),  # user-defined attribute
         "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
+        "ars_async_reg": ("ars_async_reg", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
 
@@ -163,7 +164,7 @@ class XilinxVivadoToolchain:
         # copy async_reg from wires to driving cells
         platform.add_platform_command(
             "set_property -quiet ASYNC_REG 1 [get_cells -of [get_pins -of "
-            "[get_nets -hier -filter {{async_reg==true}}] -filter "
+            "[get_nets -hier -filter {{ars_async_reg==true}}] -filter "
             "{{DIRECTION==OUT}}]]"
         )
 

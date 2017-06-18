@@ -88,8 +88,8 @@ class XilinxAsyncResetSynchronizerImpl(Module):
         ]
         async_reset.attr.add("ars_false_path")
         rst_meta.attr.add("ars_meta")
-        rst_meta.attr.add("async_reg")
-        cd.rst.attr.add("async_reg")
+        rst_meta.attr.add("ars_async_reg")
+        cd.rst.attr.add("ars_async_reg")
 
 
 class XilinxAsyncResetSynchronizer:
