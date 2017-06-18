@@ -87,8 +87,8 @@ class XilinxAsyncResetSynchronizerImpl(Module):
         self.comb += [
             rst_async.eq(reset_in)
         ]
-        rst_async.attr.add("asr_false_path")
-        rst_meta.attr.add("asr_meta")
+        rst_async.attr.add("ars_false_path")
+        rst_meta.attr.add("ars_meta")
         rst_meta.attr.add("async_reg")
         cd.rst.attr.add("async_reg")
 

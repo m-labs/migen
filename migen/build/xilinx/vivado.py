@@ -75,8 +75,8 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
-        "asr_meta": ("asr_meta", "true"),  # user-defined attribute
-        "asr_false_path": ("asr_false_path", "true"),  # user-defined attribute
+        "ars_meta": ("ars_meta", "true"),  # user-defined attribute
+        "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
 
@@ -152,13 +152,13 @@ class XilinxVivadoToolchain:
         # path
         platform.add_platform_command(
             "set_false_path -quiet -through "
-            "[get_nets -hier -filter {{asr_false_path==true}}]"
+            "[get_nets -hier -filter {{ars_false_path==true}}]"
         )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
             "set_max_delay 2 -quiet -through "
-            "[get_nets -hier -filter {{asr_meta==true}}]"
+            "[get_nets -hier -filter {{ars_meta==true}}]"
         )
         # copy async_reg from wires to cell inputs
         platform.add_platform_command(
