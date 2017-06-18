@@ -89,7 +89,8 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
-        tcl.append("create_project -in_memory -part {}".format(platform.device))
+        tcl.append("create_project -force -part {} {}".format(
+            platform.device, build_name))
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
