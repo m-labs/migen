@@ -92,6 +92,8 @@ class XilinxVivadoToolchain:
         tcl = []
         tcl.append("create_project -force -part {} {}".format(
             platform.device, build_name))
+        tcl.append("create_property ars_meta net")
+        tcl.append("create_property ars_false_path net")
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
