@@ -75,6 +75,8 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
+        "ars_meta": ("ars_meta", "true"),  # user-defined attribute
+        "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
 
@@ -88,6 +90,10 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
+        tcl.append("create_project -force -part {} {}".format(
+            platform.device, build_name))
+        tcl.append("create_property ars_meta net")
+        tcl.append("create_property ars_false_path net")
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
@@ -143,6 +149,20 @@ class XilinxVivadoToolchain:
         del self.clocks
         del self.false_paths
 
+    def _constrain(self, platform):
+        # The asychronous reset input to the AsyncResetSynchronizer is a false
+        # path
+        platform.add_platform_command(
+            "set_false_path -quiet -through "
+            "[get_nets -hier -filter {{ars_false_path==true}}]"
+        )
+        # clock_period-2ns to resolve metastability on the wire between the
+        # AsyncResetSynchronizer FFs
+        platform.add_platform_command(
+            "set_max_delay 2 -quiet -through "
+            "[get_nets -hier -filter {{ars_meta==true}}]"
+        )
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
             toolchain_path="/opt/Xilinx/Vivado", source=True, run=True):
         os.makedirs(build_dir, exist_ok=True)
@@ -153,6 +173,7 @@ class XilinxVivadoToolchain:
             fragment = fragment.get_fragment()
         platform.finalize(fragment)
         self._convert_clocks(platform)
+        self._constrain(platform)
         v_output = platform.get_verilog(fragment)
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
         v_file = build_name + ".v"
