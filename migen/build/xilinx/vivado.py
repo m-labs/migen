@@ -75,6 +75,7 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
+        "asr_meta": ("asr_meta", "true"),  # user-defined attribute
         "asr_false_path": ("asr_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
@@ -147,9 +148,17 @@ class XilinxVivadoToolchain:
         del self.false_paths
 
     def _constrain(self, platform):
+        # The asychronous reset input to the AsyncResetSynchronizer is a false
+        # path
         platform.add_platform_command(
-            "set_false_path -to [get_cells -of_objects "
-            "[get_nets -hier -filter {{asr_false_path==true}}]]"
+            "set_false_path -quiet -through "
+            "[get_nets -hier -filter {{asr_false_path==true}}]"
+        )
+        # clock_period-2ns to resolve metastability on the wire between the
+        # AsyncResetSynchronizer FFs
+        platform.add_platform_command(
+            "set_max_delay 2 -quiet -through "
+            "[get_nets -hier -filter {{asr_meta==true}}]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
