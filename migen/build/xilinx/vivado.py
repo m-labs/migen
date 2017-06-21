@@ -75,7 +75,7 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
-        "ars_meta": ("ars_meta", "true"),  # user-defined attribute
+        "ars_ff": ("ars_ff", "true"),  # user-defined attribute
         "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
@@ -92,7 +92,7 @@ class XilinxVivadoToolchain:
         tcl = []
         tcl.append("create_project -force -part {} {}".format(
             platform.device, build_name))
-        tcl.append("create_property ars_meta net")
+        tcl.append("create_property ars_ff cell")
         tcl.append("create_property ars_false_path net")
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
@@ -153,14 +153,16 @@ class XilinxVivadoToolchain:
         # The asychronous reset input to the AsyncResetSynchronizer is a false
         # path
         platform.add_platform_command(
-            "set_false_path -quiet -through "
-            "[get_nets -hier -filter {{ars_false_path==true}}]"
+            "set_false_path -quiet "
+            "-through [get_nets -hier -filter {{ars_false_path==true}}] "
+            "-to [get_cells -hier -filter {{ars_ff==true}}]"
         )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
-            "set_max_delay 2 -quiet -through "
-            "[get_nets -hier -filter {{ars_meta==true}}]"
+            "set_max_delay 2 -quiet "
+            "-from [get_cells -hier -filter {{ars_ff==true}}] "
+            "-to [get_cells -hier -filter {{ars_ff==true}}]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",

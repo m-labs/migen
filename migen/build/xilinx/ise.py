@@ -129,7 +129,7 @@ class XilinxISEToolchain:
         "keep": ("keep", "true"),
         "no_retiming": ("register_balancing", "no"),
         "async_reg": None,
-        "ars_false_path": None,
+        "ars_ff": None,
         "ars_meta": None,
         "no_shreg_extract": ("shreg_extract", "no")
     }
