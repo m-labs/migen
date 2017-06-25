@@ -90,8 +90,6 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
-        tcl.append("create_project -force -part {} {}".format(
-            platform.device, build_name))
         tcl.append("create_property ars_ff cell")
         tcl.append("create_property ars_false_path net")
         for filename, language, library in sources:
