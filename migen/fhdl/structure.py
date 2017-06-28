@@ -384,7 +384,7 @@ class Signal(_Value):
         """
         from migen.fhdl.bitcontainer import value_bits_sign
         kw = dict(bits_sign=value_bits_sign(other), variable=other.variable,
-                reset=other.reset, reset_less=other.reset_less,
+                reset=other.reset.value, reset_less=other.reset_less,
                 related=other.related, attr=set(other.attr))
         kw.update(kwargs)
         return cls(**kw)
