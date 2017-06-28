@@ -387,7 +387,7 @@ class Signal(_Value):
                 reset=other.reset, reset_less=other.reset_less,
                 related=other.related, attr=set(other.attr))
         kw.update(kwargs)
-        return cls(**kwargs)
+        return cls(**kw)
 
     def __hash__(self):
         return self.duid
