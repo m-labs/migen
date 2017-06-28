@@ -383,7 +383,11 @@ class Signal(_Value):
         See `migen.fhdl.bitcontainer.value_bits_sign` for details.
         """
         from migen.fhdl.bitcontainer import value_bits_sign
-        return cls(bits_sign=value_bits_sign(other), **kwargs)
+        kw = dict(bits_sign=value_bits_sign(other), variable=other.variable,
+                reset=other.reset, reset_less=other.reset_less,
+                related=other.related, attr=set(other.attr))
+        kw.update(kwargs)
+        return cls(**kwargs)
 
     def __hash__(self):
         return self.duid
