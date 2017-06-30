@@ -120,7 +120,7 @@ class BusSynchronizer(Module):
 class GrayCounter(Module):
     def __init__(self, width):
         self.ce = Signal()
-        self.q = Signal(width, reset_less=True)
+        self.q = Signal(width)
         self.q_next = Signal(width)
         self.q_binary = Signal(width)
         self.q_next_binary = Signal(width)
