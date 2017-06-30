@@ -75,7 +75,8 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
-        "ars_ff": ("ars_ff", "true"),  # user-defined attribute
+        "ars_ff1": ("ars_ff1", "true"),  # user-defined attribute
+        "ars_ff2": ("ars_ff2", "true"),  # user-defined attribute
         "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
@@ -90,8 +91,9 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
-        tcl.append("create_property ars_ff cell")
-        tcl.append("create_property ars_false_path net")
+        tcl.append("create_property -type bool ars_ff1 cell")
+        tcl.append("create_property -type bool ars_ff2 cell")
+        tcl.append("create_property -type bool ars_false_path net")
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
@@ -157,15 +159,15 @@ class XilinxVivadoToolchain:
         # path
         platform.add_platform_command(
             "set_false_path -quiet "
-            "-through [get_nets -hier -filter {{ars_false_path==true}}] "
-            "-to [get_cells -hier -filter {{ars_ff==true}}]"
+            "-through [get_nets -hier -filter ars_false_path] "
+            "-to [get_cells -hier -filter {{ars_ff1 || ars_ff2}}]"
         )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
             "set_max_delay 2 -quiet "
-            "-from [get_cells -hier -filter {{ars_ff==true}}] "
-            "-to [get_cells -hier -filter {{ars_ff==true}}]"
+            "-from [get_cells -hier -filter ars_ff1] "
+            "-to [get_cells -hier -filter ars_ff2]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
