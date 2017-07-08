@@ -74,7 +74,7 @@ _io = [
         Subsignal("dat", Pins("AC20 AA23 AA22 AC21")),
         IOStandard("LVCMOS25")),
 
-    ("sdcard_spi", 0,
+    ("mmc_spi", 0,
         Subsignal("miso", Pins("AC20")),
         Subsignal("clk", Pins("AB23")),
         Subsignal("mosi", Pins("AB22")),
