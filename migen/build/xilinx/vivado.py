@@ -93,6 +93,7 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
+        tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
         tcl.append("create_property -type bool mr_ff cell")
         tcl.append("create_property -type bool mr_false_path net")
         tcl.append("create_property -type bool ars_ff1 cell")
