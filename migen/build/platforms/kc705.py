@@ -75,7 +75,7 @@ _io = [
         IOStandard("LVCMOS25")),
 
     ("mmc_spi", 0,
-        Subsignal("miso", Pins("AC20")),
+        Subsignal("miso", Pins("AC20"), Misc("PULLUP")),
         Subsignal("clk", Pins("AB23")),
         Subsignal("mosi", Pins("AB22")),
         Subsignal("cs_n", Pins("AC21")),
