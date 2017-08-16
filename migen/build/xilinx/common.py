@@ -161,3 +161,41 @@ class XilinxDDROutputS7:
 xilinx_s7_special_overrides = {
     DDROutput:              XilinxDDROutputS7
 }
+
+
+class XilinxDDROutputImplKU(Module):
+    def __init__(self, i1, i2, o, clk):
+        self.specials += Instance("ODDRE1",
+                i_C=clk, i_SR=0,
+                i_D1=i1, i_D2=i2, o_Q=o,
+        )
+
+
+class XilinxDDROutputKU:
+    @staticmethod
+    def lower(dr):
+        return XilinxDDROutputImplS7(dr.i1, dr.i2, dr.o, dr.clk)
+
+
+class XilinxDDRInputImplKU(Module):
+    def __init__(self, i, o1, o2, clk):
+        self.specials += Instance("IDDRE1",
+            p_DDR_CLK_EDGE="SAME_EDGE_PIPELINED",
+            p_IS_C_INVERTED=0,
+            i_d=i,
+            o_q1=o1, o_q2=o2,
+            i_c=clk, i_cb=~clk,
+            i_r=0
+        )
+
+
+class XilinxDDRInputKU:
+    @staticmethod
+    def lower(dr):
+        return XilinxDDRInputImplS7(dr.i, dr.o1, dr.o2, dr.clk)
+
+
+xilinx_ku_special_overrides = {
+    DDROutput:              XilinxDDROutputKU,
+    DDRInput:               XilinxDDRInputKU
+}
