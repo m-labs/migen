@@ -119,7 +119,15 @@ class XilinxDifferentialOutput:
         return XilinxDifferentialOutputImpl(dr.i, dr.o_p, dr.o_n)
 
 
-class XilinxDDROutputImpl(Module):
+xilinx_special_overrides = {
+    MultiReg:               XilinxMultiReg,
+    AsyncResetSynchronizer: XilinxAsyncResetSynchronizer,
+    DifferentialInput:      XilinxDifferentialInput,
+    DifferentialOutput:     XilinxDifferentialOutput
+}
+
+
+class XilinxDDROutputImplS6(Module):
     def __init__(self, i1, i2, o, clk):
         self.specials += Instance("ODDR2",
                 p_DDR_ALIGNMENT="NONE", p_INIT=0, p_SRTYPE="SYNC",
@@ -128,18 +136,14 @@ class XilinxDDROutputImpl(Module):
         )
 
 
-class XilinxDDROutput:
+class XilinxDDROutputS6:
     @staticmethod
     def lower(dr):
-        return XilinxDDROutputImpl(dr.i1, dr.i2, dr.o, dr.clk)
+        return XilinxDDROutputImplS6(dr.i1, dr.i2, dr.o, dr.clk)
 
 
-xilinx_special_overrides = {
-    MultiReg:               XilinxMultiReg,
-    AsyncResetSynchronizer: XilinxAsyncResetSynchronizer,
-    DifferentialInput:      XilinxDifferentialInput,
-    DifferentialOutput:     XilinxDifferentialOutput,
-    DDROutput:              XilinxDDROutput
+xilinx_s6_special_overrides = {
+    DDROutput:              XilinxDDROutputS6
 }
 
 
