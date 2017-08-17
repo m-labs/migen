@@ -111,3 +111,14 @@ class Platform(XilinxPlatform):
 
     def __init__(self):
         XilinxPlatform.__init__(self, "xcku040-ffva1156-1-c", _io, toolchain="vivado")
+
+    def do_finalize(self, fragment):
+        XilinxPlatform.do_finalize(self, fragment)
+        try:
+            self.add_period_constraint(self.lookup_request("eth_clocks").rx, 8.0)
+        except ConstraintError:
+            pass
+        try:
+            self.add_period_constraint(self.lookup_request("eth_clocks").tx, 8.0)
+        except ConstraintError:
+            pass
