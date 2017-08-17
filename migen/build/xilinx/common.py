@@ -194,7 +194,7 @@ class XilinxDDROutputImplKU(Module):
 class XilinxDDROutputKU:
     @staticmethod
     def lower(dr):
-        return XilinxDDROutputImplS7(dr.i1, dr.i2, dr.o, dr.clk)
+        return XilinxDDROutputImplKU(dr.i1, dr.i2, dr.o, dr.clk)
 
 
 class XilinxDDRInputImplKU(Module):
@@ -212,7 +212,7 @@ class XilinxDDRInputImplKU(Module):
 class XilinxDDRInputKU:
     @staticmethod
     def lower(dr):
-        return XilinxDDRInputImplS7(dr.i, dr.o1, dr.o2, dr.clk)
+        return XilinxDDRInputImplKU(dr.i, dr.o1, dr.o2, dr.clk)
 
 
 xilinx_ku_special_overrides = {
