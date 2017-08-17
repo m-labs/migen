@@ -186,6 +186,7 @@ xilinx_s7_special_overrides = {
 class XilinxDDROutputImplKU(Module):
     def __init__(self, i1, i2, o, clk):
         self.specials += Instance("ODDRE1",
+                p_SRTYPE="ASYNC",
                 i_C=clk, i_SR=0,
                 i_D1=i1, i_D2=i2, o_Q=o,
         )
@@ -200,6 +201,7 @@ class XilinxDDROutputKU:
 class XilinxDDRInputImplKU(Module):
     def __init__(self, i, o1, o2, clk):
         self.specials += Instance("IDDRE1",
+            p_SRTYPE="ASYNC",
             p_DDR_CLK_EDGE="SAME_EDGE_PIPELINED",
             p_IS_C_INVERTED=0,
             i_d=i,
