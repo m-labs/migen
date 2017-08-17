@@ -89,6 +89,19 @@ _io = [
         Subsignal("reset_n", Pins("AJ14"), IOStandard("LVCMOS15")),
         Misc("SLEW=FAST"),
     ),
+
+    ("eth_clocks", 0,
+        Subsignal("tx", Pins("M22")),
+        Subsignal("rx", Pins("T25")),
+        IOStandard("LVCMOS25")
+    ),
+    ("eth", 0,
+        Subsignal("rx_ctl", Pins("T24")),
+        Subsignal("rx_data", Pins("R23 P23 R25 R26")),
+        Subsignal("tx_ctl", Pins("N22")),
+        Subsignal("tx_data", Pins("K20 K22 P20 P21")),
+        IOStandard("LVCMOS25")
+    ),
 ]
 
 
