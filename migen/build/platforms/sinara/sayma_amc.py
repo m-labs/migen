@@ -13,12 +13,12 @@ _io = [
     ("serial", 0,
         Subsignal("tx", Pins("AK8")),
         Subsignal("rx", Pins("AL8")),
-        IOStandard("LVCMOS18")
+        IOStandard("LVCMOS33")
     ),
     ("serial", 1,
         Subsignal("tx", Pins("M27")),
         Subsignal("rx", Pins("L27")),
-        IOStandard("LVCMOS18")
+        IOStandard("LVCMOS33")
     ),
     ("serial_rtm", 0,
         Subsignal("tx", Pins("G27")),
