@@ -102,6 +102,17 @@ _io = [
         Subsignal("tx_data", Pins("K20 K22 P20 P21")),
         IOStandard("LVCMOS25")
     ),
+
+    ("sma_io", 0,
+        Subsignal("level", Pins("K23")),
+        Subsignal("direction", Pins("K25")),
+        IOStandard("LVCMOS33")
+    ),
+    ("sma_io", 1,
+        Subsignal("level", Pins("L25")),
+        Subsignal("direction", Pins("L23")),
+        IOStandard("LVCMOS33")
+    )
 ]
 
 
