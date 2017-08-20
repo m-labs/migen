@@ -23,7 +23,7 @@ _io = [
     ("serial_rtm", 0,
         Subsignal("tx", Pins("G27")),
         Subsignal("rx", Pins("H27")),
-        IOStandard("LVCMOS18")
+        IOStandard("LVCMOS33")
     ),
 
     # this is the second SPI flash (not containing the bitstream)
