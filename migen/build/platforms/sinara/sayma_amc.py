@@ -3,12 +3,12 @@ from migen.build.xilinx import XilinxPlatform
 
 
 _io = [
-    ("user_led", 0, Pins("AG9"), IOStandard("LVCMOS18")),  # sfp1_led1
-    ("user_led", 1, Pins("AJ10"), IOStandard("LVCMOS18")), # sfp1_led2
-    ("user_led", 2, Pins("AJ13"), IOStandard("LVCMOS18")), # sfp2_led1
-    ("user_led", 3, Pins("AE13"), IOStandard("LVCMOS18")), # sfp2_led2
+    ("user_led", 0, Pins("AG9"), IOStandard("LVCMOS33")),  # sfp1_led1
+    ("user_led", 1, Pins("AJ10"), IOStandard("LVCMOS33")), # sfp1_led2
+    ("user_led", 2, Pins("AJ13"), IOStandard("LVCMOS33")), # sfp2_led1
+    ("user_led", 3, Pins("AE13"), IOStandard("LVCMOS33")), # sfp2_led2
 
-    ("clk50", 0, Pins("AF9"), IOStandard("LVCMOS18")),
+    ("clk50", 0, Pins("AF9"), IOStandard("LVCMOS33")),
 
     ("serial", 0,
         Subsignal("tx", Pins("AK8")),
