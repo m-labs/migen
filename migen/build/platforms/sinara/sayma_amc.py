@@ -27,7 +27,8 @@ _io = [
     ),
 
     # this is the second SPI flash (not containing the bitstream)
-    # clock is shared with the bitstream flash and needs to be accessed through STARTUPE3
+    # clock is shared with the bitstream flash and needs to be accessed
+    # through STARTUPE3
     ("spiflash", 0,
         Subsignal("cs_n", Pins("K21")),
         Subsignal("dq", Pins("M20 L20 R21 R22")),
@@ -237,16 +238,19 @@ class Platform(XilinxPlatform):
     default_clk_period = 20.0
 
     def __init__(self):
-        XilinxPlatform.__init__(self, "xcku040-ffva1156-1-c", _io,
-                _connectors, toolchain="vivado")
+        XilinxPlatform.__init__(
+                self, "xcku040-ffva1156-1-c", _io, _connectors,
+                toolchain="vivado")
 
     def do_finalize(self, fragment):
         XilinxPlatform.do_finalize(self, fragment)
         try:
-            self.add_period_constraint(self.lookup_request("eth_clocks").rx, 8.0)
+            self.add_period_constraint(
+                    self.lookup_request("eth_clocks").rx, 8.0)
         except ConstraintError:
             pass
         try:
-            self.add_period_constraint(self.lookup_request("eth_clocks").tx, 8.0)
+            self.add_period_constraint(
+                    self.lookup_request("eth_clocks").tx, 8.0)
         except ConstraintError:
             pass
