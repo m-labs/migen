@@ -146,12 +146,99 @@ _io = [
 ]
 
 
+_connectors = [
+    ("LPC", {
+        "LA33_N": "V28",
+        "LA32_N": "U25",
+        "LA31_N": "Y28",
+        "LA30_N": "U27",
+        "LA29_N": "W29",
+        "LA28_N": "W26",
+        "LA27_N": "AB26",
+        "LA26_N": "AB22",
+        "LA25_N": "AB20",
+        "LA24_N": "AC23",
+        "LA23_N": "AC21",
+        "LA22_N": "U22",
+        "LA21_N": "W21",
+        "LA20_N": "T23",
+        "LA19_N": "V23",
+        "LA18_CC_N": "Y25",
+        "LA17_CC_N": "W24",
+        "LA16_N": "Y30",
+        "LA15_N": "Y32",
+        "LA14_N": "V34",
+        "LA13_N": "Y33",
+        "LA12_N": "W31",
+        "LA11_N": "AB29",
+        "LA10_N": "AB34",
+        "LA09_N": "AF32",
+        "LA08_N": "AD31",
+        "LA07_N": "AD33",
+        "LA06_N": "AD34",
+        "LA05_N": "AF34",
+        "LA04_N": "AG32",
+        "LA03_N": "W34",
+        "LA02_N": "AG34",
+        "LA01_CC_N": "AB31",
+        "LA00_CC_N": "AB32",
+        "LA33_P": "V27",
+        "LA32_P": "U24",
+        "LA31_P": "W28",
+        "LA30_P": "U26",
+        "LA29_P": "V29",
+        "LA28_P": "V26",
+        "LA27_P": "AB25",
+        "LA26_P": "AA22",
+        "LA25_P": "AA20",
+        "LA24_P": "AC22",
+        "LA23_P": "AB21",
+        "LA22_P": "U21",
+        "LA21_P": "V21",
+        "LA20_P": "T22",
+        "LA19_P": "V22",
+        "LA18_CC_P": "W25",
+        "LA17_CC_P": "W23",
+        "LA16_P": "W30",
+        "LA15_P": "Y31",
+        "LA14_P": "U34",
+        "LA13_P": "W33",
+        "LA12_P": "V31",
+        "LA11_P": "AA29",
+        "LA10_P": "AA34",
+        "LA09_P": "AE32",
+        "LA08_P": "AD30",
+        "LA07_P": "AC33",
+        "LA06_P": "AC34",
+        "LA05_P": "AE33",
+        "LA04_P": "AG31",
+        "LA03_P": "V33",
+        "LA02_P": "AF33",
+        "LA01_CC_P": "AB30",
+        "LA00_CC_P": "AA32",
+        # LVDS
+        "CLK0_M2C_N": "AA25",
+        "CLK0_M2C_P": "AA24",
+        "CLK1_M2C_N": "AA23",
+        "CLK1_M2C_P": "Y23",
+        # DIFF_HSTL_I_DCI_18
+        "GBTCLK0_M2C_P": "AC31",
+        "GBTCLK0_M2C_N": "AC32",
+        "DP0_M2C_P": "AE27",
+        "DP0_M2C_N": "AF27",
+        "DP0_C2M_P": "AE28",
+        "DP0_C2M_N": "AF28",
+    }),
+]
+
+
 class Platform(XilinxPlatform):
     default_clk_name = "clk50"
     default_clk_period = 20.0
 
     def __init__(self):
-        XilinxPlatform.__init__(self, "xcku040-ffva1156-1-c", _io, toolchain="vivado")
+        XilinxPlatform.__init__(self, "xcku040-ffva1156-1-c", _io,
+                _connectors, toolchain="vivado")
 
     def do_finalize(self, fragment):
         XilinxPlatform.do_finalize(self, fragment)
