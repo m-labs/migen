@@ -31,6 +31,11 @@ _io = [
         IOStandard("LVCMOS25")
     ),
     ("hmc7043_reset", 0, Pins("E17"), IOStandard("LVCMOS25")),
+
+    # clock mux
+    ("clk_src_ext_sel", 0, Pins("P15"), IOStandard("LVCMOS25")),
+    ("ref_clk_src_sel", 0, Pins("J14"), IOStandard("LVCMOS25")),
+    ("dac_clk_src_sel", 0, Pins("P16"), IOStandard("LVCMOS25")),
 ]
 
 
