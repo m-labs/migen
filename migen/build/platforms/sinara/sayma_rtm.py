@@ -20,6 +20,17 @@ _io = [
         Subsignal("rx_n", Pins("R17")),  # rtm_fpga_lvds1_n
         IOStandard("LVDS_25")
     ),
+
+    # HMC clocking chips (830 and 7043)
+    ("hmc_spi", 0,
+        Subsignal("clk", Pins("A17")),
+        Subsignal("mosi", Pins("B16"), Misc("PULLDOWN")),
+        Subsignal("miso", Pins("D9")),
+        # cs[0]=830 cs[1]=7043
+        Subsignal("cs_n", Pins("C8 D16")),
+        IOStandard("LVCMOS25")
+    ),
+    ("hmc7043_reset", 0, Pins("E17"), IOStandard("LVCMOS25")),
 ]
 
 
