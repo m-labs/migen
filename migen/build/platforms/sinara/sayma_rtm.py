@@ -36,6 +36,25 @@ _io = [
     ("clk_src_ext_sel", 0, Pins("P15"), IOStandard("LVCMOS25")),
     ("ref_clk_src_sel", 0, Pins("J14"), IOStandard("LVCMOS25")),
     ("dac_clk_src_sel", 0, Pins("P16"), IOStandard("LVCMOS25")),
+
+    # DACs
+    ("ad9154_rst_n", 0, Pins("U15"), IOStandard("LVCMOS25")),
+    ("ad9154_spi", 0,
+        Subsignal("clk", Pins("T13")),
+        Subsignal("cs_n", Pins("U14")),
+        Subsignal("mosi", Pins("V17")),
+        Subsignal("miso", Pins("R13")),
+        IOStandard("LVCMOS25")
+    ),
+    ("ad9154_txen", 0, Pins("V16 U16"), IOStandard("LVCMOS25")),
+    ("ad9154_spi", 1,
+        Subsignal("clk", Pins("J15")),
+        Subsignal("cs_n", Pins("K18")),
+        Subsignal("mosi", Pins("J18")),
+        Subsignal("miso", Pins("J16")),
+        IOStandard("LVCMOS25")
+    ),
+    ("ad9154_txen", 1, Pins("L17 L14"), IOStandard("LVCMOS25")),
 ]
 
 
