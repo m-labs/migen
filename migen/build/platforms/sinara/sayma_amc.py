@@ -32,7 +32,7 @@ _io = [
     ("spiflash", 0,
         Subsignal("cs_n", Pins("K21")),
         Subsignal("dq", Pins("M20 L20 R21 R22")),
-        IOStandard("LVCMOS25")
+        IOStandard("LVCMOS33")
     ),
 
     ("ddram_32", 1,
