@@ -144,6 +144,39 @@ _io = [
         Subsignal("rx_n", Pins("B12")), # rtm_fpga_lvds2_n
         IOStandard("LVDS")
     ),
+
+    # AD9154 DACs
+    ("dac_refclk", 0,
+        Subsignal("p", Pins("V6")),
+        Subsignal("n", Pins("V5")),
+    ),
+    ("dac_refclk", 1,
+        Subsignal("p", Pins("P6")),
+        Subsignal("n", Pins("P5")),
+    ),
+    ("dac_sysref", 0,
+        Subsignal("p", Pins("B10")),
+        Subsignal("n", Pins("A10")),
+        IOStandard("LVDS")
+    ),
+    ("dac_sync", 0,
+        Subsignal("p", Pins("L8")),
+        Subsignal("n", Pins("K8")),
+        IOStandard("LVDS")
+    ),
+    ("dac_sync", 1,
+        Subsignal("p", Pins("J9")),
+        Subsignal("n", Pins("H9")),
+        IOStandard("LVDS")
+    ),
+    ("dac_jesd", 0,
+        Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
+        Subsignal("txn", Pins("R3 U3 W3 AA3 AC3 AE3 AG3 AH5"))
+    ),
+    ("dac_jesd", 1,
+        Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
+        Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
+    ),
 ]
 
 
