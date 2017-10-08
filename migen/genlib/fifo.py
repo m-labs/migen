@@ -18,20 +18,22 @@ def _inc(signal, modulo):
 
 
 class _FIFOInterface:
-    """
+    __doc__desc__ = """
     Data written to the input interface (`din`, `we`, `writable`) is
     buffered and can be read at the output interface (`dout`, `re`,
     `readable`). The data entry written first to the input
     also appears first on the output.
+    """
 
-    Parameters
+    __doc__param__ = """Parameters
     ----------
     width : int
         Bit width for the data.
     depth : int
         Depth of the FIFO.
+    """
 
-    Attributes
+    __doc__attrib__ = """Attributes
     ----------
     din : in, width
         Input data
@@ -48,6 +50,19 @@ class _FIFOInterface:
         Acknowledge `dout`. If asserted, the next entry will be
         available on the next cycle (if `readable` is high then).
     """
+
+    __doc__ = """\
+    {desc}
+    {param}
+    {attrib}
+    """
+
+    __doc__ = __doc__.format(
+        desc=__doc__desc__,
+        param=__doc__param__,
+        attrib=__doc__attrib__,
+    )
+
     def __init__(self, width, depth):
         self.we = Signal()
         self.writable = Signal()  # not full
@@ -66,7 +81,16 @@ class SyncFIFO(Module, _FIFOInterface):
     Read and write interfaces are accessed from the same clock domain.
     If different clock domains are needed, use :class:`AsyncFIFO`.
 
-    {interface}
+    {desc}
+
+    {param}
+    fwft : bool, optional
+        Enable first word fall through (FWFT) mode (the default is `True`).
+        In FWFT mode, the first word written into an empty FIFO automatically
+        appears at `self.dout` without needing to activating the `self.re`
+        signal.
+
+    {attrib}
     level : out
         Number of unread entries.
     replace : in
@@ -74,7 +98,11 @@ class SyncFIFO(Module, _FIFOInterface):
         if that entry has already been read (i.e. the FIFO is empty).
         Assert in conjunction with `we`.
     """
-    __doc__ = __doc__.format(interface=_FIFOInterface.__doc__)
+    __doc__ = __doc__.format(
+        desc=_FIFOInterface.__doc__desc__,
+        param=_FIFOInterface.__doc__param__,
+        attrib=_FIFOInterface.__doc__attrib__,
+    )
 
     def __init__(self, width, depth, fwft=True):
         _FIFOInterface.__init__(self, width, depth)
@@ -129,6 +157,15 @@ class SyncFIFO(Module, _FIFOInterface):
 
 
 class SyncFIFOBuffered(Module, _FIFOInterface):
+    """Buffered Synchronous FIFO (first in, first out)
+
+    Read and write interfaces are accessed from the same clock domains but the
+    output is buffered.
+
+    {interface}
+    """
+    __doc__ = __doc__.format(interface=_FIFOInterface.__doc__)
+
     def __init__(self, width, depth):
         _FIFOInterface.__init__(self, width, depth)
         self.submodules.fifo = fifo = SyncFIFO(width, depth, False)
