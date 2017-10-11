@@ -63,6 +63,12 @@ def settings(path, ver=None, sub=None):
 class XilinxMultiRegImpl(MultiRegImpl):
     def __init__(self, *args, **kwargs):
         MultiRegImpl.__init__(self, *args, **kwargs)
+        i = self.i
+        if not hasattr(i, "attr"):
+            i0, i = i, Signal()
+            self.comb += i.eq(i0)
+        i.attr.add("mr_false_path")
+        self.regs[0].attr.add("mr_ff")
         for r in self.regs:
             r.attr.add("async_reg")
             r.attr.add("no_shreg_extract")

@@ -75,6 +75,8 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
+        "mr_ff": ("mr_ff", "true"),  # user-defined attribute
+        "mr_false_path": ("mr_false_path", "true"),  # user-defined attribute
         "ars_ff1": ("ars_ff1", "true"),  # user-defined attribute
         "ars_ff2": ("ars_ff2", "true"),  # user-defined attribute
         "ars_false_path": ("ars_false_path", "true"),  # user-defined attribute
@@ -91,6 +93,8 @@ class XilinxVivadoToolchain:
 
     def _build_batch(self, platform, sources, build_name):
         tcl = []
+        tcl.append("create_property -type bool mr_ff cell")
+        tcl.append("create_property -type bool mr_false_path net")
         tcl.append("create_property -type bool ars_ff1 cell")
         tcl.append("create_property -type bool ars_ff2 cell")
         tcl.append("create_property -type bool ars_false_path net")
@@ -155,6 +159,12 @@ class XilinxVivadoToolchain:
         del self.false_paths
 
     def _constrain(self, platform):
+        # The asynchronous input to a MultiReg is a false path
+        platform.add_platform_command(
+            "set_false_path -quiet "
+            "-through [get_nets -hier -filter mr_false_path] "
+            "-to [get_cells -hier -filter mr_ff]"
+        )
         # The asychronous reset input to the AsyncResetSynchronizer is a false
         # path
         platform.add_platform_command(
