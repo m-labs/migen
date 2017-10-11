@@ -7,13 +7,13 @@ _io = [
 
     ("clk50", 0, Pins("Y18"), IOStandard("LVCMOS25")),
 
-    ("ck_fpgaio", 0,
+    ("clk_fpgaio", 0,
         Subsignal("p", Pins("W19")),
         Subsignal("n", Pins("W20")),
         IOStandard("LVDS25"),
     ),
 
-    ("clkrec", 0,
+    ("clk_rec", 0,
         Subsignal("p", Pins("U20")),
         Subsignal("n", Pins("V20")),
         IOStandard("LVDS25"),
@@ -44,6 +44,11 @@ _io = [
         Subsignal("n", Pins("E6")),
     ),
 
+    # ("clk125_gtp", 0,
+    #     Subsignal("p", Pins("F10")),
+    #     Subsignal("n", Pins("E10")),
+    # ),
+
     ("sfp_gtp", 0,
         Subsignal("txp", Pins("B4")),
         Subsignal("txn", Pins("A4")),
@@ -62,17 +67,35 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    # ...
+    ("sfp_gtp", 1,
+        Subsignal("txp", Pins("D5")),
+        Subsignal("txn", Pins("C5")),
+        Subsignal("rxp", Pins("D11")),
+        Subsignal("rxn", Pins("C11")),
+    ),
     ("sfp", 1,
         # ...
         Subsignal("led", Pins("T18")),
         IOStandard("LVCMOS25")
     ),
-    # ...
+
+    ("sfp_gtp", 2,
+        Subsignal("txp", Pins("B6")),
+        Subsignal("txn", Pins("A6")),
+        Subsignal("rxp", Pins("B10")),
+        Subsignal("rxn", Pins("A10")),
+    ),
     ("sfp", 2,
         # ...
         Subsignal("led", Pins("P20")),
         IOStandard("LVCMOS25")
+    ),
+
+    ("sata_gtp", 0,
+        Subsignal("txp", Pins("D7")),
+        Subsignal("txn", Pins("C7")),
+        Subsignal("rxp", Pins("D9")),
+        Subsignal("rxn", Pins("C9")),
     ),
 
     ("ddram", 0,
@@ -85,22 +108,16 @@ _io = [
         Subsignal("cas_n", Pins("G4"), IOStandard("SSTL15")),
         Subsignal("we_n", Pins("F1"), IOStandard("SSTL15")),
         # Subsignal("cs_n", Pins(""), IOStandard("SSTL15")),
-        Subsignal("dm", Pins("N4 J4"), IOStandard("SSTL15"),
-            Misc("DATA_RATE=DDR")),
+        Subsignal("dm", Pins("J4 N4"), IOStandard("SSTL15")),
         Subsignal("dq", Pins(
             "L4 L5 J6 K6 K3 L3 M2 M3 "
-            "P1 R1 N2 P2 M5 M6 N5 N6"),
-            IOStandard("SSTL15_DCI"),
-            Misc("ODT=RTT_40"),
-            Misc("DATA_RATE=DDR")),
-        Subsignal("dqs_p", Pins("P5 M1"),
-            IOStandard("DIFF_SSTL15"),
-            Misc("DATA_RATE=DDR")),
-        Subsignal("dqs_n", Pins("P4 L1"),
-            IOStandard("DIFF_SSTL15"),
-            Misc("DATA_RATE=DDR")),
-        Subsignal("clk_p", Pins("H3"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
-        Subsignal("clk_n", Pins("G3"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
+            "P1 R1 N2 P2 M5 M6 N5 P6"),
+            IOStandard("SSTL15"),
+            Misc("IN_TERM=UNTUNED_SPLIT_50")),
+        Subsignal("dqs_p", Pins("M1 P5"), IOStandard("DIFF_SSTL15")),
+        Subsignal("dqs_n", Pins("L1 P4"), IOStandard("DIFF_SSTL15")),
+        Subsignal("clk_p", Pins("H3"), IOStandard("DIFF_SSTL15")),
+        Subsignal("clk_n", Pins("G3"), IOStandard("DIFF_SSTL15")),
         Subsignal("cke", Pins("B2"), IOStandard("SSTL15")),
         Subsignal("odt", Pins("H4"), IOStandard("SSTL15")),
         Subsignal("reset_n", Pins("L6"), IOStandard("LVCMOS15")),
@@ -139,5 +156,5 @@ class Platform(XilinxPlatform):
 
     def __init__(self):
         XilinxPlatform.__init__(
-                self, "xc7a100t-fgg484-2-c", _io, _connectors,
+                self, "xc7a100t-fgg484-2", _io, _connectors,
                 toolchain="vivado")
