@@ -218,8 +218,8 @@ _io = [
         Subsignal("n", Pins("H1"))
     ),
     ("sfp_rx", 0,  # inverted prior to HW rev 1.1
-        Subsignal("p", Pins("G3")),
-        Subsignal("n", Pins("G4"))
+        Subsignal("p", Pins("G4")),
+        Subsignal("n", Pins("G3"))
     ),
     ("sfp_tx_disable_n", 0, Pins("Y20"), IOStandard("LVCMOS25")),
     ("sfp_rx_los", 0, Pins("P19"), IOStandard("LVCMOS25")),
