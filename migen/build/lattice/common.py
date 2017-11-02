@@ -41,6 +41,22 @@ diamond_special_overrides = {
 }
 
 
-icestorm_special_overrides = {
+class IcestormAsyncResetSynchronizerImpl(Module):
+    def __init__(self, cd, async_reset):
+        rst1 = Signal()
+        self.specials += [
+            Instance("SB_DFFS", i_D=0, i_S=async_reset,
+                i_C=cd.clk, o_Q=rst1),
+            Instance("SB_DFFS", i_D=rst1, i_S=async_reset,
+                i_C=cd.clk, o_Q=cd.rst)
+        ]
 
+
+class IcestormAsyncResetSynchronizer:
+    @staticmethod
+    def lower(dr):
+        return IcestormAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
+
+icestorm_special_overrides = {
+    AsyncResetSynchronizer: IcestormAsyncResetSynchronizer,
 }
