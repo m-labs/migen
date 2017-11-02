@@ -23,7 +23,7 @@ class Platform(LatticePlatform):
     default_clk_period = 303.0303
 
     def __init__(self):
-        LatticePlatform.__init__(self, "ice40-1k-vq100", _io,
+        LatticePlatform.__init__(self, "ice40-hx1k-vq100", _io,
             toolchain="icestorm")
 
     def create_programmer(self, iceburn_path="./iCEburn.py"):
