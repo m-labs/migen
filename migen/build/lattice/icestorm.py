@@ -82,6 +82,23 @@ icepack {icepack_opt} {build_name}.txt {build_name}.bin{fail_stmt}
 
 
 class LatticeIceStormToolchain:
+    attr_translate = {
+        "keep": ("keep", "true"),
+        "no_retiming": None,  # yosys does not do retiming
+        "async_reg": None,
+
+        # The next 5 attributes are Vivado-specific. Ignore.
+        "mr_ff": None,
+        "mr_false_path": None,  # user-defined attribute
+        "ars_ff1": None,  # user-defined attribute
+        "ars_ff2": None,  # user-defined attribute
+        "ars_false_path": None,  # user-defined attribute
+
+        # Shift reg primitive issues are ISE-specific. Ignore.
+        "no_shreg_extract": None
+    }
+
+
     def __init__(self):
         self.yosys_opt = "-q"
         self.pnr_opt = "-q"
