@@ -40,6 +40,11 @@ def _build_yosys(device, sources, vincpaths, build_name):
     for filename, language, library in sources:
         ys_contents += "read_{}{} {}\n".format(language, incflags, filename)
 
+    # Migen only outputs Xilinx-style attributes enclosed in strings.
+    # (i.e. "true", "0", etc). yosys wants constant literals to represent
+    # true and false, so convert before synthesis.
+    ys_contents += "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0\n"
+
     ys_contents += """synth_ice40 -top top -blif {build_name}.blif""".format(
         build_name=build_name)
 
@@ -97,7 +102,6 @@ class LatticeIceStormToolchain:
         # Shift reg primitive issues are ISE-specific. Ignore.
         "no_shreg_extract": None
     }
-
 
     def __init__(self):
         self.yosys_opt = "-q"
