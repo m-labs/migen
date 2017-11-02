@@ -4,7 +4,7 @@ from migen.genlib.io import *
 from migen.genlib.resetsync import AsyncResetSynchronizer
 
 
-class LatticeAsyncResetSynchronizerImpl(Module):
+class DiamondAsyncResetSynchronizerImpl(Module):
     def __init__(self, cd, async_reset):
         rst1 = Signal()
         self.specials += [
@@ -15,13 +15,13 @@ class LatticeAsyncResetSynchronizerImpl(Module):
         ]
 
 
-class LatticeAsyncResetSynchronizer:
+class DiamondAsyncResetSynchronizer:
     @staticmethod
     def lower(dr):
-        return LatticeAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
+        return DiamondAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
 
 
-class LatticeDDROutputImpl(Module):
+class DiamondDDROutputImpl(Module):
     def __init__(self, i1, i2, o, clk):
         self.specials += Instance("ODDRXD1",
                 synthesis_directive="ODDRAPPS=\"SCLK_ALIGNED\"",
@@ -30,12 +30,17 @@ class LatticeDDROutputImpl(Module):
         )
 
 
-class LatticeDDROutput:
+class DiamondDDROutput:
     @staticmethod
     def lower(dr):
-        return LatticeDDROutputImpl(dr.i1, dr.i2, dr.o, dr.clk)
+        return DiamondDDROutputImpl(dr.i1, dr.i2, dr.o, dr.clk)
 
-lattice_special_overrides = {
-    AsyncResetSynchronizer: LatticeAsyncResetSynchronizer,
-    DDROutput: LatticeDDROutput
+diamond_special_overrides = {
+    AsyncResetSynchronizer: DiamondAsyncResetSynchronizer,
+    DDROutput: DiamondDDROutput
+}
+
+
+icestorm_special_overrides = {
+
 }
