@@ -18,7 +18,13 @@ class LatticePlatform(GenericPlatform):
     def get_verilog(self, *args, special_overrides=dict(), **kwargs):
         so = dict(common.lattice_special_overrides)
         so.update(special_overrides)
-        return GenericPlatform.get_verilog(self, *args, special_overrides=so, **kwargs)
+        if isinstance(self.toolchain, diamond.LatticeDiamondToolchain):
+            return GenericPlatform.get_verilog(self, *args, special_overrides=so, **kwargs)
+        elif isinstance(self.toolchain, icestorm.LatticeIceStormToolchain):
+            return GenericPlatform.get_verilog(self, *args, special_overrides=so,
+                attr_translate=self.toolchain.attr_translate, **kwargs)
+        else:
+            raise ValueError("Unknown toolchain")
 
     def build(self, *args, **kwargs):
         return self.toolchain.build(self, *args, **kwargs)
