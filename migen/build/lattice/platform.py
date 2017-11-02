@@ -16,12 +16,16 @@ class LatticePlatform(GenericPlatform):
             raise ValueError("Unknown toolchain")
 
     def get_verilog(self, *args, special_overrides=dict(), **kwargs):
-        so = dict(common.lattice_special_overrides)
-        so.update(special_overrides)
         if isinstance(self.toolchain, diamond.LatticeDiamondToolchain):
-            return GenericPlatform.get_verilog(self, *args, special_overrides=so, **kwargs)
+            diamond_so = dict(common.diamond_special_overrides)
+            diamond_so.update(special_overrides)
+            return GenericPlatform.get_verilog(self, *args,
+                special_overrides=diamond_so, **kwargs)
         elif isinstance(self.toolchain, icestorm.LatticeIceStormToolchain):
-            return GenericPlatform.get_verilog(self, *args, special_overrides=so,
+            icestorm_so = dict(common.icestorm_special_overrides)
+            icestorm_so.update(special_overrides)
+            return GenericPlatform.get_verilog(self, *args,
+                special_overrides=icestorm_so,
                 attr_translate=self.toolchain.attr_translate, **kwargs)
         else:
             raise ValueError("Unknown toolchain")
