@@ -1,4 +1,4 @@
-# This file is Copyright (c) 2016 William D. Jones <thor0505@comcast.net>
+# This file is Copyright (c) 2016-2017 William D. Jones <thor0505@comcast.net>
 # License: BSD
 
 import os
@@ -41,7 +41,7 @@ def _build_yosys(device, sources, vincpaths, build_name):
         ys_contents += "read_{}{} {}\n".format(language, incflags, filename)
 
     # Migen only outputs Xilinx-style attributes enclosed in strings.
-    # (i.e. "true", "0", etc). yosys wants constant literals to represent
+    # (i.e. "true", "0", etc). Yosys wants constant literals to represent
     # true and false, so convert before synthesis.
     ys_contents += "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0\n"
 
@@ -132,11 +132,11 @@ class LatticeIceStormToolchain:
         tools.write_to_file(build_name + ".pcf",
                             _build_pcf(named_sc, named_pc))
         if run:
-            (family, size, package) = self.parse_device_string(platform.device)
-            pnr_opt = self.pnr_opt + " -d " + size + " -P " + package
+            (family, series_size, package) = self.parse_device_string(platform.device)
+            pnr_opt = self.pnr_opt + " -d " + self.get_size_string(series_size) + " -P " + package
             # TODO: PNR will probably eventually support LP devices.
             icetime_opt = self.icetime_opt + " -P " + package + \
-                " -d " + "hx" + size + " -c " + \
+                " -d " + series_size + " -c " + \
                 str(max(self.freq_constraints.values(), default=0.0))
             _run_icestorm(build_name, False, self.yosys_opt, pnr_opt,
                           icetime_opt, self.icepack_opt)
@@ -146,14 +146,29 @@ class LatticeIceStormToolchain:
         return v_output.ns
 
     def parse_device_string(self, device_str):
-        (family, size, package) = device_str.split("-")
+        # Arachne only understands packages based on the device size, but
+        # LP for a given size supports packages that HX for the same size
+        # doesn't and vice versa; we need to know the device series due to
+        # icetime.
+        valid_packages = {
+            "lp384" : ["qn32", "cm36", "cm49"],
+            "lp1k" : ["swg16tr", "cm36", "cm49", "cm81", "cb81", "qn84", "cm121", "cb121"],
+            "hx1k" : ["vq100", "cb132", "tq144"],
+            "lp8k" : ["cm81", "cm81:4k", "cm121", "cm121:4k", "cm225", "cm225:4k"],
+            "hx8k" : ["cb132", "cb132:4k", "tq144:4k", "cm225", "ct256"],
+        }
+
+        (family, series_size, package) = device_str.split("-")
         if family not in ["ice40"]:
             raise ValueError("Unknown device family")
-        if size not in ["1k", "8k"]:
-            raise ValueError("Invalid device size")
-        if package not in ["tq144", "ct256", "vq100"]:
+        if series_size not in ["lp384", "lp1k", "hx1k", "lp8k", "hx8k"]:
+            raise ValueError("Invalid device series/size")
+        if package not in valid_packages[series_size]:
             raise ValueError("Invalid device package")
-        return (family, size, package)
+        return (family, series_size, package)
+
+    def get_size_string(self, series_size_str):
+        return series_size_str[2:]
 
     # icetime can only handle a single global constraint. Pending more
     # finely-tuned analysis features in arachne-pnr and IceStorm, save
