@@ -57,6 +57,28 @@ class IcestormAsyncResetSynchronizer:
     def lower(dr):
         return IcestormAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
 
+
+class IcestormDifferentialOutputImpl(Module):
+    def __init__(self, i, o_p, o_n):
+        self.specials += Instance("SB_IO",
+            p_PIN_TYPE=C(0b011000, 6),
+            p_IO_STANDARD="SB_LVCMOS",
+            io_PACKAGE_PIN=o_p,
+            i_D_OUT_0=i)
+
+        self.specials += Instance("SB_IO",
+            p_PIN_TYPE=C(0b011000, 6),
+            p_IO_STANDARD="SB_LVCMOS",
+            io_PACKAGE_PIN=o_n,
+            i_D_OUT_0=~i)
+
+
+class IcestormDifferentialOutput:
+    @staticmethod
+    def lower(dr):
+        return IcestormDifferentialOutputImpl(dr.i, dr.o_p, dr.o_n)
+
 icestorm_special_overrides = {
     AsyncResetSynchronizer: IcestormAsyncResetSynchronizer,
+    DifferentialOutput:     IcestormDifferentialOutput
 }
