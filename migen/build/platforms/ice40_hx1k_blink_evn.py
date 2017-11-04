@@ -24,7 +24,7 @@ class Platform(LatticePlatform):
 
     def __init__(self):
         LatticePlatform.__init__(self, "ice40-hx1k-vq100", _io,
-            toolchain="icestorm")
+                                 toolchain="icestorm")
 
     def create_programmer(self, iceburn_path="./iCEburn.py"):
         return IceBurnProgrammer(iceburn_path)

@@ -34,7 +34,7 @@ class Platform(LatticePlatform):
 
     def __init__(self):
         LatticePlatform.__init__(self, "ice40-hx8k-ct256", _io,
-            toolchain="icestorm")
+                                 toolchain="icestorm")
 
     def create_programmer(self):
         return IceStormProgrammer()
