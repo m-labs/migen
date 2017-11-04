@@ -20,13 +20,15 @@ class LatticePlatform(GenericPlatform):
             diamond_so = dict(common.diamond_special_overrides)
             diamond_so.update(special_overrides)
             return GenericPlatform.get_verilog(self, *args,
-                special_overrides=diamond_so, **kwargs)
+                                               special_overrides=diamond_so,
+                                               **kwargs)
         elif isinstance(self.toolchain, icestorm.LatticeIceStormToolchain):
             icestorm_so = dict(common.icestorm_special_overrides)
             icestorm_so.update(special_overrides)
             return GenericPlatform.get_verilog(self, *args,
-                special_overrides=icestorm_so,
-                attr_translate=self.toolchain.attr_translate, **kwargs)
+                                               special_overrides=icestorm_so,
+                                               attr_translate=self.toolchain.attr_translate,
+                                               **kwargs)
         else:
             raise ValueError("Unknown toolchain")
 
