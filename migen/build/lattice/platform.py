@@ -16,21 +16,16 @@ class LatticePlatform(GenericPlatform):
             raise ValueError("Unknown toolchain")
 
     def get_verilog(self, *args, special_overrides=dict(), **kwargs):
+        so = dict()  # No common overrides between ECP and ice40.
         if isinstance(self.toolchain, diamond.LatticeDiamondToolchain):
-            diamond_so = dict(common.diamond_special_overrides)
-            diamond_so.update(special_overrides)
-            return GenericPlatform.get_verilog(self, *args,
-                                               special_overrides=diamond_so,
-                                               **kwargs)
+            so.update(common.diamond_special_overrides)
         elif isinstance(self.toolchain, icestorm.LatticeIceStormToolchain):
-            icestorm_so = dict(common.icestorm_special_overrides)
-            icestorm_so.update(special_overrides)
-            return GenericPlatform.get_verilog(self, *args,
-                                               special_overrides=icestorm_so,
-                                               attr_translate=self.toolchain.attr_translate,
-                                               **kwargs)
+            so.update(common.icestorm_special_overrides)
         else:
             raise ValueError("Unknown toolchain")
+        return GenericPlatform.get_verilog(self, *args, special_overrides=so,
+                                           attr_translate=self.toolchain.attr_translate,
+                                           **kwargs)
 
     def build(self, *args, **kwargs):
         return self.toolchain.build(self, *args, **kwargs)
