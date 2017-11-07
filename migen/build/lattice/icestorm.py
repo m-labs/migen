@@ -104,11 +104,14 @@ icepack {icepack_opt} {build_name}.txt {build_name}.bin{fail_stmt}
 class LatticeIceStormToolchain:
     attr_translate = {
         "keep": ("keep", "true"),
-        "no_retiming": None,  # yosys/arachne-pnr does not do retiming.
+        "no_retiming": None,  # yosys can do retiming via the (non-default)
+                              # "-retime" option to "synth_ice40", but
+                              # yosys does not check for an equivalent
+                              # constraint to prevent retiming on signals.
         "async_reg": None,  # yosys has no equivalent, and arachne-pnr
                             # wouldn't take advantage of it anyway.
 
-        # While custom constraints are supported in yosys, neither
+        # While custom attributes are supported in yosys, neither
         # arachne-pnr nor icetime currently can take advantage of them
         # to add fine-grained timing constraints.
         "mr_ff": None,  # user-defined attribute
