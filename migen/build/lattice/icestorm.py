@@ -111,7 +111,7 @@ class LatticeIceStormToolchain:
         self.icepack_opt = ""
         self.freq_constraints = dict()
 
-    # platform.device should be of the form "ice40-{1k,8k}-{tq144, etc}""
+    # platform.device should be of the form "ice40-{lp384, hx1k, etc}-{tq144, etc}""
     def build(self, platform, fragment, build_dir="build", build_name="top",
               run=True):
         os.makedirs(build_dir, exist_ok=True)
@@ -135,7 +135,6 @@ class LatticeIceStormToolchain:
         if run:
             (family, series_size, package) = self.parse_device_string(platform.device)
             pnr_opt = self.pnr_opt + " -d " + self.get_size_string(series_size) + " -P " + package
-            # TODO: PNR will probably eventually support LP devices.
             icetime_opt = self.icetime_opt + " -P " + package + \
                 " -d " + series_size + " -c " + \
                 str(max(self.freq_constraints.values(), default=0.0))
