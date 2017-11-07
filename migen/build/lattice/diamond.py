@@ -7,6 +7,7 @@ import subprocess
 import shutil
 
 from migen.fhdl.structure import _Fragment
+from migen.fhdl.verilog import DummyAttrTranslate
 
 from migen.build.generic_platform import *
 from migen.build import tools
@@ -77,6 +78,8 @@ def _run_diamond(build_name, source, ver=None):
 
 
 class LatticeDiamondToolchain:
+    attr_translate = DummyAttrTranslate()
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
               toolchain_path="/opt/Diamond", run=True):
         os.makedirs(build_dir, exist_ok=True)
