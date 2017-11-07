@@ -87,17 +87,20 @@ icepack {icepack_opt} {build_name}.txt {build_name}.bin{fail_stmt}
 class LatticeIceStormToolchain:
     attr_translate = {
         "keep": ("keep", "true"),
-        "no_retiming": None,  # yosys does not do retiming
-        "async_reg": None,
+        "no_retiming": None,  # yosys/arachne-pnr does not do retiming.
+        "async_reg": None,  # yosys has no equivalent, and arachne-pnr
+                            # wouldn't take advantage of it anyway.
 
-        # The next 5 attributes are Vivado-specific. Ignore.
-        "mr_ff": None,
+        # While custom constraints are supported in yosys, neither
+        # arachne-pnr nor icetime currently can take advantage of them
+        # to add fine-grained timing constraints.
+        "mr_ff": None,  # user-defined attribute
         "mr_false_path": None,  # user-defined attribute
         "ars_ff1": None,  # user-defined attribute
         "ars_ff2": None,  # user-defined attribute
         "ars_false_path": None,  # user-defined attribute
 
-        # Shift reg primitive issues are ISE-specific. Ignore.
+        # ice40 does not have a shift register primitive.
         "no_shreg_extract": None
     }
 
