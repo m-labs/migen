@@ -33,23 +33,23 @@ def _build_pcf(named_sc, named_pc):
 
 
 def _build_yosys(device, sources, vincpaths, build_name):
-    ys_contents = ""
+    ys_contents = list()
     incflags = ""
     for path in vincpaths:
         incflags += " -I" + path
     for filename, language, library in sources:
-        ys_contents += "read_{}{} {}\n".format(language, incflags, filename)
+        ys_contents.append("read_{}{} {}".format(language, incflags, filename))
 
     # Migen only outputs Xilinx-style attributes enclosed in strings.
     # (i.e. "true", "0", etc). Yosys wants constant literals to represent
     # true and false, so convert before synthesis.
-    ys_contents += "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0\n"
+    ys_contents.append("attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0")
 
-    ys_contents += """synth_ice40 -top top -blif {build_name}.blif""".format(
-        build_name=build_name)
+    ys_contents.append("""synth_ice40 -top top -blif {build_name}.blif""".format(
+        build_name=build_name))
 
     ys_name = build_name + ".ys"
-    tools.write_to_file(ys_name, ys_contents)
+    tools.write_to_file(ys_name, "\n".join(ys_contents))
 
 
 def _run_icestorm(build_name, source, yosys_opt, pnr_opt,
