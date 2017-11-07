@@ -32,7 +32,9 @@ def _build_pcf(named_sc, named_pc):
     return r
 
 
-def _build_yosys(device, sources, vincpaths, build_name):
+def _build_yosys(device, sources, vincpaths, build_name, pre_synth,
+                 synth_override, post_synth):
+    # Unconditionally-required yosys commands in the context of Migen.
     ys_contents = list()
     incflags = ""
     for path in vincpaths:
@@ -45,8 +47,23 @@ def _build_yosys(device, sources, vincpaths, build_name):
     # true and false, so convert before synthesis.
     ys_contents.append("attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0")
 
-    ys_contents.append("""synth_ice40 -top top -blif {build_name}.blif""".format(
-        build_name=build_name))
+    # Pre-synthesis user-commands go here.
+    for pre in pre_synth:
+        ys_contents.append(pre.format(build_name=build_name))
+
+    # Give the programmer an opportunity to override the default synthesis
+    # command if they need to. The default is fine for most applications.
+    # Must generate {build_name}.blif as output.
+    if not synth_override:
+        ys_contents.append("""synth_ice40 -top top -blif {build_name}.blif""".format(
+            build_name=build_name))
+    else:
+        for synth in synth_override:
+            ys_contents.append(synth.format(build_name=build_name))
+
+    # Finally, add post-synthesis commands.
+    for post in post_synth:
+        ys_contents.append(post.format(build_name=build_name))
 
     ys_name = build_name + ".ys"
     tools.write_to_file(ys_name, "\n".join(ys_contents))
@@ -106,6 +123,9 @@ class LatticeIceStormToolchain:
 
     def __init__(self):
         self.yosys_opt = "-q"
+        self.pre_synthesis_commands = list()
+        self.synthesis_commands = list()
+        self.post_synthesis_commands = list()
         self.pnr_opt = "-q"
         self.icetime_opt = ""
         self.icepack_opt = ""
@@ -128,7 +148,8 @@ class LatticeIceStormToolchain:
         v_output.write(v_file)
         sources = platform.sources | {(v_file, "verilog", "work")}
         _build_yosys(platform.device, sources, platform.verilog_include_paths,
-                     build_name)
+                     build_name, self.pre_synthesis_commands,
+                     self.synthesis_commands, self.post_synthesis_commands)
 
         tools.write_to_file(build_name + ".pcf",
                             _build_pcf(named_sc, named_pc))
