@@ -115,7 +115,7 @@ _io = [
 
     ("ddram", 0,
         Subsignal("a", Pins(
-            "L6 M5 P6 K6 M1 M3 N2 N7 "
+            "L6 M5 P6 K6 M1 M3 N2 M6 "
             "P1 P2 L4 N5 L3 R1 N3"),
             IOStandard("SSTL15")),
         Subsignal("ba", Pins("L5 M2 N4"), IOStandard("SSTL15")),
