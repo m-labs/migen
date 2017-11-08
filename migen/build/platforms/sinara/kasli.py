@@ -173,3 +173,5 @@ class Platform(XilinxPlatform):
         XilinxPlatform.__init__(
                 self, "xc7a100t-fgg484-2", _io, _connectors,
                 toolchain="vivado")
+        self.add_platform_command(
+                "set_property INTERNAL_VREF 0.750 [get_iobanks 35]")
