@@ -33,43 +33,6 @@ def _build_pcf(named_sc, named_pc):
     return r
 
 
-def _build_yosys(device, sources, vincpaths, build_name, pre_synth,
-                 synth_override, post_synth):
-    # Unconditionally-required yosys commands in the context of Migen.
-    ys_contents = list()
-    incflags = ""
-    for path in vincpaths:
-        incflags += " -I" + path
-    for filename, language, library in sources:
-        ys_contents.append("read_{}{} {}".format(language, incflags, filename))
-
-    # Migen only outputs Xilinx-style attributes enclosed in strings.
-    # (i.e. "true", "0", etc). Yosys wants constant literals to represent
-    # true and false, so convert before synthesis.
-    ys_contents.append("attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0")
-
-    # Pre-synthesis user-commands go here.
-    for pre in pre_synth:
-        ys_contents.append(pre.format(build_name=build_name))
-
-    # Give the programmer an opportunity to override the default synthesis
-    # command if they need to. The default is fine for most applications.
-    # Must generate {build_name}.blif as output.
-    if not synth_override:
-        ys_contents.append("""synth_ice40 -top top -blif {build_name}.blif""".format(
-            build_name=build_name))
-    else:
-        for synth in synth_override:
-            ys_contents.append(synth.format(build_name=build_name))
-
-    # Finally, add post-synthesis commands.
-    for post in post_synth:
-        ys_contents.append(post.format(build_name=build_name))
-
-    ys_name = build_name + ".ys"
-    tools.write_to_file(ys_name, "\n".join(ys_contents))
-
-
 def _run_icestorm(build_name, source, yosys_opt, pnr_opt,
                   icetime_opt, icepack_opt):
     if sys.platform == "win32" or sys.platform == "cygwin":
@@ -129,9 +92,12 @@ class LatticeIceStormToolchain:
 
     def __init__(self):
         self.yosys_opt = "-q"
-        self.pre_synthesis_commands = list()
-        self.synthesis_commands = list()
-        self.post_synthesis_commands = list()
+        self.synthesis_template = [
+            "{read_files}",
+            "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
+            "synth_ice40 -top top -blif {build_name}.blif",
+        ]
+
         self.pnr_opt = "-q"
         self.icetime_opt = ""
         self.icepack_opt = ""
@@ -153,9 +119,19 @@ class LatticeIceStormToolchain:
         v_file = build_name + ".v"
         v_output.write(v_file)
         sources = platform.sources | {(v_file, "verilog", "work")}
-        _build_yosys(platform.device, sources, platform.verilog_include_paths,
-                     build_name, self.pre_synthesis_commands,
-                     self.synthesis_commands, self.post_synthesis_commands)
+
+        incflags = ""
+        read_files = list()
+        for path in platform.verilog_include_paths:
+            incflags += " -I" + path
+        for filename, language, library in sources:
+            read_files.append("read_{}{} {}".format(language, incflags, filename))
+
+        file_string = "\n".join(read_files)
+        ys_contents = "\n".join(_.format(build_name=build_name, read_files=file_string) for _ in self.synthesis_template)
+
+        ys_name = build_name + ".ys"
+        tools.write_to_file(ys_name, ys_contents)
 
         tools.write_to_file(build_name + ".pcf",
                             _build_pcf(named_sc, named_pc))
