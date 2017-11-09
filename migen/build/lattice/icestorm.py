@@ -104,7 +104,7 @@ class LatticeIceStormToolchain:
 
         self.freq_constraints = dict()
 
-    # platform.device should be of the form "ice40-{lp384, hx1k, etc}-{tq144, etc}""
+    # platform.device should be of the form "ice40-{lp384, hx1k, etc}-{tq144, etc}"
     def build(self, platform, fragment, build_dir="build", build_name="top",
               run=True):
         os.makedirs(build_dir, exist_ok=True)
@@ -121,7 +121,8 @@ class LatticeIceStormToolchain:
         v_output.write(v_file)
 
         ys_contents = "\n".join(_.format(build_name=build_name,
-                                         read_files=self.gen_read_files(platform, v_file)) for _ in self.synthesis_template)
+                                         read_files=self.gen_read_files(platform, v_file))
+                                for _ in self.synthesis_template)
 
         ys_name = build_name + ".ys"
         tools.write_to_file(ys_name, ys_contents)
@@ -130,9 +131,11 @@ class LatticeIceStormToolchain:
                             _build_pcf(named_sc, named_pc))
         if run:
             (family, series_size, package) = self.parse_device_string(platform.device)
-            pnr_pkg_opts = "-d " + self.get_size_string(series_size) + " -P " + package
+            pnr_pkg_opts = "-d " + self.get_size_string(series_size) + \
+                           " -P " + package
             icetime_pkg_opts = "-P " + package + " -d " + series_size
-            icetime_constraint = str(max(self.freq_constraints.values(), default=0.0))
+            icetime_constraint = str(max(self.freq_constraints.values(),
+                                         default=0.0))
 
             _run_icestorm(False, self.build_template, build_name, pnr_pkg_opts,
                           icetime_pkg_opts, icetime_constraint)
@@ -148,9 +151,11 @@ class LatticeIceStormToolchain:
         # icetime.
         valid_packages = {
             "lp384": ["qn32", "cm36", "cm49"],
-            "lp1k": ["swg16tr", "cm36", "cm49", "cm81", "cb81", "qn84", "cm121", "cb121"],
+            "lp1k": ["swg16tr", "cm36", "cm49", "cm81", "cb81", "qn84",
+                     "cm121", "cb121"],
             "hx1k": ["vq100", "cb132", "tq144"],
-            "lp8k": ["cm81", "cm81:4k", "cm121", "cm121:4k", "cm225", "cm225:4k"],
+            "lp8k": ["cm81", "cm81:4k", "cm121", "cm121:4k", "cm225",
+                     "cm225:4k"],
             "hx8k": ["cb132", "cb132:4k", "tq144:4k", "cm225", "ct256"],
         }
 
@@ -173,7 +178,9 @@ class LatticeIceStormToolchain:
         for path in platform.verilog_include_paths:
             incflags += " -I" + path
         for filename, language, library in sources:
-            read_files.append("read_{}{} {}".format(language, incflags, filename))
+            read_files.append("read_{}{} {}".format(language,
+                                                    incflags,
+                                                    filename))
         return "\n".join(read_files)
 
     # icetime can only handle a single global constraint. Pending more
