@@ -9,6 +9,7 @@ from migen.fhdl.structure import _Fragment
 
 from migen.build.generic_platform import *
 from migen.build import tools
+from migen.build.lattice import common
 
 
 def _format_constraint(c):
@@ -123,6 +124,8 @@ class LatticeIceStormToolchain:
         # ice40 does not have a shift register primitive.
         "no_shreg_extract": None
     }
+
+    special_overrides = common.icestorm_special_overrides
 
     def __init__(self):
         self.yosys_opt = "-q"

@@ -17,12 +17,8 @@ class LatticePlatform(GenericPlatform):
 
     def get_verilog(self, *args, special_overrides=dict(), **kwargs):
         so = dict()  # No common overrides between ECP and ice40.
-        if isinstance(self.toolchain, diamond.LatticeDiamondToolchain):
-            so.update(common.diamond_special_overrides)
-        elif isinstance(self.toolchain, icestorm.LatticeIceStormToolchain):
-            so.update(common.icestorm_special_overrides)
-        else:
-            raise ValueError("Unknown toolchain")
+        so.update(self.toolchain.special_overrides)
+        so.update(special_overrides)
         return GenericPlatform.get_verilog(self, *args, special_overrides=so,
                                            attr_translate=self.toolchain.attr_translate,
                                            **kwargs)
