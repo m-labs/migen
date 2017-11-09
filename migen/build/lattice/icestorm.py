@@ -89,7 +89,7 @@ class LatticeIceStormToolchain:
     special_overrides = common.icestorm_special_overrides
 
     def __init__(self):
-        self.synthesis_template = [
+        self.yosys_template = [
             "{read_files}",
             "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
             "synth_ice40 -top top -blif {build_name}.blif",
@@ -122,7 +122,7 @@ class LatticeIceStormToolchain:
 
         ys_contents = "\n".join(_.format(build_name=build_name,
                                          read_files=self.gen_read_files(platform, v_file))
-                                for _ in self.synthesis_template)
+                                for _ in self.yosys_template)
 
         ys_name = build_name + ".ys"
         tools.write_to_file(ys_name, ys_contents)
