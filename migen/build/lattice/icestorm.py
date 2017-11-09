@@ -119,18 +119,9 @@ class LatticeIceStormToolchain:
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
         v_file = build_name + ".v"
         v_output.write(v_file)
-        sources = platform.sources | {(v_file, "verilog", "work")}
 
-        incflags = ""
-        read_files = list()
-        for path in platform.verilog_include_paths:
-            incflags += " -I" + path
-        for filename, language, library in sources:
-            read_files.append("read_{}{} {}".format(language, incflags, filename))
-
-        file_string = "\n".join(read_files)
         ys_contents = "\n".join(_.format(build_name=build_name,
-                                         read_files=file_string) for _ in self.synthesis_template)
+                                         read_files=self.gen_read_files(platform, v_file)) for _ in self.synthesis_template)
 
         ys_name = build_name + ".ys"
         tools.write_to_file(ys_name, ys_contents)
@@ -174,6 +165,16 @@ class LatticeIceStormToolchain:
 
     def get_size_string(self, series_size_str):
         return series_size_str[2:]
+
+    def gen_read_files(self, platform, main):
+        sources = platform.sources | {(main, "verilog", "work")}
+        incflags = ""
+        read_files = list()
+        for path in platform.verilog_include_paths:
+            incflags += " -I" + path
+        for filename, language, library in sources:
+            read_files.append("read_{}{} {}".format(language, incflags, filename))
+        return "\n".join(read_files)
 
     # icetime can only handle a single global constraint. Pending more
     # finely-tuned analysis features in arachne-pnr and IceStorm, save
