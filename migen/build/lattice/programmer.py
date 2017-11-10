@@ -37,3 +37,13 @@ class IceBurnProgrammer(GenericProgrammer):
 
     def load_bitstream(self, bitstream_file):
         subprocess.call([self.iceburn, "-evw", bitstream_file])
+
+
+class TinyFpgaBProgrammer(GenericProgrammer):
+    needs_bitreverse = False
+
+    # The default flash address you probably want is 0x30000; the image at
+    # address 0 is for the bootloader.
+    def flash(self, address, bitstream_file):
+        subprocess.call(["tinyfpgab", "-a", str(address), "-p",
+                        bitstream_file])
