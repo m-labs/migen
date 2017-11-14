@@ -45,5 +45,10 @@ class TestExamplesPlatform(unittest.TestCase):
     pass
 
 for mod, name in _find_platforms(migen.build.platforms):
-    setattr(TestExamplesPlatform, "test_" + name,
-            _make_platform_test_method(mod, name))
+    # Roach has no default clock, so expect failure.
+    if name == "roach":
+        test_fcn = unittest.expectedFailure(_make_platform_test_method(mod,
+                                            name))
+    else:
+        test_fcn = _make_platform_test_method(mod, name)
+    setattr(TestExamplesPlatform, "test_" + name, test_fcn)
