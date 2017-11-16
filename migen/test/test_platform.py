@@ -1,21 +1,11 @@
 import unittest
 import importlib
 import pkgutil
-import shutil
+import tempfile
 
 from migen import *
 from migen.genlib.cdc import MultiReg
 import migen.build.platforms
-
-
-def _make_platform_test_method(mod, name):
-    def platform_test_method(self):
-        plat = importlib.import_module(mod).Platform()
-        m = TestModulePlatform(plat)
-        plat.build(m, run=False, build_name=name, build_dir=name)
-        shutil.rmtree(name)
-
-    return platform_test_method
 
 
 def _find_platforms(mod_root):
@@ -42,13 +32,15 @@ class TestModulePlatform(Module):
 
 
 class TestExamplesPlatform(unittest.TestCase):
-    pass
-
-for mod, name in _find_platforms(migen.build.platforms):
-    # Roach has no default clock, so expect failure.
-    if name == "roach":
-        test_fcn = unittest.expectedFailure(_make_platform_test_method(mod,
-                                            name))
-    else:
-        test_fcn = _make_platform_test_method(mod, name)
-    setattr(TestExamplesPlatform, "test_" + name, test_fcn)
+    def test_platforms(self):
+        for mod, name in _find_platforms(migen.build.platforms):
+            with self.subTest(mod=mod, name=name):
+                # Roach has no default clock, so expect failure/skip.
+                if name == "roach":
+                    pass
+                else:
+                    plat = importlib.import_module(mod).Platform()
+                    m = TestModulePlatform(plat)
+                    with tempfile.TemporaryDirectory(name) as temp_dir:
+                        plat.build(m, run=False, build_name=name,
+                                   build_dir=temp_dir)
