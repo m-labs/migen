@@ -58,3 +58,10 @@ def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
                               rules, max_matches):
             sys.stdout.write(line)
     return proc.returncode
+
+
+def cygpath_to_windows(path):
+    winpath = subprocess.Popen(["cygpath", "-wf", "-"], stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    return winpath.communicate(path)[0].strip()
