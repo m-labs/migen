@@ -65,3 +65,6 @@ def cygpath_to_windows(path):
                                stdout=subprocess.PIPE,
                                universal_newlines=True)
     return winpath.communicate(path)[0].strip()
+
+def sanitize(p):
+            return cygpath_to_windows(p) if sys.platform == "cygwin" else p
