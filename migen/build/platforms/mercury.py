@@ -18,7 +18,7 @@ _io = [
         Subsignal("clk", Pins("P53"), IOStandard("LVTTL")),
         Subsignal("mosi", Pins("P46"), IOStandard("LVTTL")),
         Subsignal("miso", Pins("P51"), IOStandard("LVTTL"))
-     ),
+    ),
 
     # FPGA is primary
     ("spiflash", 0,
@@ -26,14 +26,14 @@ _io = [
         Subsignal("clk", Pins("P53"), IOStandard("LVTTL")),
         Subsignal("mosi", Pins("P46"), IOStandard("LVTTL")),
         Subsignal("miso", Pins("P51"), IOStandard("LVTTL"))
-     ),
+    ),
 
     ("spiflash2x", 0,
         Subsignal("cs_n", Pins("P27")),
         Subsignal("clk", Pins("P53")),
         Subsignal("dq", Pins("P46", "P51")),
         IOStandard("LVTTL"), Misc("SLEW=FAST")
-     ),
+    ),
 
     # ADC over SPI- FPGA is primary
     ("adc", 0,
@@ -41,7 +41,7 @@ _io = [
         Subsignal("clk",  Pins("P9"), IOStandard("LVTTL")),
         Subsignal("mosi", Pins("P10"), IOStandard("LVTTL")),
         Subsignal("miso", Pins("P21"), IOStandard("LVTTL"))
-     ),
+    ),
 
     # GPIO control- SRAM and connectors are shared: these pins control how
     # to access each. Recommended to combine with gpio_sram_bus extension,
@@ -52,7 +52,7 @@ _io = [
         Subsignal("bussw_oe_n", Pins("P30")),  # 5V tolerant GPIO is shared
         # w/ memory using this pin.
         IOStandard("LVTTL"), Misc("SLEW=FAST")
-     )
+    )
 ]
 
 # Perhaps define some connectors as having a specific purpose- i.e. a 5V GPIO
@@ -97,7 +97,7 @@ gpio_sram = [
         # Subsignal("oe_n", Pins()),  # If OE wasn't tied to ground on Mercury,
         # this pin would be here.
         IOStandard("LVTTL"), Misc("SLEW=FAST")
-     )
+    )
 ]
 
 # The "serial port" is in fact over SPI. The creators of the board provide a
@@ -108,7 +108,7 @@ serial = [
     ("serial", 0,
         Subsignal("tx", Pins("DIO:0"), IOStandard("LVCMOS33")),  # FTDI D1
         Subsignal("rx", Pins("INPUT:0"), IOStandard("LVCMOS33"))  # FTDI D0
-     )
+    )
 ]
 
 leds = [
@@ -151,7 +151,7 @@ vga = [
                   Misc("SLEW=FAST")),
         Subsignal("b", Pins("DIO:6 CLKIO:0"), IOStandard("LVCMOS33"),
                   Misc("SLEW=FAST"))
-     )
+    )
 ]
 
 extclk = [
@@ -172,21 +172,21 @@ sevenseg = [
         Subsignal("enable1", Pins("GPIO:9"), IOStandard("LVTTL")),   # EN1
         Subsignal("enable2", Pins("GPIO:10"), IOStandard("LVTTL")),  # EN2
         Subsignal("enable3", Pins("GPIO:11"), IOStandard("LVTTL"))  # EN2
-     )
+    )
 ]
 
 ps2 = [
     ("ps2", 0,
         Subsignal("clk", Pins("LED:1"), IOStandard("LVCMOS33")),
         Subsignal("data", Pins("LED:0"), IOStandard("LVCMOS33"))
-     )
+    )
 ]
 
 audio = [
     ("audio", 0,
         Subsignal("l", Pins("GPIO:29"), IOStandard("LVTTL")),
         Subsignal("r", Pins("GPIO:28"), IOStandard("LVTTL"))
-     )
+    )
 ]
 
 
