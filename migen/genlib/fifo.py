@@ -1,6 +1,6 @@
 from migen.fhdl.structure import *
 from migen.fhdl.module import Module
-from migen.fhdl.specials import Memory, READ_FIRST, WRITE_FIRST, NO_CHANGE
+from migen.fhdl.specials import Memory, READ_FIRST
 from migen.fhdl.bitcontainer import log2_int
 from migen.fhdl.decorators import ClockDomainsRenamer
 from migen.genlib.cdc import MultiReg, GrayCounter
