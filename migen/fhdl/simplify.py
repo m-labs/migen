@@ -87,7 +87,7 @@ class MemoryToArray(ModuleTransformer):
                 if port.async_read:
                     f.comb.append(port.dat_r.eq(storage[port.adr]))
                 else:
-                    if port.mode == WRITE_FIRST and port.we is not None:
+                    if port.mode == WRITE_FIRST:
                         adr_reg = Signal.like(port.adr)
                         rd_stmt = adr_reg.eq(port.adr)
                         f.comb.append(port.dat_r.eq(storage[adr_reg]))
