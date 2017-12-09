@@ -44,8 +44,8 @@ def _printsig(ns, s):
 
 def _printconstant(node):
     if node.signed:
-        return (str(node.nbits) + "'sd" + str(2**node.nbits + node.value),
-                True)
+        val = node.value if node.value >= 0 else 2**node.nbits + node.value
+        return (str(node.nbits) + "'sd" + str(val), True)
     else:
         return str(node.nbits) + "'d" + str(node.value), False
 
