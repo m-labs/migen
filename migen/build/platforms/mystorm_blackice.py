@@ -4,21 +4,6 @@ from migen.build.lattice.programmer import MyStormProgrammer
 
 
 _io = [
-    ("pmod", 1, Pins("94 91 88 85"), IOStandard("LVCMOS33")),
-    ("pmod", 2, Pins("95 93 90 87"), IOStandard("LVCMOS33")),
-    ("pmod", 3, Pins("105 102 99 97"), IOStandard("LVCMOS33")),
-    ("pmod", 4, Pins("104 101 98 96"), IOStandard("LVCMOS33")),
-    ("pmod", 5, Pins("143 114 112 107"), IOStandard("LVCMOS33")),
-    ("pmod", 6, Pins("144 113 110 106"), IOStandard("LVCMOS33")),
-    ("pmod", 7, Pins("10 9 2 1"), IOStandard("LVCMOS33")),
-    ("pmod", 8, Pins("8 7 4 3"), IOStandard("LVCMOS33")),
-    ("pmod", 9, Pins("20 19 16 15"), IOStandard("LVCMOS33")),
-    ("pmod", 10, Pins("18 17 12 11"), IOStandard("LVCMOS33")),
-    ("pmod", 11, Pins("34 33 22 21"), IOStandard("LVCMOS33")),
-    ("pmod", 12, Pins("32 31 26 25"), IOStandard("LVCMOS33")),
-    ("pmod", 13, Pins("29 28 24 23"), IOStandard("LVCMOS33")),
-    ("pmod", 14, Pins("71 67 68 70"), IOStandard("LVCMOS33")),
-
     ("sram", 0,
         Subsignal("adr", Pins("137 138 139 141 142 42 43 44 73 74 75 76 115",
                               "116 117 118 119 78 62")),
@@ -65,14 +50,31 @@ _io = [
     ("greset", 0, Pins("128"), IOStandard("LVCMOS33")),
 ]
 
+_connectors = [
+    ("pmod1", "94 91 88 85"),
+    ("pmod2", "95 93 90 87"),
+    ("pmod3", "105 102 99 97"),
+    ("pmod4", "104 101 98 96"),
+    ("pmod5", "143 114 112 107"),
+    ("pmod6", "144 113 110 106"),
+    ("pmod7", "10 9 2 1"),
+    ("pmod8", "8 7 4 3"),
+    ("pmod9", "20 19 16 15"),
+    ("pmod10", "18 17 12 11"),
+    ("pmod11", "34 33 22 21"),
+    ("pmod12", "32 31 26 25"),
+    ("pmod13", "29 28 24 23"),
+    ("pmod14", "71 67 68 70"),
+]
+
 
 class Platform(LatticePlatform):
     default_clk_name = "clk100"
     default_clk_period = 10
 
     def __init__(self):
-        LatticePlatform.__init__(self, "ice40-hx8k-tq144:4k", _io,
-                                 toolchain="icestorm")
+        LatticePlatform.__init__(self, "ice40-hx8k-tq144:4k",
+                                 _io, _connectors, toolchain="icestorm")
 
     def create_programmer(self, serial_port="/dev/ttyACM0"):
         return MyStormProgrammer(serial_port)
