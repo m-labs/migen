@@ -55,6 +55,73 @@ _io = [
         IOStandard("LVCMOS25")
     ),
     ("ad9154_txen", 1, Pins("L17 L14"), IOStandard("LVCMOS25")),
+
+    # Allaki
+    ("allaki0_rfsw0", 1, Pins("R2"), IOStandard("LVCMOS25")),
+    ("allaki0_rfsw1", 1, Pins("N4"), IOStandard("LVCMOS25")),
+    ("allaki1_rfsw0", 1, Pins("R5"), IOStandard("LVCMOS25")),
+    ("allaki1_rfsw1", 1, Pins("V4"), IOStandard("LVCMOS25")),
+    ("allaki2_rfsw0", 1, Pins("B15"), IOStandard("LVCMOS25")),
+    ("allaki2_rfsw1", 1, Pins("B12"), IOStandard("LVCMOS25")),
+    ("allaki3_rfsw0", 1, Pins("L4"), IOStandard("LVCMOS25")),
+    ("allaki3_rfsw1", 1, Pins("J4"), IOStandard("LVCMOS25")),
+
+    ("allaki0_att0", 1,
+        Subsignal("le", Pins("U2")),
+        Subsignal("sin", Pins("T4")),
+        Subsignal("clk", Pins("V3")),
+        Subsignal("rst", Pins("R3")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki0_att1", 1,
+        Subsignal("le", Pins("P1")),
+        Subsignal("sin", Pins("P3")),
+        Subsignal("clk", Pins("N3")),
+        Subsignal("rst", Pins("M4")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki1_att0", 1,
+        Subsignal("le", Pins("U7")),
+        Subsignal("sin", Pins("R6")),
+        Subsignal("clk", Pins("V8")),
+        Subsignal("rst", Pins("R7")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki1_att1", 1,
+        Subsignal("le", Pins("T3")),
+        Subsignal("sin", Pins("U5")),
+        Subsignal("clk", Pins("P6")),
+        Subsignal("rst", Pins("U4")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki2_att0", 1,
+        Subsignal("le", Pins("C13")),
+        Subsignal("sin", Pins("E16")),
+        Subsignal("clk", Pins("D14")),
+        Subsignal("rst", Pins("A15")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki2_att1", 1,
+        Subsignal("le", Pins("D11")),
+        Subsignal("sin", Pins("C14")),
+        Subsignal("clk", Pins("A12")),
+        Subsignal("rst", Pins("C12")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki3_att0", 1,
+        Subsignal("le", Pins("M2")),
+        Subsignal("sin", Pins("N1")),
+        Subsignal("clk", Pins("M6")),
+        Subsignal("rst", Pins("L5")),
+        IOStandard("LVCMOS25")
+    ),
+    ("allaki3_att1", 1,
+        Subsignal("le", Pins("K5")),
+        Subsignal("sin", Pins("L2")),
+        Subsignal("clk", Pins("K2")),
+        Subsignal("rst", Pins("J5")),
+        IOStandard("LVCMOS25")
+    ),
 ]
 
 
