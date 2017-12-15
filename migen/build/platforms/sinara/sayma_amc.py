@@ -26,6 +26,12 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
+    ("i2c", 0,
+        Subsignal("scl", Pins("N21")),
+        Subsignal("sda", Pins("M21")),
+        IOStandard("LVCMOS33")
+    ),
+
     # this is the second SPI flash (not containing the bitstream)
     # clock is shared with the bitstream flash and needs to be accessed
     # through STARTUPE3
