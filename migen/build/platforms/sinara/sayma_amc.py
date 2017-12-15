@@ -164,6 +164,23 @@ _io = [
         Subsignal("n", Pins("AF5"))
     ),
 
+    ("sfp_tx", 0,
+        Subsignal("p", Pins("AN4")),
+        Subsignal("n", Pins("AN3"))
+    ),
+    ("sfp_rx", 0,
+        Subsignal("p", Pins("AP2")),
+        Subsignal("n", Pins("AP1"))
+    ),
+    ("sfp_tx", 1,
+        Subsignal("p", Pins("AM6")),
+        Subsignal("n", Pins("AM5"))
+    ),
+    ("sfp_rx", 1,
+        Subsignal("p", Pins("AM2")),
+        Subsignal("n", Pins("AM1"))
+    ),
+
     # AD9154 DACs
     ("dac_refclk", 0,
         Subsignal("p", Pins("V6")),
