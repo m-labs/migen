@@ -151,6 +151,19 @@ _io = [
         IOStandard("LVDS")
     ),
 
+    ("si5324", 0,
+        Subsignal("rst_n", Pins("L24"), IOStandard("LVCMOS33")),
+        Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
+    ),
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("D13"), IOStandard("LVDS")),
+        Subsignal("n", Pins("C13"), IOStandard("LVDS"))
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("AF6")),
+        Subsignal("n", Pins("AF5"))
+    ),
+
     # AD9154 DACs
     ("dac_refclk", 0,
         Subsignal("p", Pins("V6")),
