@@ -163,6 +163,10 @@ _io = [
         Subsignal("p", Pins("AF6")),
         Subsignal("n", Pins("AF5"))
     ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("H12"), IOStandard("LVDS")),
+        Subsignal("n", Pins("G12"), IOStandard("LVDS"))
+    ),
 
     ("sfp_tx", 0,
         Subsignal("p", Pins("AN4")),
