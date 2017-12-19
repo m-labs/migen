@@ -2,14 +2,30 @@ import inspect
 from opcode import opname
 from collections import defaultdict
 
+_call_opcodes = {
+    "CALL_FUNCTION" : 3,
+    "CALL_FUNCTION_VAR" : 3,
+    "CALL_FUNCTION_KW" : 3,
+    "CALL_FUNCTION_VAR_KW" : 3,
+}
+
+_load_build_opcodes = {
+    "LOAD_GLOBAL" : 3,
+    "LOAD_ATTR" : 3,
+    "LOAD_FAST" : 3,
+    "LOAD_DEREF" : 3,
+    "DUP_TOP" : 1,
+    "BUILD_LIST" : 3,
+}
+
 
 def get_var_name(frame):
     code = frame.f_code
     call_index = frame.f_lasti
     call_opc = opname[code.co_code[call_index]]
-    if call_opc != "CALL_FUNCTION" and call_opc != "CALL_FUNCTION_VAR":
+    if call_opc not in _call_opcodes:
         return None
-    index = call_index+3
+    index = call_index+_call_opcodes[call_opc]
     while True:
         opc = opname[code.co_code[index]]
         if opc == "STORE_NAME" or opc == "STORE_ATTR":
@@ -21,12 +37,8 @@ def get_var_name(frame):
         elif opc == "STORE_DEREF":
             name_index = int(code.co_code[index+1])
             return code.co_cellvars[name_index]
-        elif opc == "LOAD_GLOBAL" or opc == "LOAD_ATTR" or opc == "LOAD_FAST" or opc == "LOAD_DEREF":
-            index += 3
-        elif opc == "DUP_TOP":
-            index += 1
-        elif opc == "BUILD_LIST":
-            index += 3
+        elif opc in _load_build_opcodes:
+            index += _load_build_opcodes[opc]
         else:
             return None
 
