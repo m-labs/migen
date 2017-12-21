@@ -1,21 +1,30 @@
 import inspect
+from sys import version_info
 from opcode import opname
 from collections import defaultdict
 
+# All opcodes are 2 bytes in length in Python 3.6
+def _bytecode_length_version_guard(old_len):
+    return old_len if version_info[1] < 6 else 2
+
 _call_opcodes = {
-    "CALL_FUNCTION" : 3,
-    "CALL_FUNCTION_VAR" : 3,
-    "CALL_FUNCTION_KW" : 3,
-    "CALL_FUNCTION_VAR_KW" : 3,
+    "CALL_FUNCTION" : _bytecode_length_version_guard(3),
+    "CALL_FUNCTION_KW" : _bytecode_length_version_guard(3),
 }
 
+if version_info[1] < 6:
+    _call_opcodes["CALL_FUNCTION_VAR"] = 3
+    _call_opcodes["CALL_FUNCTION_VAR_KW"] = 3
+else:
+    _call_opcodes["CALL_FUNCTION_EX"] = 2
+
 _load_build_opcodes = {
-    "LOAD_GLOBAL" : 3,
-    "LOAD_ATTR" : 3,
-    "LOAD_FAST" : 3,
-    "LOAD_DEREF" : 3,
-    "DUP_TOP" : 1,
-    "BUILD_LIST" : 3,
+    "LOAD_GLOBAL" : _bytecode_length_version_guard(3),
+    "LOAD_ATTR" : _bytecode_length_version_guard(3),
+    "LOAD_FAST" : _bytecode_length_version_guard(3),
+    "LOAD_DEREF" : _bytecode_length_version_guard(3),
+    "DUP_TOP" : _bytecode_length_version_guard(1),
+    "BUILD_LIST" : _bytecode_length_version_guard(3),
 }
 
 
