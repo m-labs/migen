@@ -52,6 +52,6 @@ def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
                             universal_newlines=True, bufsize=1,
                             **kwargs)
     with proc:
-        for line in open(proc.stdout.fileno(), errors="replace"):
+        for line in open(proc.stdout.fileno(), errors="ignore"):
             print(sub_rules(line, rules, max_matches), end="")
     return proc.returncode
