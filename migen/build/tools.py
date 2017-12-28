@@ -38,15 +38,13 @@ def versions(path):
             continue
 
 
-def sub_rules(lines, rules, max_matches=1):
-    for line in lines:
-        n = max_matches
-        for pattern, color in rules:
-            line, m = re.subn(pattern, color, line, n)
-            n -= m
-            if not n:
-                break
-        yield line
+def sub_rules(line, rules, max_matches=1):
+    for pattern, color in rules:
+        line, matches = re.subn(pattern, color, line, max_matches)
+        max_matches -= matches
+        if not max_matches:
+            break
+    return line
 
 
 def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
@@ -54,7 +52,6 @@ def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
                             universal_newlines=True, bufsize=1,
                             **kwargs)
     with proc:
-        for line in sub_rules(iter(proc.stdout.readline, ""),
-                              rules, max_matches):
-            sys.stdout.write(line)
+        for line in open(proc.stdout.fileno(), errors="replace"):
+            print(sub_rules(line, rules, max_matches), end="")
     return proc.returncode
