@@ -48,10 +48,10 @@ def sub_rules(line, rules, max_matches=1):
 
 
 def subprocess_call_filtered(command, rules, *, max_matches=1, **kwargs):
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                            universal_newlines=True, bufsize=1,
-                            **kwargs)
-    with proc:
-        for line in open(proc.stdout.fileno(), errors="ignore"):
-            print(sub_rules(line, rules, max_matches), end="")
-    return proc.returncode
+    with subprocess.Popen(command, stdout=subprocess.PIPE,
+                          universal_newlines=True, bufsize=1,
+                          **kwargs) as proc:
+        with open(proc.stdout.fileno(), errors="ignore", closefd=False) as stdout:
+            for line in stdout:
+                print(sub_rules(line, rules, max_matches), end="")
+        return proc.wait()
