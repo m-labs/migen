@@ -20,8 +20,8 @@ _io = [
     ),
 
     ("serial", 0,
-        Subsignal("tx", Pins("N13")),
-        Subsignal("rx", Pins("N17")),
+        Subsignal("rx", Pins("N13")),  # FPGA input, schematics TxD_2V5 
+        Subsignal("tx", Pins("N17")),  # FPGA output, schematics RxD_2V5
         IOStandard("LVCMOS25")
     ),
 
