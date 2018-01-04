@@ -10,13 +10,13 @@ _io = [
     ("clk_fpgaio", 0,
         Subsignal("p", Pins("Y18")),
         Subsignal("n", Pins("Y19")),
-        IOStandard("LVDS25"),
+        IOStandard("LVDS_25"),
     ),
 
     ("clk_rec", 0,
         Subsignal("p", Pins("U20")),
         Subsignal("n", Pins("V20")),
-        IOStandard("LVDS25"),
+        IOStandard("LVDS_25"),
     ),
 
     ("serial", 0,
