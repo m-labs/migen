@@ -42,6 +42,16 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
+    ("spiflash2x", 0,
+        Subsignal("cs_n", Pins("T19")),
+        Subsignal("dq", Pins("P22 R22")),
+        Subsignal("wp", Pins("P21")),
+        Subsignal("hold", Pins("R21")),
+        # "clk" is on CCLK
+        IOStandard("LVCMOS25")
+    ),
+
+
     ("clk_gtp", 0,
         Subsignal("p", Pins("F6")),
         Subsignal("n", Pins("E6")),
