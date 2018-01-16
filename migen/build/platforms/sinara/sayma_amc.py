@@ -32,6 +32,15 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
+    ("rtm_fpga_cfg", 0,
+        Subsignal("cclk", Pins("J25")),
+        Subsignal("din", Pins("K26")),
+        Subsignal("done", Pins("K27")),
+        Subsignal("init_b", Pins("G25")),
+        Subsignal("program_b", Pins("G26")),
+        IOStandard("LVCMOS33")
+    ),
+
     # this is the second SPI flash (not containing the bitstream)
     # clock is shared with the bitstream flash and needs to be accessed
     # through STARTUPE3
