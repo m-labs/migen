@@ -130,7 +130,7 @@ _io = [
         IOStandard("LVCMOS33")
     ),
     ("eth_mii", 0,
-        Subsignal("dv", Pins("T24")),
+        Subsignal("rx_dv", Pins("T24")),
         Subsignal("rx_data", Pins("R23 P23 R25 R26")),
         Subsignal("tx_en", Pins("N22")),
         Subsignal("tx_data", Pins("K20 K22 P20 P21")),
