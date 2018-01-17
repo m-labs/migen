@@ -126,7 +126,7 @@ _io = [
 
     ("eth_clocks", 0,
         Subsignal("tx", Pins("M22")),
-        Subsignal("rx", Pins("T25")),
+        Subsignal("rx", Pins("AG11")),
         IOStandard("LVCMOS33")
     ),
     ("eth_mii", 0,
