@@ -67,7 +67,6 @@ class XilinxMultiRegImpl(MultiRegImpl):
         if not hasattr(i, "attr"):
             i0, i = i, Signal()
             self.comb += i.eq(i0)
-        i.attr.add("mr_false_path")
         self.regs[0].attr.add("mr_ff")
         for r in self.regs:
             r.attr.add("async_reg")
@@ -94,7 +93,6 @@ class XilinxAsyncResetSynchronizerImpl(Module):
                 i_CE=1, i_C=cd.clk, o_Q=cd.rst,
                 attr={"async_reg", "ars_ff2"})
         ]
-        async_reset.attr.add("ars_false_path")
 
 
 class XilinxAsyncResetSynchronizer:
