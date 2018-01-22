@@ -186,22 +186,18 @@ _io = [
         Subsignal("n", Pins("G12"), IOStandard("LVDS"))
     ),
 
-    ("sfp_tx", 0,
-        Subsignal("p", Pins("AN4")),
-        Subsignal("n", Pins("AN3"))
-    ),
-    ("sfp_rx", 0,
-        Subsignal("p", Pins("AP2")),
-        Subsignal("n", Pins("AP1"))
+    ("sfp", 0,
+        Subsignal("txp", Pins("AN4")),
+        Subsignal("txn", Pins("AN3")),
+        Subsignal("rxp", Pins("AP2")),
+        Subsignal("rxn", Pins("AP1"))
     ),
     ("sfp_tx_disable_n", 0, Pins("AP11"), IOStandard("LVCMOS33")),
-    ("sfp_tx", 1,
-        Subsignal("p", Pins("AM6")),
-        Subsignal("n", Pins("AM5"))
-    ),
-    ("sfp_rx", 1,
-        Subsignal("p", Pins("AM2")),
-        Subsignal("n", Pins("AM1"))
+    ("sfp", 1,
+        Subsignal("txp", Pins("AM6")),
+        Subsignal("txn", Pins("AM5")),
+        Subsignal("rxp", Pins("AM2")),
+        Subsignal("rxn", Pins("AM1"))
     ),
     ("sfp_tx_disable_n", 1, Pins("AM12"), IOStandard("LVCMOS33")),
 

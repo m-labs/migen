@@ -7,21 +7,24 @@ _io = [
 
     ("clk50", 0, Pins("W19"), IOStandard("LVCMOS25")),
 
-    ("clk_fpgaio", 0,
-        Subsignal("p", Pins("Y18")),
-        Subsignal("n", Pins("Y19")),
-        IOStandard("LVDS_25"),
-    ),
-
-    ("clk_rec", 0,
-        Subsignal("p", Pins("U20")),
-        Subsignal("n", Pins("V20")),
-        IOStandard("LVDS_25"),
-    ),
-
     ("serial", 0,
         Subsignal("rx", Pins("N13")),  # FPGA input, schematics TxD_2V5 
         Subsignal("tx", Pins("N17")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("spiflash", 0,
+        Subsignal("cs_n", Pins("T19")),
+        Subsignal("dq", Pins("P22 R22 P21 R21")),
+        # "clk" is on CCLK
+        IOStandard("LVCMOS25")
+    ),
+    ("spiflash2x", 0,
+        Subsignal("cs_n", Pins("T19")),
+        Subsignal("dq", Pins("P22 R22")),
+        Subsignal("wp", Pins("P21")),
+        Subsignal("hold", Pins("R21")),
+        # "clk" is on CCLK
         IOStandard("LVCMOS25")
     ),
 
@@ -35,40 +38,33 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    ("spiflash", 0,
-        Subsignal("cs_n", Pins("T19")),
-        Subsignal("dq", Pins("P22 R22 P21 R21")),
-        # "clk" is on CCLK
-        IOStandard("LVCMOS25")
-    ),
-
-    ("spiflash2x", 0,
-        Subsignal("cs_n", Pins("T19")),
-        Subsignal("dq", Pins("P22 R22")),
-        Subsignal("wp", Pins("P21")),
-        Subsignal("hold", Pins("R21")),
-        # "clk" is on CCLK
-        IOStandard("LVCMOS25")
-    ),
-
-
-    ("clk_gtp", 0,
-        Subsignal("p", Pins("F6")),
-        Subsignal("n", Pins("E6")),
-    ),
-
     ("clk125_gtp", 0,
         Subsignal("p", Pins("F10")),
         Subsignal("n", Pins("E10")),
     ),
 
-    ("sfp_gtp", 0,
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("U20")),
+        Subsignal("n", Pins("V20")),
+        IOStandard("LVDS_25"),
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("F6")),
+        Subsignal("n", Pins("E6")),
+    ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("Y18")),
+        Subsignal("n", Pins("Y19")),
+        IOStandard("LVDS_25"),
+    ),
+
+    ("sfp", 0,
         Subsignal("txp", Pins("B4")),
         Subsignal("txn", Pins("A4")),
         Subsignal("rxp", Pins("B8")),
         Subsignal("rxn", Pins("A8")),
     ),
-    ("sfp", 0,
+    ("sfp_ctl", 0,
         Subsignal("mod_def1", Pins("U7")),
         Subsignal("mod_def2", Pins("T3")),
         Subsignal("los", Pins("P15")),
@@ -80,13 +76,13 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    ("sfp_gtp", 1,
+    ("sfp", 1,
         Subsignal("txp", Pins("D5")),
         Subsignal("txn", Pins("C5")),
         Subsignal("rxp", Pins("D11")),
         Subsignal("rxn", Pins("C11")),
     ),
-    ("sfp", 1,
+    ("sfp_ctl", 1,
         Subsignal("mod_def1", Pins("P17")),
         Subsignal("mod_def2", Pins("U18")),
         Subsignal("los", Pins("R18")),
@@ -98,13 +94,13 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    ("sfp_gtp", 2,
+    ("sfp", 2,
         Subsignal("txp", Pins("B6")),
         Subsignal("txn", Pins("A6")),
         Subsignal("rxp", Pins("B10")),
         Subsignal("rxn", Pins("A10")),
     ),
-    ("sfp", 2,
+    ("sfp_ctl", 2,
         Subsignal("mod_def1", Pins("P14")),
         Subsignal("mod_def2", Pins("P20")),
         Subsignal("los", Pins("V22")),
@@ -116,7 +112,7 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    ("sata_gtp", 0,
+    ("sata", 0,
         Subsignal("txp", Pins("D7")),
         Subsignal("txn", Pins("C7")),
         Subsignal("rxp", Pins("D9")),
