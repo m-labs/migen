@@ -192,14 +192,14 @@ _io = [
         Subsignal("rxp", Pins("AP2")),
         Subsignal("rxn", Pins("AP1"))
     ),
-    ("sfp_tx_disable_n", 0, Pins("AP11"), IOStandard("LVCMOS33")),
+    ("sfp_tx_disable", 0, Pins("AP11"), IOStandard("LVCMOS33")),
     ("sfp", 1,
         Subsignal("txp", Pins("AM6")),
         Subsignal("txn", Pins("AM5")),
         Subsignal("rxp", Pins("AM2")),
         Subsignal("rxn", Pins("AM1"))
     ),
-    ("sfp_tx_disable_n", 1, Pins("AM12"), IOStandard("LVCMOS33")),
+    ("sfp_tx_disable", 1, Pins("AM12"), IOStandard("LVCMOS33")),
 
     # AD9154 DACs
     ("dac_refclk", 0,
