@@ -24,9 +24,9 @@ class MultiRegImpl(Module):
 
         ###
 
+        sd = getattr(self.sync, self.odomain)
         src = self.i
         for reg in self.regs:
-            sd = getattr(self.sync, self.odomain)
             sd += reg.eq(src)
             src = reg
         self.comb += self.o.eq(src)
