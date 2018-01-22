@@ -157,12 +157,13 @@ class LatticeIceStormToolchain:
             "lp8k": ["cm81", "cm81:4k", "cm121", "cm121:4k", "cm225",
                      "cm225:4k"],
             "hx8k": ["cb132", "cb132:4k", "tq144:4k", "cm225", "ct256"],
+            "up5k": ["sg48"],
         }
 
         (family, series_size, package) = device_str.split("-")
         if family not in ["ice40"]:
             raise ValueError("Unknown device family")
-        if series_size not in ["lp384", "lp1k", "hx1k", "lp8k", "hx8k"]:
+        if series_size not in ["lp384", "lp1k", "hx1k", "lp8k", "hx8k", "up5k"]:
             raise ValueError("Invalid device series/size")
         if package not in valid_packages[series_size]:
             raise ValueError("Invalid device package")
