@@ -92,7 +92,7 @@ class XilinxVivadoToolchain:
     def _build_batch(self, platform, sources, build_name):
         tcl = []
         tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
-        tcl.append("create_property -type bool mr_ff cell")
+        tcl.append("create_property -type bool mr_ff net")
         tcl.append("create_property -type bool ars_ff1 cell")
         tcl.append("create_property -type bool ars_ff2 cell")
         for filename, language, library in sources:
@@ -159,8 +159,7 @@ class XilinxVivadoToolchain:
         # The asynchronous input to a MultiReg is a false path
         platform.add_platform_command(
             "set_false_path -quiet "
-            "-to [get_pins -filter {{REF_PIN_NAME == D}} -of "
-            "[get_cells -hier -filter {{mr_ff}}]]"
+            "-to [get_nets -hier -filter mr_ff]]"
         )
         # The asychronous reset input to the AsyncResetSynchronizer is a false
         # path
