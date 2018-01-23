@@ -159,21 +159,21 @@ class XilinxVivadoToolchain:
         # The asynchronous input to a MultiReg is a false path
         platform.add_platform_command(
             "set_false_path -quiet "
-            "-to [get_nets -hier -filter mr_ff]]"
+            "-to [get_nets -filter mr_ff]]"
         )
         # The asychronous reset input to the AsyncResetSynchronizer is a false
         # path
         platform.add_platform_command(
             "set_false_path -quiet "
             "-to [get_pins -filter {{REF_PIN_NAME == PRE}} -of "
-            "[get_cells -hier -filter {{ars_ff1 || ars_ff2}}]]"
+            "[get_cells -filter {{ars_ff1 || ars_ff2}}]]"
         )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
             "set_max_delay 2 -quiet "
-            "-from [get_cells -hier -filter ars_ff1] "
-            "-to [get_cells -hier -filter ars_ff2]"
+            "-from [get_cells -filter ars_ff1] "
+            "-to [get_cells -filter ars_ff2]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
