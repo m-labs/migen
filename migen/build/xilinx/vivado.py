@@ -143,12 +143,10 @@ class XilinxVivadoToolchain:
                 " [get_nets {clk}]", clk=clk)
         for from_, to in sorted(self.false_paths,
                                 key=lambda x: (x[0].duid, x[1].duid)):
-            if (from_ not in self.clocks
-                    or to not in self.clocks):
-                raise ValueError("Vivado requires period "
-                                 "constraints on all clocks used in false paths")
             platform.add_platform_command(
-                "set_false_path -from [get_clocks {from_}] -to [get_clocks {to}]",
+                "set_false_path "
+                "-from [get_clocks -of [get_nets {from_}]] "
+                "-to [get_clocks -of [get_nets {to}]]",
                 from_=from_, to=to)
 
         # make sure add_*_constraint cannot be used again
