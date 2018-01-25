@@ -1,11 +1,6 @@
 import os
 import subprocess
 
-try:
-    import serial
-except ImportError:
-    serial = None
-
 from migen.build.generic_programmer import GenericProgrammer
 from migen.build import tools
 
@@ -61,12 +56,10 @@ class TinyFpgaBProgrammer(GenericProgrammer):
 
 class MyStormProgrammer(GenericProgrammer):
     def __init__(self, serial_port):
-        if serial is None:
-            raise RuntimeError(
-                "MyStormProgrammer requires pyserial be installed.")
         self.serial_port = serial_port
 
     def load_bitstream(self, bitstream_file):
+        import serial
         with serial.Serial(self.serial_port) as port:
             with open(bitstream_file, "rb") as f:
                 port.write(f.read())
