@@ -83,7 +83,7 @@ _io = [
             IOStandard("3.3-V LVTTL")
         ),
 
-        Subsignal("uart",
+        Subsignal("serial",
             Subsignal("rx", Pins("A22")),
             Subsignal("tx", Pins("B21")),
             Subsignal("conv_usb_n", Pins("C6")),
@@ -128,7 +128,7 @@ _io = [
             IOStandard("3.3-V LVTTL")
         ),
 
-        Subsignal("ddr3",
+        Subsignal("ddram",
             Subsignal("a",
                       Pins("C28 B28 E26 D26 J21 J20 C26 B26",
                            "F26 F25 A24 B24 D24 C24 G23"),
