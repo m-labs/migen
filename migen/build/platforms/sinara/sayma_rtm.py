@@ -25,7 +25,7 @@ _io = [
     ("hmc_spi", 0,
         Subsignal("clk", Pins("A17")),
         Subsignal("mosi", Pins("B16")),
-        Subsignal("miso", Pins("D9"), Misc("PULLDOWN")),
+        Subsignal("miso", Pins("D9"), Misc("PULLDOWN=TRUE")),
         # cs[0]=830 cs[1]=7043
         Subsignal("cs_n", Pins("C8 D16")),
         IOStandard("LVCMOS25")
@@ -43,7 +43,7 @@ _io = [
         Subsignal("clk", Pins("T13")),
         Subsignal("cs_n", Pins("U14")),
         Subsignal("mosi", Pins("V17")),
-        Subsignal("miso", Pins("R13"), Misc("PULLDOWN")),
+        Subsignal("miso", Pins("R13"), Misc("PULLDOWN=TRUE")),
         IOStandard("LVCMOS25")
     ),
     ("ad9154_txen", 0, Pins("V16 U16"), IOStandard("LVCMOS25")),
@@ -51,7 +51,7 @@ _io = [
         Subsignal("clk", Pins("J15")),
         Subsignal("cs_n", Pins("K18")),
         Subsignal("mosi", Pins("J18")),
-        Subsignal("miso", Pins("J16"), Misc("PULLDOWN")),
+        Subsignal("miso", Pins("J16"), Misc("PULLDOWN=TRUE")),
         IOStandard("LVCMOS25")
     ),
     ("ad9154_txen", 1, Pins("L17 L14"), IOStandard("LVCMOS25")),
