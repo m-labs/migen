@@ -129,6 +129,9 @@ class SyncFIFO(Module, _FIFOInterface):
 
 
 class SyncFIFOBuffered(Module, _FIFOInterface):
+    """Has an interface compatible with SyncFIFO with fwft=True,
+    but does not use asynchronous RAM reads that are not compatible
+    with block RAMs. Increases latency by one cycle."""
     def __init__(self, width, depth):
         _FIFOInterface.__init__(self, width, depth)
         self.submodules.fifo = fifo = SyncFIFO(width, depth, False)
