@@ -212,3 +212,22 @@ class AsyncFIFO(Module, _FIFOInterface):
             rdport.adr.eq(consume.q_next_binary[:-1]),
             self.dout.eq(rdport.dat_r)
         ]
+
+
+class AsyncFIFOBuffered(Module, _FIFOInterface):
+    """Improves timing when it breaks due to sluggish clock-to-output
+    delay in e.g. Xilinx block RAMs. Increases latency by one cycle."""
+    def __init__(self, width, depth):
+        _FIFOInterface.__init__(self, width, depth)
+        self.submodules.fifo = fifo = AsyncFIFO(width, depth)
+
+        self.writable = fifo.writable
+        self.din = fifo.din
+        self.we = fifo.we
+
+        self.sync.read += \
+            If(self.re | ~self.readable,
+                self.dout.eq(fifo.dout),
+                self.readable.eq(fifo.readable)
+            )
+        self.comb += fifo.re.eq(self.re | ~self.readable)
