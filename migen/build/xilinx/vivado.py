@@ -92,9 +92,6 @@ class XilinxVivadoToolchain:
     def _build_batch(self, platform, sources, build_name):
         tcl = []
         tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
-        tcl.append("create_property -type bool mr_ff net")
-        tcl.append("create_property -type bool ars_ff1 cell")
-        tcl.append("create_property -type bool ars_ff2 cell")
         for filename, language, library in sources:
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
@@ -144,9 +141,10 @@ class XilinxVivadoToolchain:
         for from_, to in sorted(self.false_paths,
                                 key=lambda x: (x[0].duid, x[1].duid)):
             platform.add_platform_command(
-                "set_false_path "
-                "-from [get_clocks -of [get_nets {from_}]] "
-                "-to [get_clocks -of [get_nets {to}]]",
+                "set_clock_groups "
+                "-group [get_clocks -include_generated_clocks -of [get_nets {from_}]] "
+                "-group [get_clocks -include_generated_clocks -of [get_nets {to}]] "
+                "-asynchronous",
                 from_=from_, to=to)
 
         # make sure add_*_constraint cannot be used again
@@ -157,21 +155,23 @@ class XilinxVivadoToolchain:
         # The asynchronous input to a MultiReg is a false path
         platform.add_platform_command(
             "set_false_path -quiet "
-            "-to [get_nets -filter mr_ff]]"
+            "-to [get_nets -filter {{mr_ff == TRUE}}]"
         )
         # The asychronous reset input to the AsyncResetSynchronizer is a false
         # path
         platform.add_platform_command(
             "set_false_path -quiet "
-            "-to [get_pins -filter {{REF_PIN_NAME == PRE}} -of "
-            "[get_cells -filter {{ars_ff1 || ars_ff2}}]]"
+            "-to [get_pins -filter {{REF_PIN_NAME == PRE}} "
+                "-of [get_cells -filter {{ars_ff1 == TRUE || ars_ff2 == TRUE}}]]"
         )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
             "set_max_delay 2 -quiet "
-            "-from [get_cells -filter ars_ff1] "
-            "-to [get_cells -filter ars_ff2]"
+            "-from [get_pins -filter {{REF_PIN_NAME == Q}} "
+                "-of [get_cells -filter {{ars_ff1 == TRUE}}]] "
+            "-to [get_pins -filter {{REF_PIN_NAME == D}} "
+                "-of [get_cells -filter {{ars_ff2 == TRUE}}]]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
@@ -205,4 +205,5 @@ class XilinxVivadoToolchain:
         self.clocks[clk] = period
 
     def add_false_path_constraint(self, platform, from_, to):
-        self.false_paths.add((from_, to))
+        if (to, from_) not in self.false_paths:
+            self.false_paths.add((from_, to))
