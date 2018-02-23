@@ -127,7 +127,7 @@ _io = [
     ("eth_clocks", 0,
         Subsignal("tx", Pins("M22")),
         Subsignal("rx", Pins("AG11")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
     ("eth_rgmii", 0,
         Subsignal("rx_ctl", Pins("T24")),
@@ -136,7 +136,7 @@ _io = [
         Subsignal("tx_data", Pins("K20 K22 P20 P21")),
         Subsignal("mdc", Pins("T27")),
         Subsignal("mdio", Pins("R27")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
 
     ("sma_io", 0,
