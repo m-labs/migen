@@ -25,10 +25,9 @@ _io = [
     ("hmc_spi", 0,
         Subsignal("clk", Pins("A17"), Misc("PULLDOWN=TRUE")),
         # cs[0]=830 cs[1]=7043
-        # Watch out for the HMC830 SPI mode peculiarity. PULLUP CS and PULLDOWN
-        # CLK here, then bring the SPI core online (CS high, CLK low) and
-        # choose SPI mode by sequencing a rising edge on CS and CLK.
-        Subsignal("cs_n", Pins("C8 D16"), Misc("PULLUP=TRUE")),
+        # Watch out for the HMC830 SPI mode peculiarity. PULLDOWN CS here
+        # so that toggling the SPI core offline will make edges.
+        Subsignal("cs_n", Pins("C8 D16"), Misc("PULLDOWN=TRUE")),
         Subsignal("mosi", Pins("B16"), Misc("PULLDOWN=TRUE")),
         Subsignal("miso", Pins("D9"), Misc("PULLDOWN=TRUE")),
         IOStandard("LVCMOS25")
