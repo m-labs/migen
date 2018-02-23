@@ -129,7 +129,7 @@ _io = [
         Subsignal("rx", Pins("AG11")),
         IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
-    ("eth_rgmii", 0,
+    ("eth", 0,
         Subsignal("rx_ctl", Pins("T24")),
         Subsignal("rx_data", Pins("R23 P23 R25 R26")),
         Subsignal("tx_ctl", Pins("N22")),
