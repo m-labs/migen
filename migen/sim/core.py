@@ -41,7 +41,7 @@ class TimeManager:
             else:
                 high = False
             self.clocks[k] = ClockState(high, half_period, half_period - phase)
-    
+
     def tick(self):
         rising = set()
         falling = set()
@@ -64,14 +64,14 @@ str2op = {
     "+": operator.add,
     "-": operator.sub,
     "*": operator.mul,
-    
+
     ">>>": operator.rshift,
     "<<<": operator.lshift,
-    
+
     "&": operator.and_,
     "^": operator.xor,
     "|": operator.or_,
-    
+
     "<": operator.lt,
     "<=": operator.le,
     "==": operator.eq,
@@ -325,7 +325,7 @@ class Simulator:
             self.evaluator.execute([x])
             return None
         else:
-            raise ValueError
+            raise ValueError("Invalid simulator exec/eval request", x)
 
     def _process_generators(self, cd):
         exhausted = []
