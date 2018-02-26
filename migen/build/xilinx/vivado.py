@@ -105,7 +105,6 @@ class XilinxVivadoToolchain:
             tcl.append("synth_design -top top -part {} -include_dirs {{{}}}".format(platform.device, " ".join(platform.verilog_include_paths)))
         else:
             tcl.append("synth_design -top top -part {}".format(platform.device))
-        tcl.append("write_checkpoint -force {}_synth.dcp".format(build_name))
         tcl.append("report_timing_summary -file {}_timing_synth.rpt".format(build_name))
         tcl.append("report_utilization -hierarchical -file {}_utilization_hierarchical_synth.rpt".format(build_name))
         tcl.append("report_utilization -file {}_utilization_synth.rpt".format(build_name))
@@ -113,7 +112,6 @@ class XilinxVivadoToolchain:
         tcl.append("place_design")
         if self.with_phys_opt:
             tcl.append("phys_opt_design -directive AddRetime")
-        tcl.append("write_checkpoint -force {}_place.dcp".format(build_name))
         tcl.append("report_utilization -hierarchical -file {}_utilization_hierarchical_place.rpt".format(build_name))
         tcl.append("report_utilization -file {}_utilization_place.rpt".format(build_name))
         tcl.append("report_io -file {}_io.rpt".format(build_name))
