@@ -19,7 +19,7 @@ _io = [
 
     ("clk100", 0, Pins("129"), IOStandard("LVCMOS33")),
 
-    ("sdcard", 0,
+    ("mmc", 0,
         Subsignal("dat", Pins("63 64 39 38")),
         Subsignal("cmd", Pins("41")),
         Subsignal("clk", Pins("37")),
