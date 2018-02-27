@@ -330,7 +330,11 @@ def convert(f, ios=None, name="top",
                 f.clock_domains.append(cd)
                 ios |= {cd.clk, cd.rst}
             else:
-                raise KeyError("Unresolved clock domain: '"+cd_name+"'")
+                msg = "Unresolved clock domain: \""+cd_name+"\"\n"
+                msg += "Available clock domains:\n"
+                for name in sorted(list_clock_domains(f)):
+                    msg += "- "+name+"\n"
+                raise Exception(msg)
 
     f = lower_complex_slices(f)
     insert_resets(f)
