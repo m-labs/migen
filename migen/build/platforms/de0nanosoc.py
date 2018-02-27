@@ -69,17 +69,21 @@ _io = [
         Subsignal("key", Pins("J18"), IOStandard("3.3-V LVTTL")),
         Subsignal("led", Pins("A20"), IOStandard("3.3-V LVTTL")),
 
-        Subsignal("enet",
+        Subsignal("eth",
             Subsignal("tx_en", Pins("A12")),
             Subsignal("tx_data", Pins("A16 J14 A15 D17")),
             Subsignal("rx_dv", Pins("J13")),
             Subsignal("rx_data", Pins("A14 A11 C15 A9")),
-            Subsignal("rx_clk", Pins("J12")),
             Subsignal("reset_n", Pins("B14")),
             Subsignal("mdio", Pins("E16")),
             Subsignal("mdc", Pins("A13")),
             Subsignal("int_n", Pins("B14")),
-            Subsignal("gtx_clk", Pins("J15")),
+            IOStandard("3.3-V LVTTL")
+        ),
+
+        Subsignal("eth_clocks",
+            Subsignal("rx", Pins("J12")),
+            Subsignal("gtx", Pins("J15")),
             IOStandard("3.3-V LVTTL")
         ),
 
