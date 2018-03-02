@@ -388,3 +388,10 @@ class Platform(XilinxPlatform):
                 toolchain="vivado")
         self.add_platform_command(
                 "set_property INTERNAL_VREF 0.750 [get_iobanks 35]")
+        self.toolchain.bitstream_commands.extend([
+            "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
+            "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
+            "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 2 [current_design]",
+            "set_property CFGBVS VCCO [current_design]",
+            "set_property CONFIG_VOLTAGE 2.5 [current_design]",
+            ])
