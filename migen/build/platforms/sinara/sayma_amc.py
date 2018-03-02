@@ -321,6 +321,13 @@ class Platform(XilinxPlatform):
         XilinxPlatform.__init__(
                 self, "xcku040-ffva1156-1-c", _io, _connectors,
                 toolchain="vivado")
+        self.toolchain.bitstream_commands.extend([
+            "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
+            "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
+            "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]",
+            "set_property CFGBVS VCCO [current_design]",
+            "set_property CONFIG_VOLTAGE 3.3 [current_design]",
+            ])
 
     # We do not contrain Ethernet clocks here, since we do not know
     # if they are RGMII (125MHz) or MII (25MHz)
