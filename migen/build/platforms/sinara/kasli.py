@@ -1,15 +1,109 @@
 from migen.build.generic_platform import *
 from migen.build.xilinx import XilinxPlatform
 
-
-_io = [
+_io_v1_0 = [
     ("user_led", 0, Pins("T16"), IOStandard("LVCMOS25")),  # LED_USER1
 
     ("clk50", 0, Pins("W19"), IOStandard("LVCMOS25")),
 
     ("serial", 0,
-        Subsignal("rx", Pins("N13")),  # FPGA input, schematics TxD_2V5 
+        Subsignal("rx", Pins("N13")),  # FPGA input, schematics TxD_2V5
         Subsignal("tx", Pins("N17")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("clk_sel", 0, Pins("F21"), IOStandard("LVCMOS25")),
+
+    ("vusb_present", 0, Pins("M17"), IOStandard("LVCMOS25")),
+
+    ("sfp_ctl", 0,
+        Subsignal("mod_def1", Pins("U7")),
+        Subsignal("mod_def2", Pins("T3")),
+        Subsignal("los", Pins("P15")),
+        Subsignal("mod_present", Pins("U16")),
+        Subsignal("rate_select", Pins("N15")),
+        Subsignal("tx_disable", Pins("R14")),
+        Subsignal("tx_fault", Pins("N14")),
+        Subsignal("led", Pins("P16")),
+        IOStandard("LVCMOS25")
+    ),
+    ("sfp_ctl", 1,
+        Subsignal("mod_def1", Pins("P17")),
+        Subsignal("mod_def2", Pins("U18")),
+        Subsignal("los", Pins("R18")),
+        Subsignal("mod_present", Pins("W20")),
+        Subsignal("rate_select", Pins("T18")),
+        Subsignal("tx_disable", Pins("R17")),
+        Subsignal("tx_fault", Pins("U17")),
+        Subsignal("led", Pins("R19")),
+        IOStandard("LVCMOS25")
+    ),
+    ("sfp_ctl", 2,
+        Subsignal("mod_def1", Pins("P14")),
+        Subsignal("mod_def2", Pins("P20")),
+        Subsignal("los", Pins("V22")),
+        Subsignal("mod_present", Pins("T21")),
+        Subsignal("rate_select", Pins("T20")),
+        Subsignal("tx_disable", Pins("U21")),
+        Subsignal("tx_fault", Pins("R16")),
+        Subsignal("led", Pins("P19")),
+        IOStandard("LVCMOS25")
+    ),
+]
+
+
+_io_v1_1 = [
+    ("user_led", 0, Pins("N17"), IOStandard("LVCMOS25")),  # LED_USER1
+    ("user_led", 1, Pins("V22"), IOStandard("LVCMOS25")),  # LED_USER2
+    ("user_led", 2, Pins("T21"), IOStandard("LVCMOS25")),  # LED_USER3
+
+    ("serial", 0,
+        Subsignal("rx", Pins("M17")),  # FPGA input, schematics TxD_2V5
+        Subsignal("tx", Pins("T16")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("vusb_present", 0, Pins("N13"), IOStandard("LVCMOS25")),
+
+    ("sfp_ctl", 0,
+        Subsignal("los", Pins("N15")),
+        Subsignal("mod_present", Pins("P16")),
+        Subsignal("rate_select", Pins("R14")),
+        Subsignal("rate_select1", Pins("P15")),
+        Subsignal("tx_disable", Pins("N14")),
+        Subsignal("tx_fault", Pins("U7")),
+        Subsignal("led", Pins("U16")),
+        IOStandard("LVCMOS25")
+    ),
+
+    ("sfp_ctl", 1,
+        Subsignal("los", Pins("T18")),
+        Subsignal("mod_present", Pins("P17")),
+        Subsignal("rate_select", Pins("U18")),
+        Subsignal("rate_select1", Pins("R18")),
+        Subsignal("tx_disable", Pins("R17")),
+        Subsignal("tx_fault", Pins("U17")),
+        Subsignal("led", Pins("R19")),
+        IOStandard("LVCMOS25")
+    ),
+
+    ("sfp_ctl", 2,
+        Subsignal("los", Pins("R16")),
+        Subsignal("mod_present", Pins("T20")),
+        Subsignal("rate_select", Pins("P14")),
+        Subsignal("rate_select1", Pins("U21")),
+        Subsignal("tx_disable", Pins("P20")),
+        Subsignal("tx_fault", Pins("P19")),
+        Subsignal("led", Pins("W20")),
+        IOStandard("LVCMOS25")
+    ),
+]
+
+
+_io_common = [
+    ("i2c", 0,
+        Subsignal("scl", Pins("J16")),
+        Subsignal("sda", Pins("F15")),
         IOStandard("LVCMOS25")
     ),
 
@@ -28,16 +122,6 @@ _io = [
         IOStandard("LVCMOS25")
     ),
 
-    ("clk_sel", 0, Pins("F21"), IOStandard("LVCMOS25")),
-
-    ("vusb_present", 0, Pins("M17"), IOStandard("LVCMOS25")),
-
-    ("i2c", 0,
-        Subsignal("scl", Pins("J16")),
-        Subsignal("sda", Pins("F15")),
-        IOStandard("LVCMOS25")
-    ),
-
     ("clk125_gtp", 0,
         Subsignal("p", Pins("F10")),
         Subsignal("n", Pins("E10")),
@@ -48,10 +132,12 @@ _io = [
         Subsignal("n", Pins("V20")),
         IOStandard("LVDS_25"),
     ),
+
     ("si5324_clkout", 0,
         Subsignal("p", Pins("F6")),
         Subsignal("n", Pins("E6")),
     ),
+
     ("si5324_clkout_fabric", 0,
         Subsignal("p", Pins("Y18")),
         Subsignal("n", Pins("Y19")),
@@ -64,54 +150,18 @@ _io = [
         Subsignal("rxp", Pins("B8")),
         Subsignal("rxn", Pins("A8")),
     ),
-    ("sfp_ctl", 0,
-        Subsignal("mod_def1", Pins("U7")),
-        Subsignal("mod_def2", Pins("T3")),
-        Subsignal("los", Pins("P15")),
-        Subsignal("mod_present", Pins("U16")),
-        Subsignal("rate_select", Pins("N15")),
-        Subsignal("tx_disable", Pins("R14")),
-        Subsignal("tx_fault", Pins("N14")),
-        Subsignal("led", Pins("P16")),
-        IOStandard("LVCMOS25")
-    ),
-
     ("sfp", 1,
         Subsignal("txp", Pins("D5")),
         Subsignal("txn", Pins("C5")),
         Subsignal("rxp", Pins("D11")),
         Subsignal("rxn", Pins("C11")),
     ),
-    ("sfp_ctl", 1,
-        Subsignal("mod_def1", Pins("P17")),
-        Subsignal("mod_def2", Pins("U18")),
-        Subsignal("los", Pins("R18")),
-        Subsignal("mod_present", Pins("W20")),
-        Subsignal("rate_select", Pins("T18")),
-        Subsignal("tx_disable", Pins("R17")),
-        Subsignal("tx_fault", Pins("U17")),
-        Subsignal("led", Pins("R19")),
-        IOStandard("LVCMOS25")
-    ),
-
     ("sfp", 2,
         Subsignal("txp", Pins("B6")),
         Subsignal("txn", Pins("A6")),
         Subsignal("rxp", Pins("B10")),
         Subsignal("rxn", Pins("A10")),
     ),
-    ("sfp_ctl", 2,
-        Subsignal("mod_def1", Pins("P14")),
-        Subsignal("mod_def2", Pins("P20")),
-        Subsignal("los", Pins("V22")),
-        Subsignal("mod_present", Pins("T21")),
-        Subsignal("rate_select", Pins("T20")),
-        Subsignal("tx_disable", Pins("U21")),
-        Subsignal("tx_fault", Pins("R16")),
-        Subsignal("led", Pins("P19")),
-        IOStandard("LVCMOS25")
-    ),
-
     ("sata", 0,
         Subsignal("txp", Pins("D7")),
         Subsignal("txn", Pins("C7")),
@@ -382,9 +432,16 @@ class Platform(XilinxPlatform):
     default_clk_name = "clk50"
     default_clk_period = 20.0
 
-    def __init__(self):
+    def __init__(self, hw_rev="v1.0"):
+        if hw_rev == "v1.0":
+            io_rev = _io_v1_0
+        elif hw_rev == "v1.1":
+            io_rev = _io_v1_1
+        else:
+            raise ValueError("Unknown hardware revision", hw_rev)
+
         XilinxPlatform.__init__(
-                self, "xc7a100t-fgg484-2", _io, _connectors,
+                self, "xc7a100t-fgg484-2", _io_common + io_rev, _connectors,
                 toolchain="vivado")
         self.add_platform_command(
                 "set_property INTERNAL_VREF 0.750 [get_iobanks 35]")
