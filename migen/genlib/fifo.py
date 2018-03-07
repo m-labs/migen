@@ -54,8 +54,8 @@ class _FIFOInterface:
         self.re = Signal()
         self.readable = Signal()  # not empty
 
-        self.din = Signal(width)
-        self.dout = Signal(width)
+        self.din = Signal(width, reset_less=True)
+        self.dout = Signal(width, reset_less=True)
         self.width = width
         self.depth = depth
 
