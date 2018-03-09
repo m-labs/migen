@@ -206,9 +206,10 @@ class XilinxDDRInputImplKU(Module):
         self.specials += Instance("IDDRE1",
             p_DDR_CLK_EDGE="SAME_EDGE_PIPELINED",
             p_IS_C_INVERTED=0,
+            p_IS_CB_INVERTED=1,
             i_D=i,
             o_Q1=o1, o_Q2=o2,
-            i_C=clk, i_CB=~clk,
+            i_C=clk, i_CB=clk,
             i_R=0
         )
 
