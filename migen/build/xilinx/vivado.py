@@ -118,6 +118,7 @@ class XilinxVivadoToolchain:
         tcl.append("report_control_sets -verbose -file {}_control_sets.rpt".format(build_name))
         tcl.append("report_clock_utilization -file {}_clock_utilization.rpt".format(build_name))
         tcl.append("route_design")
+        tcl.append("phys_opt_design")
         tcl.append("write_checkpoint -force {}_route.dcp".format(build_name))
         tcl.append("report_route_status -file {}_route_status.rpt".format(build_name))
         tcl.append("report_drc -file {}_drc.rpt".format(build_name))
