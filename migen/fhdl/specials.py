@@ -278,6 +278,11 @@ class Memory(Special):
                 return verilog_printexpr(ns, e)[0]
         adrbits = bits_for(memory.depth-1)
 
+        for port in memory.ports:
+            if port.async_read:
+                r += "(* ram_style = \"distributed\" *) "
+                break
+
         r += "reg [" + str(memory.width-1) + ":0] " \
             + gn(memory) \
             + "[0:" + str(memory.depth-1) + "];\n"
