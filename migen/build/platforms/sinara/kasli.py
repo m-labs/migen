@@ -67,7 +67,7 @@ _io_v1_1 = [
 
     ("sfp_ctl", 0,
         Subsignal("los", Pins("N15")),
-        Subsignal("mod_present", Pins("P16")),
+        Subsignal("mod_present_n", Pins("P16")),
         Subsignal("rate_select", Pins("R14")),
         Subsignal("rate_select1", Pins("P15")),
         Subsignal("tx_disable", Pins("N14")),
@@ -78,7 +78,7 @@ _io_v1_1 = [
 
     ("sfp_ctl", 1,
         Subsignal("los", Pins("T18")),
-        Subsignal("mod_present", Pins("P17")),
+        Subsignal("mod_present_n", Pins("P17")),
         Subsignal("rate_select", Pins("U18")),
         Subsignal("rate_select1", Pins("R18")),
         Subsignal("tx_disable", Pins("R17")),
@@ -89,7 +89,7 @@ _io_v1_1 = [
 
     ("sfp_ctl", 2,
         Subsignal("los", Pins("R16")),
-        Subsignal("mod_present", Pins("T20")),
+        Subsignal("mod_present_n", Pins("T20")),
         Subsignal("rate_select", Pins("P14")),
         Subsignal("rate_select1", Pins("U21")),
         Subsignal("tx_disable", Pins("P20")),
