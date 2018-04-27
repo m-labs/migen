@@ -133,3 +133,10 @@ class Platform(XilinxPlatform):
 
     def __init__(self):
         XilinxPlatform.__init__(self, "xc7a15t-csg325-1", _io, toolchain="vivado")
+        self.toolchain.bitstream_commands.extend([
+            # FIXME: enable this when the XADC reference wiring is fixed
+            # "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
+            "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
+            "set_property CFGBVS VCCO [current_design]",
+            "set_property CONFIG_VOLTAGE 3.3 [current_design]",
+        ])
