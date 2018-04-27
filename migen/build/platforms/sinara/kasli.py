@@ -446,6 +446,9 @@ class Platform(XilinxPlatform):
         self.add_platform_command(
                 "set_property INTERNAL_VREF 0.750 [get_iobanks 35]")
         self.toolchain.bitstream_commands.extend([
+            # NOTE: disable this on Kasli/v1.0 boards where the XADC reference
+            # has not been fixed.
+            "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
             "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
             "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
             "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 2 [current_design]",
