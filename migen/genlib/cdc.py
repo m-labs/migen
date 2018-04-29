@@ -13,7 +13,7 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 
 
 class MultiRegImpl(Module):
-    def __init__(self, i, o, odomain, n, reset):
+    def __init__(self, i, o, odomain, n, reset=0):
         self.i = i
         self.o = o
         self.odomain = odomain
