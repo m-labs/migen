@@ -55,7 +55,7 @@ class MachClock(Module):
         i = bisect.bisect_right(self.supported_freqs, 1000.0/period)
         if i:
             return self.supported_freqs[i-1]
-        raise ValueError
+        raise ValueError("Clock period out of range for internal oscillator.")
 
 
 class Platform(LatticePlatform):
@@ -75,7 +75,7 @@ class Platform(LatticePlatform):
     def request(self, *args, **kwargs):
         try:
             sig = GenericPlatform.request(self, *args, **kwargs)
-        except:
+        except ConstraintError:
             # Do not add to self.constraint_manager.matched because we
             # don't want this signal to become part of the UCF.
             if (args[0] == "osch_clk") and not self.osch_used:
