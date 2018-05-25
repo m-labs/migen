@@ -271,11 +271,11 @@ def _printcomb(f, ns,
                 if display_run:
                     r += "\t$display(\"Running comb block #" + str(n) + "\");\n"
                 if blocking_assign:
-                    for t in g[0]:
+                    for t in sorted(g[0], key=lambda x: x.duid):
                         r += "\t" + ns.get_name(t) + " = " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_BLOCKING, 1, g[1])
                 else:
-                    for t in g[0]:
+                    for t in sorted(g[0], key=lambda x: x.duid):
                         r += "\t" + ns.get_name(t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_NONBLOCKING, 1, g[1])
                 if dummy_signal:
