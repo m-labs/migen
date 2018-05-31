@@ -45,8 +45,9 @@ class MachClock(Module):
     ]
 
     def __init__(self, period, out):
+        freq_str = "{:.2f}".format(self.nearest_freq(period))
         self.specials += Instance("OSCH",
-                                  p_NOM_FREQ=str(self.nearest_freq(period)),
+                                  p_NOM_FREQ=freq_str,
                                   i_STDBY=C(0),
                                   o_OSC=out
                                   )
