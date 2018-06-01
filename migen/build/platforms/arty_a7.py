@@ -15,28 +15,28 @@ _io = [
         Subsignal("r", Pins("G6")),
         Subsignal("g", Pins("F6")),
         Subsignal("b", Pins("E1")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("rgb_led", 1,
         Subsignal("r", Pins("G3")),
         Subsignal("g", Pins("J4")),
         Subsignal("b", Pins("G4")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("rgb_led", 2,
         Subsignal("r", Pins("J3")),
         Subsignal("g", Pins("J2")),
         Subsignal("b", Pins("H4")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("rgb_led", 3,
         Subsignal("r", Pins("K1")),
         Subsignal("g", Pins("H6")),
         Subsignal("b", Pins("K2")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("user_sw", 0, Pins("A8"), IOStandard("LVCMOS33")),
@@ -63,7 +63,7 @@ _io = [
         Subsignal("cs_n", Pins("C1")),
         Subsignal("mosi", Pins("H1")),
         Subsignal("miso", Pins("G1")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("i2c", 0,
@@ -71,7 +71,7 @@ _io = [
         Subsignal("sda", Pins("M18")),
         Subsignal("scl_pup", Pins("A14")),
         Subsignal("sda_pup", Pins("A13")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
 
@@ -86,7 +86,7 @@ _io = [
         Subsignal("miso", Pins("K18")),
         Subsignal("wp", Pins("L14")),
         Subsignal("hold", Pins("M14")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
 
     ("ddram", 0,
@@ -113,27 +113,32 @@ _io = [
         Misc("SLEW=FAST"),
     ),
 
+    ("eth_clocks", 0,
+        Subsignal("tx", Pins("H16")),
+        Subsignal("rx", Pins("F15")),
+        Subsignal("ref_clk", Pins("G18"), # FIXME this is missing in the litex version
+        IOStandard("LVCMOS33"),
+    ),
     ("eth", 0,
+        Subsignal("rst_n", Pins("C16"), 
+        Subsignal("mdio", Pins("K13"), 
+        Subsignal("mdc", Pins("F16"), 
+        Subsignal("dv", Pins("G16"), 
+        Subsignal("rx_er", Pins("C17"), 
+        Subsignal("rx_data", Pins("D18 E17 E18 G17"), 
+        Subsignal("tx_en", Pins("H15"), 
+        Subsignal("tx_data", Pins("H14 J14 J13 H17"), 
         Subsignal("col", Pins("D17"), 
         Subsignal("crs", Pins("G14"), 
-        Subsignal("mdc", Pins("F16"), 
-        Subsignal("mdio", Pins("K13"), 
-        Subsignal("ref_clk", Pins("G18"), 
-        Subsignal("rstn", Pins("C16"), 
-        Subsignal("rx_clk", Pins("F15"), 
-        Subsignal("rx_dv", Pins("G16"), 
-        Subsignal("rxd", Pins("D18 E17 E18 G17"), 
-        Subsignal("rxerr", Pins("C17"), 
-        Subsignal("tx_clk", Pins("H16"), 
-        Subsignal("tx_en", Pins("H15"), 
-        Subsignal("txd", Pins("H14 J14 J13 H17"), 
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"),
     ),
+]
 
-    ("pmoda", 0, Pins("G13 B11 A11 D12 D13 B18 A18 K16"), IOStandard("LVCMOS33")),
-    ("pmodb", 0, Pins("E15 E16 D15 C15 J17 J18 K15 J15"), IOStandard("LVCMOS33")),
-    ("pmodc", 0, Pins("U12 V12 V10 V11 U14 V14 T13 U13"), IOStandard("LVCMOS33")),
-    ("pmodd", 0, Pins("D4 D3 F4 F3 E2 D2 H2 G2"), IOStandard("LVCMOS33")),
+_connectors = [
+    ("pmoda", 0, "G13 B11 A11 D12 D13 B18 A18 K16"),
+    ("pmodb", 0, "E15 E16 D15 C15 J17 J18 K15 J15"),
+    ("pmodc", 0, "U12 V12 V10 V11 U14 V14 T13 U13"),
+    ("pmodd", 0, "D4 D3 F4 F3 E2 D2 H2 G2"),
 ]
 
 
