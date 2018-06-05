@@ -157,28 +157,25 @@ class GrayDecoder(Module):
 
 
 class ElasticBuffer(Module):
-    def __init__(self, width, depth, idomain, odomain, master=None):
+    def __init__(self, width, depth, idomain, odomain):
         self.din = Signal(width)
         self.dout = Signal(width)
 
         # # #
 
         reset = Signal()
-        self.clock_domains.cd_write = cd_write = ClockDomain()
-        self.clock_domains.cd_read = cd_read = ClockDomain()
+        cd_write = ClockDomain()
+        cd_read = ClockDomain()
         self.comb += [
             cd_write.clk.eq(ClockSignal(idomain)),
             cd_read.clk.eq(ClockSignal(odomain)),
             reset.eq(ResetSignal(idomain) | ResetSignal(odomain))
         ]
-        if master is None:
-            self.specials += [
-                AsyncResetSynchronizer(cd_write, reset),
-                AsyncResetSynchronizer(cd_read, reset)
-            ]
-        else:
-            self.comb += cd_write.rst.eq(master.cd_write.rst)
-            self.specials += AsyncResetSynchronizer(cd_read, reset)
+        self.specials += [
+            AsyncResetSynchronizer(cd_write, reset),
+            AsyncResetSynchronizer(cd_read, reset)
+        ]
+        self.clock_domains += cd_write, cd_read
 
         wrpointer = Signal(max=depth, reset=depth//2)
         rdpointer = Signal(max=depth)
