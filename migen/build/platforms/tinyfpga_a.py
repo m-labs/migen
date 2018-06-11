@@ -82,7 +82,7 @@ class MachClock(Module):
 
 class Platform(LatticePlatform):
     default_clk_name = "osch_clk"
-    default_clk_period = 62.5
+    default_clk_period = 1000.0/15.65
 
     def __init__(self):
         self.osch_used = False  # There may be > 1 osch,
@@ -102,7 +102,7 @@ class Platform(LatticePlatform):
             # don't want this signal to become part of the UCF.
             if (args[0] == "osch_clk") and not self.osch_used:
                 self.mach_clk_sig = Signal(name_override=args[0])
-                self.osch_routing.submodules += \
+                self.osch_routing.submodules.mclk = \
                     MachClock(self.default_clk_period, self.mach_clk_sig)
                 sig = self.mach_clk_sig
                 self.osch_used = True
@@ -112,9 +112,19 @@ class Platform(LatticePlatform):
 
     def do_finalize(self, f, *args, **kwargs):
         # Still add clock to period constraints even though it is not a pin.
+        # The constraint reflects the actual frequency chosen plus 5% as a
+        # worst case, per MachXO2 oscillator tolerances (+/- 5%, which is
+        # unrelated to the +/- 5% error in the frequency selection algorithm).
+        #
+        # If the higher of the two closest frequencies to desired was chosen,
+        # the constraint will be up to 10% higher than the desired frequency
+        # due to the combination of oscillator tolerance and the frequency
+        # selection algorithm. If the lower closest frequency was chosen, the
+        # constraint will be up to 5% higher than the desired frequency.
         if self.osch_used and hasattr(self, "default_clk_period"):
-            self.add_period_constraint(self.mach_clk_sig,
-                                       self.default_clk_period)
+            adjusted_freq = 1.05 * \
+                self.osch_routing.mclk.nearest_freq(self.default_clk_period)
+            self.add_period_constraint(self.mach_clk_sig, 1000.0/adjusted_freq)
 
         # And lastly, add the oscillator routing so the correct primitive
         # is instantiated.
