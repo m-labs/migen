@@ -135,13 +135,13 @@ _io = [
 ]
 
 _connectors = [
-    ("pmoda", 0, "G13 B11 A11 D12 D13 B18 A18 K16"),
-    ("pmodb", 0, "E15 E16 D15 C15 J17 J18 K15 J15"),
-    ("pmodc", 0, "U12 V12 V10 V11 U14 V14 T13 U13"),
-    ("pmodd", 0, "D4 D3 F4 F3 E2 D2 H2 G2"),
-    ("ck_io", 0, "V15 U16 P14 T11 R12 T14 T15 T16 N15 M16 V17 U18 R17 P17",
-                "F5 D8 C7 E7 D7 D5 B7 B6 E6 E5 A4 A3",
-                "U11 V16 M13 R10 R11 R13 R15 P15 R16 N16 N14 U17 T18 R18 P18 N17")
+    ("pmoda", "G13 B11 A11 D12 D13 B18 A18 K16"),
+    ("pmodb", "E15 E16 D15 C15 J17 J18 K15 J15"),
+    ("pmodc", "U12 V12 V10 V11 U14 V14 T13 U13"),
+    ("pmodd", "D4 D3 F4 F3 E2 D2 H2 G2"),
+    ("ck_io", "V15 U16 P14 T11 R12 T14 T15 T16 N15 M16 V17 U18 R17 P17",
+              "F5 D8 C7 E7 D7 D5 B7 B6 E6 E5 A4 A3",
+              "U11 V16 M13 R10 R11 R13 R15 P15 R16 N16 N14 U17 T18 R18 P18 N17")
 ]
 
 
