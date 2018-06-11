@@ -115,6 +115,8 @@ class Platform(LatticePlatform):
         # The constraint reflects the actual frequency chosen plus 5% as a
         # worst case, per MachXO2 oscillator tolerances (+/- 5%, which is
         # unrelated to the +/- 5% error in the frequency selection algorithm).
+        # This approach is specified by Lattice:
+        # http://www.latticesemi.com/en/Support/AnswerDatabase/4/0/7/4072
         #
         # If the higher of the two closest frequencies to desired was chosen,
         # the constraint will be up to 10% higher than the desired frequency
@@ -124,8 +126,15 @@ class Platform(LatticePlatform):
         if self.osch_used and hasattr(self, "default_clk_period"):
             adjusted_freq = 1.05 * \
                 self.osch_routing.mclk.nearest_freq(self.default_clk_period)
-            self.add_period_constraint(self.mach_clk_sig, 1000.0/adjusted_freq)
+            self.add_internal_clock_constraint(self.mach_clk_sig,
+                                               1000.0/adjusted_freq)
 
         # And lastly, add the oscillator routing so the correct primitive
         # is instantiated.
         f += self.osch_routing.get_fragment()
+
+    def add_internal_clock_constraint(self, clk, period):
+        # Normally clocks are routed from I/O pins and are thus treated as
+        # PORTs. However, for internally generated clocks, they need to be
+        # specified as NETs.
+        self.add_platform_command("""FREQUENCY NET "{clk}" {freq} MHz;""".format(freq=str(float(1/period)*1000), clk="{clk}"), clk=clk)
