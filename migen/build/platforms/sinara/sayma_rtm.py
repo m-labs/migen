@@ -18,7 +18,7 @@ _io = [
         Subsignal("tx_n", Pins("U17")),  # rtm_fpga_lvds2_n
         Subsignal("rx_p", Pins("R16"), Misc("DIFF_TERM=TRUE")),  # rtm_fpga_lvds1_p
         Subsignal("rx_n", Pins("R17"), Misc("DIFF_TERM=TRUE")),  # rtm_fpga_lvds1_n
-        IOStandard("LVDS_18")
+        IOStandard("LVDS")
     ),
 
     # HMC clocking chips (830 and 7043)
