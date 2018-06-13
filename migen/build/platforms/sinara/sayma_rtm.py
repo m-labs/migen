@@ -12,13 +12,10 @@ _io = [
     ),
 
     ("amc_rtm_serwb", 0,
-        Subsignal("clk_p", Pins("R18"), Misc("DIFF_TERM=TRUE")), # rtm_fpga_usr_io_p
-        Subsignal("clk_n", Pins("T18"), Misc("DIFF_TERM=TRUE")), # rtm_fpga_usr_io_n
-        Subsignal("tx_p", Pins("T17")),  # rtm_fpga_lvds2_p
-        Subsignal("tx_n", Pins("U17")),  # rtm_fpga_lvds2_n
-        Subsignal("rx_p", Pins("R16"), Misc("DIFF_TERM=TRUE")),  # rtm_fpga_lvds1_p
-        Subsignal("rx_n", Pins("R17"), Misc("DIFF_TERM=TRUE")),  # rtm_fpga_lvds1_n
-        IOStandard("LVDS")
+        Subsignal("clk", Pins("R18")), # rtm_fpga_usr_io_p
+        Subsignal("tx", Pins("T17")),  # rtm_fpga_lvds2_p
+        Subsignal("rx", Pins("R16")),  # rtm_fpga_lvds1_p
+        IOStandard("LVCMOS18")
     ),
 
     # HMC clocking chips (830 and 7043)
