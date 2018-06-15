@@ -170,7 +170,7 @@ _io = [
     ("si5324_clkin", 0,
         Subsignal("p", Pins("D13")),
         Subsignal("n", Pins("C13")),
-        IOStandard("LVDS")),
+        IOStandard("LVDS"),
     ),
     ("si5324_clkout", 0,
         Subsignal("p", Pins("AF6")),
