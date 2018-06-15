@@ -168,16 +168,18 @@ _io = [
         Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
     ),
     ("si5324_clkin", 0,
-        Subsignal("p", Pins("D13"), IOStandard("LVDS")),
-        Subsignal("n", Pins("C13"), IOStandard("LVDS"))
+        Subsignal("p", Pins("D13")),
+        Subsignal("n", Pins("C13")),
+        IOStandard("LVDS")),
     ),
     ("si5324_clkout", 0,
         Subsignal("p", Pins("AF6")),
         Subsignal("n", Pins("AF5"))
     ),
     ("si5324_clkout_fabric", 0,
-        Subsignal("p", Pins("H12"), IOStandard("LVDS")),
-        Subsignal("n", Pins("G12"), IOStandard("LVDS"))
+        Subsignal("p", Pins("H12")),
+        Subsignal("n", Pins("G12")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
 
     ("sfp", 0,
@@ -207,17 +209,17 @@ _io = [
     ("dac_sysref", 0,
         Subsignal("p", Pins("B10")),
         Subsignal("n", Pins("A10")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 0,
         Subsignal("p", Pins("L8")),
         Subsignal("n", Pins("K8")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 1,
         Subsignal("p", Pins("J9")),
         Subsignal("n", Pins("H9")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
         Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
