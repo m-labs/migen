@@ -431,6 +431,7 @@ _connectors = [
 class Platform(XilinxPlatform):
     default_clk_name = "clk50"
     default_clk_period = 20.0
+    userid = 0xffffffff
 
     def __init__(self, hw_rev="v1.0"):
         if hw_rev == "v1.0":
@@ -452,6 +453,8 @@ class Platform(XilinxPlatform):
             "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
             "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
             "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 2 [current_design]",
+            "set_property BITSTREAM.CONFIG.USR_ACCESS TIMESTAMP [current_design]",
+            "set_property BITSTREAM.CONFIG.USERID \"{:#010x}\" [current_design]".format(self.userid),
             "set_property CFGBVS VCCO [current_design]",
             "set_property CONFIG_VOLTAGE 2.5 [current_design]",
             ])
