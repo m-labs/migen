@@ -56,7 +56,7 @@ _io = [
         Subsignal("dq", Pins("K17", "K18", "L14", "M15")),
         IOStandard("LVCMOS33")
     ),
-    ("spiflash_1x", 0,  # clock needs to be accessed through STARTUPE2
+    ("spiflash", 0,  # clock needs to be accessed through STARTUPE2
         Subsignal("cs_n", Pins("M13")),
         Subsignal("mosi", Pins("K17")),
         Subsignal("miso", Pins("K18")),
@@ -91,19 +91,21 @@ _io = [
         Misc("SLEW=FAST"),
     ),
 
-    ("pmoda", 0, Pins("L17 L18 M14 N14 M16 M17 M18 N18"), IOStandard("LVCMOS33")),
-    ("pmodb", 0, Pins("P17 P18 R18 T18 P14 P15 N15 P16"), IOStandard("LVCMOS33")),
-    ("pmodc", 0, Pins("U15 V16 U17 U18 U16 P13 R13 V14"), IOStandard("LVCMOS33")),
-    ("pmodd", 0, Pins("V15 U12 V13 T12 T13 R11 T11 U11"), IOStandard("LVCMOS33")),
 ]
 
+_connectors = [
+    ("pmoda", "L17 L18 M14 N14 M16 M17 M18 N18"),
+    ("pmodb", "P17 P18 R18 T18 P14 P15 N15 P16"),
+    ("pmodc", "U15 V16 U17 U18 U16 P13 R13 V14"),
+    ("pmodd", "V15 U12 V13 T12 T13 R11 T11 U11")
+]
 
 class Platform(XilinxPlatform):
     default_clk_name = "clk100"
     default_clk_period = 10.0
 
     def __init__(self, toolchain="vivado", programmer="vivado"):
-        XilinxPlatform.__init__(self, "xc7s50csga324-1", _io,
+        XilinxPlatform.__init__(self, "xc7s50csga324-1", _io, _connectors,
                                 toolchain=toolchain)
         self.toolchain.bitstream_commands = \
             ["set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]"]
