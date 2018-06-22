@@ -190,7 +190,7 @@ _connectors = [
         "ck_io24" : "A4",
         "ck_io25" : "A3",
         } ),
-    ("xadc", {
+    ("XADC", {
         # Outer Analog Header
         "vaux4_n" : "C5",
         "vaux4_p" : "C6",
