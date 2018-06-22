@@ -139,9 +139,90 @@ _connectors = [
     ("pmodb", "E15 E16 D15 C15 J17 J18 K15 J15"),
     ("pmodc", "U12 V12 V10 V11 U14 V14 T13 U13"),
     ("pmodd", "D4 D3 F4 F3 E2 D2 H2 G2"),
-    ("ck_io", "V15 U16 P14 T11 R12 T14 T15 T16 N15 M16 V17 U18 R17 P17",
-              "F5 D8 C7 E7 D7 D5 B7 B6 E6 E5 A4 A3",
-              "U11 V16 M13 R10 R11 R13 R15 P15 R16 N16 N14 U17 T18 R18 P18 N17")
+    ("ck_io", {
+        # Outer Digital Header
+        "ck_io0" : "V15",
+        "ck_io1" : "U16",
+        "ck_io2" : "P14",
+        "ck_io3" : "T11",
+        "ck_io4" : "R12",
+        "ck_io5" : "T14",
+        "ck_io6" : "T15",
+        "ck_io7" : "T16",
+        "ck_io8" : "N15",
+        "ck_io9" : "M16",
+        "ck_io10" : "V17",
+        "ck_io11" : "U18",
+        "ck_io12" : "R17",
+        "ck_io13" : "P17",
+
+        # Inner Digital Header
+        "ck_io26" : "U11",
+        "ck_io27" : "V16",
+        "ck_io28" : "M13",
+        "ck_io29" : "R10",
+        "ck_io30" : "R11",
+        "ck_io31" : "R13",
+        "ck_io32" : "R15",
+        "ck_io33" : "P15",
+        "ck_io34" : "R16",
+        "ck_io35" : "N16",
+        "ck_io36" : "N14",
+        "ck_io37" : "U17",
+        "ck_io38" : "T18",
+        "ck_io39" : "R18",
+        "ck_io40" : "P18",
+        "ck_io41" : "N17",
+
+        # Outer Analog Header as Digital IO
+        "ck_a0" : "F5",
+        "ck_a1" : "D8",
+        "ck_a2" : "C7",
+        "ck_a3" : "E7",
+        "ck_a4" : "D7",
+        "ck_a5" : "D5",
+
+        # Inner Analog Header as Digital IO
+        "ck_io20" : "B7",
+        "ck_io21" : "B6",
+        "ck_io22" : "E6",
+        "ck_io23" : "E5",
+        "ck_io24" : "A4",
+        "ck_io25" : "A3",
+        } ),
+    ("xadc", {
+        # Outer Analog Header
+        "vaux4_n" : "C5",
+        "vaux4_p" : "C6",
+        "vaux5_n" : "A5",
+        "vaux5_p" : "A6",
+        "vaux6_n" : "B4",
+        "vaux6_p" : "C4",
+        "vaux7_n" : "A1",
+        "vaux7_p" : "B1",
+        "vaux15_n" : "B2",
+        "vaux15_p" : "B3",
+        "vaux0_n" : "C14",
+        "vaux0_p" : "D14",
+
+        # Inner Analog Header
+        "vaux12_n" : "B7",
+        "vaux12_p" : "B6",
+        "vaux13_n" : "E6",
+        "vaux13_p" : "E5",
+        "vaux14_n" : "A4",
+        "vaux14_p" : "A3",
+
+        # Power Measurements
+        "vsnsuv_n" : "B17",
+        "vsnsuv_p" : "B16",
+        "vsns5v0_n" : "B12",
+        "vsns5v0_p" : "C12",
+        "isns5v0_n" : "F14",
+        "isns5v0_n" : "F13",
+        "isns0v95_n" : "A16",
+        "isns0v95_n" : "A15",
+        } ),
 ]
 
 
