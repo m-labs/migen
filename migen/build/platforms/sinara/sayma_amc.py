@@ -229,6 +229,57 @@ _io = [
         Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
         Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
     ),
+
+    # Raw RTM GTH pairs.
+    # Those can be clocked by the Si5324 and used for DRTIO.
+    ("rtm_gth", 0,
+        Subsignal("txp", Pins("AH5")),
+        Subsignal("txn", Pins("AH6")),
+        Subsignal("rxp", Pins("AH1")),
+        Subsignal("rxn", Pins("AH2"))
+    ),
+    ("rtm_gth", 1,
+        Subsignal("txp", Pins("AG3")),
+        Subsignal("txn", Pins("AG4")),
+        Subsignal("rxp", Pins("AF1")),
+        Subsignal("rxn", Pins("AF2"))
+    ),
+    ("rtm_gth", 2,
+        Subsignal("txp", Pins("AE3")),
+        Subsignal("txn", Pins("AE4")),
+        Subsignal("rxp", Pins("AD1")),
+        Subsignal("rxn", Pins("AD2"))
+    ),
+    ("rtm_gth", 3,
+        Subsignal("txp", Pins("AC3")),
+        Subsignal("txn", Pins("AC4")),
+        Subsignal("rxp", Pins("AB1")),
+        Subsignal("rxn", Pins("AB2"))
+    ),
+    ("rtm_gth", 4,
+        Subsignal("txp", Pins("AA3")),
+        Subsignal("txn", Pins("AA4")),
+        Subsignal("rxp", Pins("Y1")),
+        Subsignal("rxn", Pins("Y2"))
+    ),
+    ("rtm_gth", 5,
+        Subsignal("txp", Pins("W3")),
+        Subsignal("txn", Pins("W4")),
+        Subsignal("rxp", Pins("V1")),
+        Subsignal("rxn", Pins("V2"))
+    ),
+    ("rtm_gth", 6,
+        Subsignal("txp", Pins("U3")),
+        Subsignal("txn", Pins("U4")),
+        Subsignal("rxp", Pins("T1")),
+        Subsignal("rxn", Pins("T2"))
+    ),
+    ("rtm_gth", 7,
+        Subsignal("txp", Pins("R3")),
+        Subsignal("txn", Pins("R4")),
+        Subsignal("rxp", Pins("P1")),
+        Subsignal("rxn", Pins("P2"))
+    ),
 ]
 
 
