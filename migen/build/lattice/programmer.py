@@ -52,3 +52,14 @@ class TinyFpgaBProgrammer(GenericProgrammer):
     # is active, and the user image need not be reprogrammed.
     def boot(self):
         subprocess.call(["tinyfpgab", "-b"])
+
+
+class MyStormProgrammer(GenericProgrammer):
+    def __init__(self, serial_port):
+        self.serial_port = serial_port
+
+    def load_bitstream(self, bitstream_file):
+        import serial
+        with serial.Serial(self.serial_port) as port:
+            with open(bitstream_file, "rb") as f:
+                port.write(f.read())

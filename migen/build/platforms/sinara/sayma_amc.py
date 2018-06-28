@@ -157,13 +157,10 @@ _io = [
     ),
 
     ("amc_rtm_serwb", 0,
-        Subsignal("clk_p", Pins("J8")), # rtm_fpga_usr_io_p
-        Subsignal("clk_n", Pins("H8")), # rtm_fpga_usr_io_n
-        Subsignal("tx_p", Pins("A13")), # rtm_fpga_lvds1_p
-        Subsignal("tx_n", Pins("A12")), # rtm_fpga_lvds1_n
-        Subsignal("rx_p", Pins("C12")), # rtm_fpga_lvds2_p
-        Subsignal("rx_n", Pins("B12")), # rtm_fpga_lvds2_n
-        IOStandard("LVDS")
+        Subsignal("clk", Pins("J8")), # rtm_fpga_usr_io_p
+        Subsignal("tx", Pins("A13")), # rtm_fpga_lvds1_p
+        Subsignal("rx", Pins("C12")), # rtm_fpga_lvds2_p
+        IOStandard("LVCMOS18")
     ),
 
     ("si5324", 0,
@@ -171,16 +168,18 @@ _io = [
         Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
     ),
     ("si5324_clkin", 0,
-        Subsignal("p", Pins("D13"), IOStandard("LVDS")),
-        Subsignal("n", Pins("C13"), IOStandard("LVDS"))
+        Subsignal("p", Pins("D13")),
+        Subsignal("n", Pins("C13")),
+        IOStandard("LVDS"),
     ),
     ("si5324_clkout", 0,
         Subsignal("p", Pins("AF6")),
         Subsignal("n", Pins("AF5"))
     ),
     ("si5324_clkout_fabric", 0,
-        Subsignal("p", Pins("H12"), IOStandard("LVDS")),
-        Subsignal("n", Pins("G12"), IOStandard("LVDS"))
+        Subsignal("p", Pins("H12")),
+        Subsignal("n", Pins("G12")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
 
     ("sfp", 0,
@@ -210,17 +209,17 @@ _io = [
     ("dac_sysref", 0,
         Subsignal("p", Pins("B10")),
         Subsignal("n", Pins("A10")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 0,
         Subsignal("p", Pins("L8")),
         Subsignal("n", Pins("K8")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 1,
         Subsignal("p", Pins("J9")),
         Subsignal("n", Pins("H9")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
         Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
@@ -229,6 +228,64 @@ _io = [
     ("dac_jesd", 1,
         Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
         Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
+    ),
+
+    # Raw RTM GTH pairs.
+    # Those can be clocked by the Si5324 and used for DRTIO.
+    ("rtm_gth", 0,
+        Subsignal("txp", Pins("AH6")),
+        Subsignal("txn", Pins("AH5")),
+        Subsignal("rxp", Pins("AH2")),
+        Subsignal("rxn", Pins("AH1")),
+    ),
+    ("rtm_gth", 1,
+        Subsignal("txp", Pins("AG4")),
+        Subsignal("txn", Pins("AG3")),
+        Subsignal("rxp", Pins("AF2")),
+        Subsignal("rxn", Pins("AF1")),
+    ),
+    ("rtm_gth", 2,
+        Subsignal("txp", Pins("AE4")),
+        Subsignal("txn", Pins("AE3")),
+        Subsignal("rxp", Pins("AD2")),
+        Subsignal("rxn", Pins("AD1")),
+    ),
+    ("rtm_gth", 3,
+        Subsignal("txp", Pins("AC4")),
+        Subsignal("txn", Pins("AC3")),
+        Subsignal("rxp", Pins("AB2")),
+        Subsignal("rxn", Pins("AB1")),
+    ),
+    ("rtm_gth", 4,
+        Subsignal("txp", Pins("AA4")),
+        Subsignal("txn", Pins("AA3")),
+        Subsignal("rxp", Pins("Y2")),
+        Subsignal("rxn", Pins("Y1")),
+    ),
+    ("rtm_gth", 5,
+        Subsignal("txp", Pins("W4")),
+        Subsignal("txn", Pins("W3")),
+        Subsignal("rxp", Pins("V2")),
+        Subsignal("rxn", Pins("V1")),
+    ),
+    ("rtm_gth", 6,
+        Subsignal("txp", Pins("U4")),
+        Subsignal("txn", Pins("U3")),
+        Subsignal("rxp", Pins("T2")),
+        Subsignal("rxn", Pins("T1")),
+    ),
+    ("rtm_gth", 7,
+        Subsignal("txp", Pins("R4")),
+        Subsignal("txn", Pins("R3")),
+        Subsignal("rxp", Pins("P2")),
+        Subsignal("rxn", Pins("P1")),
+    ),
+
+    # repurposed for siphaser on the DRTIO satellite
+    ("adc_sysref", 0,
+        Subsignal("p", Pins("C11")),
+        Subsignal("n", Pins("B11")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
 ]
 
@@ -328,6 +385,8 @@ class Platform(XilinxPlatform):
                 self, "xcku040-ffva1156-1-c", _io, _connectors,
                 toolchain="vivado")
         self.toolchain.bitstream_commands.extend([
+            # FIXME: enable this when the XADC reference wiring is fixed
+            # "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
             "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
             "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
             "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]",

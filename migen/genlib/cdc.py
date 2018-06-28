@@ -13,13 +13,13 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 
 
 class MultiRegImpl(Module):
-    def __init__(self, i, o, odomain, n):
+    def __init__(self, i, o, odomain, n, reset=0):
         self.i = i
         self.o = o
         self.odomain = odomain
 
         w, signed = value_bits_sign(self.i)
-        self.regs = [Signal((w, signed), reset_less=True)
+        self.regs = [Signal((w, signed), reset=reset, reset_less=True)
                 for i in range(n)]
 
         ###
@@ -35,12 +35,13 @@ class MultiRegImpl(Module):
 
 
 class MultiReg(Special):
-    def __init__(self, i, o, odomain="sys", n=2):
+    def __init__(self, i, o, odomain="sys", n=2, reset=0):
         Special.__init__(self)
         self.i = wrap(i)
         self.o = wrap(o)
         self.odomain = odomain
         self.n = n
+        self.reset = reset
 
     def iter_expressions(self):
         yield self, "i", SPECIAL_INPUT
@@ -58,7 +59,7 @@ class MultiReg(Special):
 
     @staticmethod
     def lower(dr):
-        return MultiRegImpl(dr.i, dr.o, dr.odomain, dr.n)
+        return MultiRegImpl(dr.i, dr.o, dr.odomain, dr.n, dr.reset)
 
 
 class PulseSynchronizer(Module):
