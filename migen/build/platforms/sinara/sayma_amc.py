@@ -287,6 +287,14 @@ _io = [
         Subsignal("n", Pins("B11")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
+
+    # has 100R external termination resistor
+    ("sysclk1_300", 0,
+        Subsignal("p", Pins("F18")),
+        Subsignal("n", Pins("F17")),
+        IOStandard("DIFF_SSTL15_DCI"), Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
+    ),
+
 ]
 
 
