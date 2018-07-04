@@ -80,14 +80,28 @@ class MachClock(Module):
         return selected_freq
 
 
+class OschRouting(Module):
+    def __init__(self):
+        self.osch_used = False  # Only one default clock,
+        # even if > 1 OSCH is possible, so run only once.
+        self.mach_clk_sig = Signal()
+
+    def mk_clk(self, name, clk_period):
+        if not self.osch_used:
+            self.mach_clk_sig.name_override = name
+            self.submodules.mclk = MachClock(clk_period, self.mach_clk_sig)
+            self.osch_used = True
+        else:
+            raise ConstraintError
+        return self.mach_clk_sig
+
+
 class Platform(LatticePlatform):
     default_clk_name = "osch_clk"
     default_clk_period = 1000.0/15.65
 
     def __init__(self):
-        self.osch_used = False  # There may be > 1 osch,
-        # but there's only one default clk.
-        self.osch_routing = Module()    # Internal oscillator routing.
+        self.osch_routing = OschRouting()    # Internal oscillator routing.
         # Routed during self.do_finalize().
         LatticePlatform.__init__(self, "LCMXO2-1200HC-4SG32C", _io,
                                  _connectors, toolchain="diamond")
@@ -98,14 +112,11 @@ class Platform(LatticePlatform):
         try:
             sig = GenericPlatform.request(self, *args, **kwargs)
         except ConstraintError:
-            # Do not add to self.constraint_manager.matched because we
-            # don't want this signal to become part of the UCF.
-            if (args[0] == "osch_clk") and not self.osch_used:
-                self.mach_clk_sig = Signal(name_override=args[0])
-                self.osch_routing.submodules.mclk = \
-                    MachClock(self.default_clk_period, self.mach_clk_sig)
-                sig = self.mach_clk_sig
-                self.osch_used = True
+            if args[0] == "osch_clk":
+                # Do not add to self.constraint_manager.matched because we
+                # don't want this signal to become part of the UCF.
+                sig = self.osch_routing.mk_clk("osch_clk",
+                                               self.default_clk_period)
             else:
                 raise
         return sig
@@ -123,10 +134,10 @@ class Platform(LatticePlatform):
         # due to the combination of oscillator tolerance and the frequency
         # selection algorithm. If the lower closest frequency was chosen, the
         # constraint will be up to 5% higher than the desired frequency.
-        if self.osch_used and hasattr(self, "default_clk_period"):
+        if self.osch_routing.osch_used and hasattr(self, "default_clk_period"):
             adjusted_freq = 1.05 * \
                 self.osch_routing.mclk.nearest_freq(self.default_clk_period)
-            self.add_internal_clock_constraint(self.mach_clk_sig,
+            self.add_internal_clock_constraint(self.osch_routing.mach_clk_sig,
                                                1000.0/adjusted_freq)
 
         # And lastly, add the oscillator routing so the correct primitive
@@ -137,4 +148,4 @@ class Platform(LatticePlatform):
         # Normally clocks are routed from I/O pins and are thus treated as
         # PORTs. However, for internally generated clocks, they need to be
         # specified as NETs.
-        self.add_platform_command("""FREQUENCY NET "{clk}" {freq} MHz;""".format(freq=str(float(1/period)*1000), clk="{clk}"), clk=clk)
+        self.add_platform_command("""FREQUENCY NET "{{clk}}" {freq} MHz;""".format(freq=float(1/period)*1000, clk="clk"), clk=clk)
