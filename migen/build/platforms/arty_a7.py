@@ -1,3 +1,5 @@
+# This file is Copyright (c) 2015 Yann Sionneau <yann@sionneau.net>
+# This file is Copyright (c) 2015 Florent Kermarrec <florent@enjoy-digital.fr>
 # This file is Copyright (c) 2018 William D. Jones <thor0505@comcast.net>
 # This file is Copyright (c) 2018 Caleb Jamison <cbjamo@gmail.com>
 # License: BSD
@@ -49,7 +51,7 @@ _io = [
     ("user_btn", 2, Pins("B9"), IOStandard("LVCMOS33")),
     ("user_btn", 3, Pins("B8"), IOStandard("LVCMOS33")),
 
-    ("clk100", 0, Pins("E3"), IOStandard("LVCMOS33")), # Double Check IOStandard
+    ("clk100", 0, Pins("E3"), IOStandard("LVCMOS33")),
 
     ("cpu_reset", 0, Pins("C2"), IOStandard("LVCMOS33")),
 
@@ -74,7 +76,6 @@ _io = [
         IOStandard("LVCMOS33"),
     ),
 
-
     ("spiflash4x", 0,  # clock needs to be accessed through STARTUPE2
         Subsignal("cs_n", Pins("L13")),
         Subsignal("dq", Pins("K17", "K18", "L14", "M14")),
@@ -91,7 +92,8 @@ _io = [
 
     ("ddram", 0,
         Subsignal("a", Pins(
-            "R2 M6 N4 T1 N6 R7 V6 U7 R8 V7 R6 U6 T6 T8"),
+            "R2 M6 N4 T1 N6 R7 V6 U7",
+            "R8 V7 R6 U6 T6 T8"),
             IOStandard("SSTL135")),
         Subsignal("ba", Pins("R1 P4 P2"), IOStandard("SSTL135")),
         Subsignal("ras_n", Pins("P3"), IOStandard("SSTL135")),
@@ -100,7 +102,8 @@ _io = [
         Subsignal("cs_n", Pins("U8"), IOStandard("SSTL135")),
         Subsignal("dm", Pins("L1 U1"), IOStandard("SSTL135")),
         Subsignal("dq", Pins(
-            "K5 L3 K3 L6 M3 M1 L4 M2 V4 T5 U4 V5 V1 T3 U3 R3"),
+            "K5 L3 K3 L6 M3 M1 L4 M2",
+            "V4 T5 U4 V5 V1 T3 U3 R3"),
             IOStandard("SSTL135"),
             Misc("IN_TERM=UNTUNED_SPLIT_40")),
         Subsignal("dqs_p", Pins("N2 U2"), IOStandard("DIFF_SSTL135")),
@@ -113,17 +116,17 @@ _io = [
         Misc("SLEW=FAST"),
     ),
 
+    ("eth_ref_clk", 0, Pins("G18"), IOStandard("LVCMOS33")),
     ("eth_clocks", 0,
         Subsignal("tx", Pins("H16")),
         Subsignal("rx", Pins("F15")),
-        Subsignal("ref_clk", Pins("G18")), # FIXME this is missing in the litex version
         IOStandard("LVCMOS33"),
     ),
     ("eth", 0,
         Subsignal("rst_n", Pins("C16")),
         Subsignal("mdio", Pins("K13")),
         Subsignal("mdc", Pins("F16")),
-        Subsignal("dv", Pins("G16")),
+        Subsignal("rx_dv", Pins("G16")),
         Subsignal("rx_er", Pins("C17")),
         Subsignal("rx_data", Pins("D18 E17 E18 G17")),
         Subsignal("tx_en", Pins("H15")),
@@ -231,7 +234,7 @@ class Platform(XilinxPlatform):
     default_clk_period = 10.0
 
     def __init__(self, toolchain="vivado", programmer="vivado"):
-        XilinxPlatform.__init__(self, "XC7A35TICSG324-1L", _io, _connectors,
+        XilinxPlatform.__init__(self, "xc7a35ticsg324-1L", _io, _connectors,
                                 toolchain=toolchain)
         self.toolchain.bitstream_commands = \
             ["set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]"]
