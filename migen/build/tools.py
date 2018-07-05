@@ -82,6 +82,9 @@ if sys.platform == "cygwin":
         cygwin_conv_path(what, fro, to, size)
         return ctypes.cast(to, ctypes.c_char_p).value.decode('utf-8')
 
-
-def sanitize(p):
-    return cygpath_to_windows(p) if sys.platform == "cygwin" else p
+    # Convert cygwin paths to Windows native paths. This is a noop otherwise.
+    def cygpath(p):
+        return cygpath_to_windows(p)
+else:
+    def cygpath(p):
+        return p
