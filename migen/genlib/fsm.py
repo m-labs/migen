@@ -205,8 +205,12 @@ class FSM(Module):
     def do_finalize(self):
         nstates = len(self.actions)
         self.encoding = dict((s, n) for n, s in enumerate(self.actions.keys()))
+        self.decoding = {n: s for s, n in self.encoding.items()}
+
         self.state = Signal(max=nstates, reset=self.encoding[self.reset_state])
+        self.state._enumeration = self.decoding
         self.next_state = Signal(max=nstates)
+        self.next_state._enumeration = {n: "{}:{}".format(n, s) for n, s in self.decoding.items()}
 
         ln = _LowerNext(self.next_state, self.encoding, self.state_aliases)
         cases = dict((self.encoding[k], ln.visit(v)) for k, v in self.actions.items() if v)

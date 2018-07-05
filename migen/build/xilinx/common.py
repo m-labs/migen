@@ -67,7 +67,6 @@ class XilinxMultiRegImpl(MultiRegImpl):
         if not hasattr(i, "attr"):
             i0, i = i, Signal()
             self.comb += i.eq(i0)
-        i.attr.add("mr_false_path")
         self.regs[0].attr.add("mr_ff")
         for r in self.regs:
             r.attr.add("async_reg")
@@ -94,7 +93,6 @@ class XilinxAsyncResetSynchronizerImpl(Module):
                 i_CE=1, i_C=cd.clk, o_Q=cd.rst,
                 attr={"async_reg", "ars_ff2"})
         ]
-        async_reset.attr.add("ars_false_path")
 
 
 class XilinxAsyncResetSynchronizer:
@@ -136,7 +134,7 @@ xilinx_special_overrides = {
 class XilinxDDROutputImplS6(Module):
     def __init__(self, i1, i2, o, clk):
         self.specials += Instance("ODDR2",
-                p_DDR_ALIGNMENT="C0", p_INIT=0, p_SRTYPE="SYNC",
+                p_DDR_ALIGNMENT="C0", p_INIT=0, p_SRTYPE="ASYNC",
                 i_C0=clk, i_C1=~clk, i_CE=1, i_S=0, i_R=0,
                 i_D0=i1, i_D1=i2, o_Q=o,
         )
@@ -171,9 +169,9 @@ class XilinxDDROutputS7:
 class XilinxDDRInputImplS7(Module):
     def __init__(self, i, o1, o2, clk):
         self.specials += Instance("IDDR",
-                p_DDR_CLK_EDGE="SAME_EDGE_PIPELINED",
+                p_DDR_CLK_EDGE="SAME_EDGE",
                 i_C=clk, i_CE=1, i_S=0, i_R=0,
-                o_D=i, i_Q1=o1, i_Q2=o2,
+                i_D=i, o_Q1=o1, o_Q2=o2,
         )
 
 
@@ -208,9 +206,10 @@ class XilinxDDRInputImplKU(Module):
         self.specials += Instance("IDDRE1",
             p_DDR_CLK_EDGE="SAME_EDGE_PIPELINED",
             p_IS_C_INVERTED=0,
+            p_IS_CB_INVERTED=1,
             i_D=i,
             o_Q1=o1, o_Q2=o2,
-            i_C=clk, i_CB=~clk,
+            i_C=clk, i_CB=clk,
             i_R=0
         )
 

@@ -26,6 +26,21 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
+    ("i2c", 0,
+        Subsignal("scl", Pins("N21")),
+        Subsignal("sda", Pins("M21")),
+        IOStandard("LVCMOS33")
+    ),
+
+    ("rtm_fpga_cfg", 0,
+        Subsignal("cclk", Pins("J25")),
+        Subsignal("din", Pins("K26")),
+        Subsignal("done", Pins("K27"), Misc("PULLUP=TRUE")),
+        Subsignal("init_b", Pins("G25"), Misc("PULLUP=TRUE")),
+        Subsignal("program_b", Pins("G26"), Misc("PULLUP=TRUE")),
+        IOStandard("LVCMOS33")
+    ),
+
     # this is the second SPI flash (not containing the bitstream)
     # clock is shared with the bitstream flash and needs to be accessed
     # through STARTUPE3
@@ -39,14 +54,14 @@ _io = [
         Subsignal("a", Pins(
             "E15 D15 J16 K18 H16 K17 K16 J15",
             "K15 D14 D18 G15 L18 G14 L15"),
-            IOStandard("SSTL15")),
-        Subsignal("ba", Pins("L19 H17 G16"), IOStandard("SSTL15")),
-        Subsignal("ras_n", Pins("E18"), IOStandard("SSTL15")),
-        Subsignal("cas_n", Pins("E16"), IOStandard("SSTL15")),
-        Subsignal("we_n", Pins("D16"), IOStandard("SSTL15")),
-        Subsignal("cs_n", Pins("G19"), IOStandard("SSTL15")),
+            IOStandard("SSTL15_DCI")),
+        Subsignal("ba", Pins("L19 H17 G16"), IOStandard("SSTL15_DCI")),
+        Subsignal("ras_n", Pins("E18"), IOStandard("SSTL15_DCI")),
+        Subsignal("cas_n", Pins("E16"), IOStandard("SSTL15_DCI")),
+        Subsignal("we_n", Pins("D16"), IOStandard("SSTL15_DCI")),
+        Subsignal("cs_n", Pins("G19"), IOStandard("SSTL15_DCI")),
         Subsignal("dm", Pins("F27 E26 D23 G24"),
-            IOStandard("SSTL15"),
+            IOStandard("SSTL15_DCI"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dq", Pins(
             "C28 B27 A27 C27 D28 E28 A28 D29",
@@ -57,31 +72,34 @@ _io = [
             Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dqs_p", Pins("B29 B24 C21 G20"),
-            IOStandard("DIFF_SSTL15"),
+            IOStandard("DIFF_SSTL15_DCI"),
+            Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dqs_n", Pins("A29 A24 C22 F20"),
-            IOStandard("DIFF_SSTL15"),
+            IOStandard("DIFF_SSTL15_DCI"),
+            Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
-        Subsignal("clk_p", Pins("J19"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
-        Subsignal("clk_n", Pins("J18"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
-        Subsignal("cke", Pins("H18"), IOStandard("SSTL15")),
-        Subsignal("odt", Pins("F19"), IOStandard("SSTL15")),
-        Subsignal("reset_n", Pins("F14"), IOStandard("LVCMOS15")),
+        Subsignal("clk_p", Pins("J19"), IOStandard("DIFF_SSTL15_DCI"), Misc("DATA_RATE=DDR")),
+        Subsignal("clk_n", Pins("J18"), IOStandard("DIFF_SSTL15_DCI"), Misc("DATA_RATE=DDR")),
+        Subsignal("cke", Pins("H18"), IOStandard("SSTL15_DCI")),
+        Subsignal("odt", Pins("F19"), IOStandard("SSTL15_DCI")),
+        Subsignal("reset_n", Pins("F14"), IOStandard("SSTL15")),
         Misc("SLEW=FAST"),
+        Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
     ),
 
     ("ddram_64", 0,
         Subsignal("a", Pins(
             "AE17 AL17 AG16 AG17 AD16 AH14 AD15 AK15",
             "AF14 AF15 AL18 AL15 AE18 AJ15 AG14"),
-            IOStandard("SSTL15")),
-        Subsignal("ba", Pins("AF17 AD19 AD18"), IOStandard("SSTL15")),
-        Subsignal("ras_n", Pins("AH19"), IOStandard("SSTL15")),
-        Subsignal("cas_n", Pins("AK18"), IOStandard("SSTL15")),
-        Subsignal("we_n", Pins("AG19"), IOStandard("SSTL15")),
-        Subsignal("cs_n", Pins("AF18"), IOStandard("SSTL15")),
+            IOStandard("SSTL15_DCI")),
+        Subsignal("ba", Pins("AF17 AD19 AD18"), IOStandard("SSTL15_DCI")),
+        Subsignal("ras_n", Pins("AH19"), IOStandard("SSTL15_DCI")),
+        Subsignal("cas_n", Pins("AK18"), IOStandard("SSTL15_DCI")),
+        Subsignal("we_n", Pins("AG19"), IOStandard("SSTL15_DCI")),
+        Subsignal("cs_n", Pins("AF18"), IOStandard("SSTL15_DCI")),
         Subsignal("dm", Pins("AD21 AE25 AJ21 AM21 AH26 AN26 AJ29 AL32"),
-            IOStandard("SSTL15"),
+            IOStandard("SSTL15_DCI"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dq", Pins(
             "AE23 AG20 AF22 AF20 AE22 AD20 AG22 AE20",
@@ -96,23 +114,26 @@ _io = [
             Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dqs_p", Pins("AG21 AH24 AJ20 AP20 AL27 AN29 AH33 AN34"),
-            IOStandard("DIFF_SSTL15"),
+            IOStandard("DIFF_SSTL15_DCI"),
+            Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dqs_n", Pins("AH21 AJ25 AK20 AP21 AL28 AP30 AJ33 AP34"),
-            IOStandard("DIFF_SSTL15"),
+            IOStandard("DIFF_SSTL15_DCI"),
+            Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
-        Subsignal("clk_p", Pins("AE16"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
-        Subsignal("clk_n", Pins("AE15"), IOStandard("DIFF_SSTL15"), Misc("DATA_RATE=DDR")),
-        Subsignal("cke", Pins("AL19"), IOStandard("SSTL15")),
-        Subsignal("odt", Pins("AJ18"), IOStandard("SSTL15")),
-        Subsignal("reset_n", Pins("AJ14"), IOStandard("LVCMOS15")),
+        Subsignal("clk_p", Pins("AE16"), IOStandard("DIFF_SSTL15_DCI"), Misc("DATA_RATE=DDR")),
+        Subsignal("clk_n", Pins("AE15"), IOStandard("DIFF_SSTL15_DCI"), Misc("DATA_RATE=DDR")),
+        Subsignal("cke", Pins("AL19"), IOStandard("SSTL15_DCI")),
+        Subsignal("odt", Pins("AJ18"), IOStandard("SSTL15_DCI")),
+        Subsignal("reset_n", Pins("AJ14"), IOStandard("SSTL15")),
         Misc("SLEW=FAST"),
+        Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
     ),
 
     ("eth_clocks", 0,
         Subsignal("tx", Pins("M22")),
-        Subsignal("rx", Pins("T25")),
-        IOStandard("LVCMOS33")
+        Subsignal("rx", Pins("AG11")),
+        IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
     ("eth", 0,
         Subsignal("rx_ctl", Pins("T24")),
@@ -121,7 +142,7 @@ _io = [
         Subsignal("tx_data", Pins("K20 K22 P20 P21")),
         Subsignal("mdc", Pins("T27")),
         Subsignal("mdio", Pins("R27")),
-        IOStandard("LVCMOS33")
+        IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
 
     ("sma_io", 0,
@@ -136,14 +157,45 @@ _io = [
     ),
 
     ("amc_rtm_serwb", 0,
-        Subsignal("clk_p", Pins("J8")), # rtm_fpga_usr_io_p
-        Subsignal("clk_n", Pins("H8")), # rtm_fpga_usr_io_n
-        Subsignal("tx_p", Pins("A13")), # rtm_fpga_lvds1_p
-        Subsignal("tx_n", Pins("A12")), # rtm_fpga_lvds1_n
-        Subsignal("rx_p", Pins("C12")), # rtm_fpga_lvds2_p
-        Subsignal("rx_n", Pins("B12")), # rtm_fpga_lvds2_n
-        IOStandard("LVDS")
+        Subsignal("clk", Pins("J8")), # rtm_fpga_usr_io_p
+        Subsignal("tx", Pins("A13")), # rtm_fpga_lvds1_p
+        Subsignal("rx", Pins("C12")), # rtm_fpga_lvds2_p
+        IOStandard("LVCMOS18")
     ),
+
+    ("si5324", 0,
+        Subsignal("rst_n", Pins("L24"), IOStandard("LVCMOS33")),
+        Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
+    ),
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("D13")),
+        Subsignal("n", Pins("C13")),
+        IOStandard("LVDS"),
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("AF6")),
+        Subsignal("n", Pins("AF5"))
+    ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("H12")),
+        Subsignal("n", Pins("G12")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+
+    ("sfp", 0,
+        Subsignal("txp", Pins("AN4")),
+        Subsignal("txn", Pins("AN3")),
+        Subsignal("rxp", Pins("AP2")),
+        Subsignal("rxn", Pins("AP1"))
+    ),
+    ("sfp_tx_disable", 0, Pins("AP11"), IOStandard("LVCMOS33")),
+    ("sfp", 1,
+        Subsignal("txp", Pins("AM6")),
+        Subsignal("txn", Pins("AM5")),
+        Subsignal("rxp", Pins("AM2")),
+        Subsignal("rxn", Pins("AM1"))
+    ),
+    ("sfp_tx_disable", 1, Pins("AM12"), IOStandard("LVCMOS33")),
 
     # AD9154 DACs
     ("dac_refclk", 0,
@@ -157,17 +209,17 @@ _io = [
     ("dac_sysref", 0,
         Subsignal("p", Pins("B10")),
         Subsignal("n", Pins("A10")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 0,
         Subsignal("p", Pins("L8")),
         Subsignal("n", Pins("K8")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 1,
         Subsignal("p", Pins("J9")),
         Subsignal("n", Pins("H9")),
-        IOStandard("LVDS")
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
         Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
@@ -177,6 +229,72 @@ _io = [
         Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
         Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
     ),
+
+    # Raw RTM GTH pairs.
+    # Those can be clocked by the Si5324 and used for DRTIO.
+    ("rtm_gth", 0,
+        Subsignal("txp", Pins("AH6")),
+        Subsignal("txn", Pins("AH5")),
+        Subsignal("rxp", Pins("AH2")),
+        Subsignal("rxn", Pins("AH1")),
+    ),
+    ("rtm_gth", 1,
+        Subsignal("txp", Pins("AG4")),
+        Subsignal("txn", Pins("AG3")),
+        Subsignal("rxp", Pins("AF2")),
+        Subsignal("rxn", Pins("AF1")),
+    ),
+    ("rtm_gth", 2,
+        Subsignal("txp", Pins("AE4")),
+        Subsignal("txn", Pins("AE3")),
+        Subsignal("rxp", Pins("AD2")),
+        Subsignal("rxn", Pins("AD1")),
+    ),
+    ("rtm_gth", 3,
+        Subsignal("txp", Pins("AC4")),
+        Subsignal("txn", Pins("AC3")),
+        Subsignal("rxp", Pins("AB2")),
+        Subsignal("rxn", Pins("AB1")),
+    ),
+    ("rtm_gth", 4,
+        Subsignal("txp", Pins("AA4")),
+        Subsignal("txn", Pins("AA3")),
+        Subsignal("rxp", Pins("Y2")),
+        Subsignal("rxn", Pins("Y1")),
+    ),
+    ("rtm_gth", 5,
+        Subsignal("txp", Pins("W4")),
+        Subsignal("txn", Pins("W3")),
+        Subsignal("rxp", Pins("V2")),
+        Subsignal("rxn", Pins("V1")),
+    ),
+    ("rtm_gth", 6,
+        Subsignal("txp", Pins("U4")),
+        Subsignal("txn", Pins("U3")),
+        Subsignal("rxp", Pins("T2")),
+        Subsignal("rxn", Pins("T1")),
+    ),
+    ("rtm_gth", 7,
+        Subsignal("txp", Pins("R4")),
+        Subsignal("txn", Pins("R3")),
+        Subsignal("rxp", Pins("P2")),
+        Subsignal("rxn", Pins("P1")),
+    ),
+
+    # repurposed for siphaser on the DRTIO satellite
+    ("adc_sysref", 0,
+        Subsignal("p", Pins("C11")),
+        Subsignal("n", Pins("B11")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+
+    # has 100R external termination resistor
+    ("sysclk1_300", 0,
+        Subsignal("p", Pins("F18")),
+        Subsignal("n", Pins("F17")),
+        IOStandard("DIFF_SSTL15_DCI"), Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
+    ),
+
 ]
 
 
@@ -274,16 +392,15 @@ class Platform(XilinxPlatform):
         XilinxPlatform.__init__(
                 self, "xcku040-ffva1156-1-c", _io, _connectors,
                 toolchain="vivado")
+        self.toolchain.bitstream_commands.extend([
+            # FIXME: enable this when the XADC reference wiring is fixed
+            # "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
+            "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
+            "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
+            "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]",
+            "set_property CFGBVS VCCO [current_design]",
+            "set_property CONFIG_VOLTAGE 3.3 [current_design]",
+            ])
 
-    def do_finalize(self, fragment):
-        XilinxPlatform.do_finalize(self, fragment)
-        try:
-            self.add_period_constraint(
-                    self.lookup_request("eth_clocks").rx, 8.0)
-        except ConstraintError:
-            pass
-        try:
-            self.add_period_constraint(
-                    self.lookup_request("eth_clocks").tx, 8.0)
-        except ConstraintError:
-            pass
+    # We do not contrain Ethernet clocks here, since we do not know
+    # if they are RGMII (125MHz) or MII (25MHz)

@@ -80,7 +80,7 @@ _io = [
         Subsignal("mosi", Pins("AB22")),
         Subsignal("cs_n", Pins("AC21")),
         IOStandard("LVCMOS25")),
-        
+
     ("lcd", 0,
         Subsignal("db", Pins("AA13 AA10 AA11 Y10")),
         Subsignal("e", Pins("AB10")),
@@ -151,7 +151,7 @@ _io = [
         Subsignal("int_n", Pins("N30")),
         Subsignal("mdio", Pins("J21")),
         Subsignal("mdc", Pins("R23")),
-        Subsignal("dv", Pins("R28")),
+        Subsignal("rx_dv", Pins("R28")),
         Subsignal("rx_er", Pins("V26")),
         Subsignal("rx_data", Pins("U30 U25 T25 U28 R19 T27 T26 T28")),
         Subsignal("tx_en", Pins("M27")),

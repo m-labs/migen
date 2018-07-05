@@ -1,6 +1,6 @@
 from migen.fhdl.structure import *
 from migen.fhdl.module import Module
-from migen.fhdl.specials import Memory
+from migen.fhdl.specials import Memory, READ_FIRST
 from migen.fhdl.bitcontainer import log2_int
 from migen.fhdl.decorators import ClockDomainsRenamer
 from migen.genlib.cdc import MultiReg, GrayCounter
@@ -54,8 +54,8 @@ class _FIFOInterface:
         self.re = Signal()
         self.readable = Signal()  # not empty
 
-        self.din = Signal(width)
-        self.dout = Signal(width)
+        self.din = Signal(width, reset_less=True)
+        self.dout = Signal(width, reset_less=True)
         self.width = width
         self.depth = depth
 
@@ -89,7 +89,7 @@ class SyncFIFO(Module, _FIFOInterface):
         storage = Memory(self.width, depth)
         self.specials += storage
 
-        wrport = storage.get_port(write_capable=True)
+        wrport = storage.get_port(write_capable=True, mode=READ_FIRST)
         self.specials += wrport
         self.comb += [
             If(self.replace,
@@ -106,7 +106,7 @@ class SyncFIFO(Module, _FIFOInterface):
         do_read = Signal()
         self.comb += do_read.eq(self.readable & self.re)
 
-        rdport = storage.get_port(async_read=fwft, has_re=not fwft)
+        rdport = storage.get_port(async_read=fwft, has_re=not fwft, mode=READ_FIRST)
         self.specials += rdport
         self.comb += [
             rdport.adr.eq(consume),
@@ -129,6 +129,9 @@ class SyncFIFO(Module, _FIFOInterface):
 
 
 class SyncFIFOBuffered(Module, _FIFOInterface):
+    """Has an interface compatible with SyncFIFO with fwft=True,
+    but does not use asynchronous RAM reads that are not compatible
+    with block RAMs. Increases latency by one cycle."""
     def __init__(self, width, depth):
         _FIFOInterface.__init__(self, width, depth)
         self.submodules.fifo = fifo = SyncFIFO(width, depth, False)
@@ -209,3 +212,22 @@ class AsyncFIFO(Module, _FIFOInterface):
             rdport.adr.eq(consume.q_next_binary[:-1]),
             self.dout.eq(rdport.dat_r)
         ]
+
+
+class AsyncFIFOBuffered(Module, _FIFOInterface):
+    """Improves timing when it breaks due to sluggish clock-to-output
+    delay in e.g. Xilinx block RAMs. Increases latency by one cycle."""
+    def __init__(self, width, depth):
+        _FIFOInterface.__init__(self, width, depth)
+        self.submodules.fifo = fifo = AsyncFIFO(width, depth)
+
+        self.writable = fifo.writable
+        self.din = fifo.din
+        self.we = fifo.we
+
+        self.sync.read += \
+            If(self.re | ~self.readable,
+                self.dout.eq(fifo.dout),
+                self.readable.eq(fifo.readable)
+            )
+        self.comb += fifo.re.eq(self.re | ~self.readable)

@@ -359,7 +359,7 @@ The clock domain management mechanism explained above happens during finalizatio
 Conversion for synthesis
 ************************
 
-Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``migen.fhdl.verilog`` module:
+Any FHDL module can be converted into synthesizable Verilog HDL. This is accomplished by using the ``convert`` function in the ``migen.fhdl.verilog`` module: ::
 
   # define FHDL module MyDesign here
 

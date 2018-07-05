@@ -62,7 +62,7 @@ _io = [
     ),
     ("eth", 0,
         Subsignal("rst_n", Pins("R22")),
-        Subsignal("dv", Pins("V21")),
+        Subsignal("rx_dv", Pins("V21")),
         Subsignal("rx_er", Pins("V22")),
         Subsignal("rx_data", Pins("U22 U20 T22 T21")),
         Subsignal("tx_en", Pins("N19")),

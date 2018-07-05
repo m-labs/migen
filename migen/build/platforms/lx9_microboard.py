@@ -93,7 +93,7 @@ _io = [
             Subsignal("mdio", Pins("L18"), Misc("PULLUP")),  # 1k5 ext PULLUP
             Subsignal("rst_n", Pins("T18"), Misc("TIG")),
             Subsignal("rx_data", Pins("T17 N16 N15 P18"), Misc("PULLUP")),
-            Subsignal("dv", Pins("P17"), Misc("PULLDOWN")),  # MII
+            Subsignal("rx_dv", Pins("P17"), Misc("PULLDOWN")),  # MII
             Subsignal("rx_er", Pins("N18"), Misc("PULLUP")),  # auto MDIX
             Subsignal("tx_data", Pins("K18 K17 J18 J16")),
             Subsignal("tx_en", Pins("L17")),

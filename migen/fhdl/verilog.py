@@ -1,6 +1,7 @@
 from functools import partial
 from operator import itemgetter
 import collections
+import logging
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment
@@ -44,8 +45,8 @@ def _printsig(ns, s):
 
 def _printconstant(node):
     if node.signed:
-        return (str(node.nbits) + "'sd" + str(2**node.nbits + node.value),
-                True)
+        val = node.value if node.value >= 0 else 2**node.nbits + node.value
+        return (str(node.nbits) + "'sd" + str(val), True)
     else:
         return str(node.nbits) + "'d" + str(node.value), False
 
@@ -157,13 +158,16 @@ def _printnode(ns, at, level, node):
         raise TypeError("Node of unrecognized type: "+str(type(node)))
 
 
-def _list_comb_wires(f):
-    r = set()
+def _list_comb_wires_regs(f):
+    w, r = set(), set()
     groups = group_by_targets(f.comb)
     for g in groups:
         if len(g[1]) == 1 and isinstance(g[1][0], _Assign):
+            w |= g[0]
+        else:
             r |= g[0]
-    return r
+    return w, r
+
 
 def _printattr(attr, attr_translate):
     r = ""
@@ -194,7 +198,8 @@ def _printheader(f, ios, name, ns, attr_translate,
     special_outs = list_special_ios(f, False, True, True)
     inouts = list_special_ios(f, False, False, True)
     targets = list_targets(f) | special_outs
-    wires = _list_comb_wires(f) | special_outs
+    wires, comb_regs = _list_comb_wires_regs(f)
+    wires |= special_outs
     r = "module " + name + "(\n"
     firstp = True
     for sig in sorted(ios, key=lambda x: x.duid):
@@ -221,7 +226,7 @@ def _printheader(f, ios, name, ns, attr_translate,
         if sig in wires:
             r += "wire " + _printsig(ns, sig) + ";\n"
         else:
-            if reg_initialization:
+            if reg_initialization and sig not in comb_regs:
                 r += "reg " + _printsig(ns, sig) + " = " + _printexpr(ns, sig.reset)[0] + ";\n"
             else:
                 r += "reg " + _printsig(ns, sig) + ";\n"
@@ -266,11 +271,11 @@ def _printcomb(f, ns,
                 if display_run:
                     r += "\t$display(\"Running comb block #" + str(n) + "\");\n"
                 if blocking_assign:
-                    for t in g[0]:
+                    for t in sorted(g[0], key=lambda x: x.duid):
                         r += "\t" + ns.get_name(t) + " = " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_BLOCKING, 1, g[1])
                 else:
-                    for t in g[0]:
+                    for t in sorted(g[0], key=lambda x: x.duid):
                         r += "\t" + ns.get_name(t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
                     r += _printnode(ns, _AT_NONBLOCKING, 1, g[1])
                 if dummy_signal:
@@ -330,7 +335,11 @@ def convert(f, ios=None, name="top",
                 f.clock_domains.append(cd)
                 ios |= {cd.clk, cd.rst}
             else:
-                raise KeyError("Unresolved clock domain: '"+cd_name+"'")
+                msg = "Available clock domains:\n"
+                for name in sorted(list_clock_domains(f)):
+                    msg += "- "+name+"\n"
+                logging.error(msg)
+                raise KeyError("Unresolved clock domain: \""+cd_name+"\"")
 
     f = lower_complex_slices(f)
     insert_resets(f)

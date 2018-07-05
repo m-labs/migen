@@ -27,5 +27,5 @@ test:
 
 about:
   home: https://m-labs.hk/gateware.html
-  license: 3-clause BSD
+  license: 2-clause BSD
   summary: 'A Python toolbox for building complex digital hardware'

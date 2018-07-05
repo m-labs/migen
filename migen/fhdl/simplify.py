@@ -87,13 +87,13 @@ class MemoryToArray(ModuleTransformer):
                 if port.async_read:
                     f.comb.append(port.dat_r.eq(storage[port.adr]))
                 else:
-                    if port.mode == WRITE_FIRST and port.we is not None:
+                    if port.mode == WRITE_FIRST:
                         adr_reg = Signal.like(port.adr)
                         rd_stmt = adr_reg.eq(port.adr)
                         f.comb.append(port.dat_r.eq(storage[adr_reg]))
                     elif port.mode == NO_CHANGE and port.we is not None:
                         rd_stmt = If(~port.we, port.dat_r.eq(storage[port.adr]))
-                    else: # READ_FIRST or port.we is None, simplest case
+                    else: # NO_CHANGE without write capability reduces to READ_FIRST
                         rd_stmt = port.dat_r.eq(storage[port.adr])
                     if port.re is None:
                         sync.append(rd_stmt)

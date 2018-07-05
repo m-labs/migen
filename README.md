@@ -39,7 +39,7 @@ System-on-chip design based on Migen:
 https://github.com/m-labs/misoc
 
 Online documentation:
-https://m-labs.hk/gateware.html
+https://m-labs.hk/migen/manual/
 
 #### Quick intro
 
