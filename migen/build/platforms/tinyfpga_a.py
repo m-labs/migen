@@ -99,6 +99,11 @@ class OschRouting(Module):
 class Platform(LatticePlatform):
     default_clk_name = "osch_clk"
     default_clk_period = 1000.0/15.65
+    osch_clk_period = 1000.0/15.65
+    # osch_clk_period is the variable used to set the OSCH period.
+    # If default_clk_name == "osch_clk", default_clk_period should _also_ be
+    # set to osch_clk_period for consistency with the rest of Migen,
+    # which may look for a class variable called default_clk_name.
 
     def __init__(self):
         self.osch_routing = OschRouting()    # Internal oscillator routing.
@@ -116,9 +121,7 @@ class Platform(LatticePlatform):
                 # Do not add to self.constraint_manager.matched because we
                 # don't want this signal to become part of the UCF.
                 sig = self.osch_routing.mk_clk("osch_clk",
-                                               self.default_clk_period)
-            else:
-                raise
+                                               self.osch_clk_period)
         return sig
 
     def do_finalize(self, f, *args, **kwargs):
@@ -134,9 +137,9 @@ class Platform(LatticePlatform):
         # due to the combination of oscillator tolerance and the frequency
         # selection algorithm. If the lower closest frequency was chosen, the
         # constraint will be up to 5% higher than the desired frequency.
-        if self.osch_routing.osch_used and hasattr(self, "default_clk_period"):
+        if self.osch_routing.osch_used and hasattr(self, "osch_clk_period"):
             adjusted_freq = 1.05 * \
-                self.osch_routing.mclk.nearest_freq(self.default_clk_period)
+                self.osch_routing.mclk.nearest_freq(self.osch_clk_period)
             self.add_internal_clock_constraint(self.osch_routing.mach_clk_sig,
                                                1000.0/adjusted_freq)
 
