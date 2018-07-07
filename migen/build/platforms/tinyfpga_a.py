@@ -16,7 +16,7 @@ _connectors = [
 # Default peripherals.
 # Only on AX.
 led = [
-    ("user_led", 0, Pins("GPIO:0"))
+    ("user_led", 0, Pins("GPIO:0"), IOStandard("LVCMOS33"))
 ]
 
 serial = [
@@ -146,6 +146,10 @@ class Platform(LatticePlatform):
         # And lastly, add the oscillator routing so the correct primitive
         # is instantiated.
         f += self.osch_routing.get_fragment()
+
+        # Handle cases where OSCH is either not used or not default.
+        if self.default_clk_name != "osch_clk":
+            GenericPlatform.do_finalize(self, f, *args, **kwargs)
 
     def add_internal_clock_constraint(self, clk, period):
         # Normally clocks are routed from I/O pins and are thus treated as
