@@ -4,9 +4,6 @@ from migen import *
 from migen.build.generic_platform import *
 from migen.build.lattice import LatticePlatform
 
-_io = [
-]
-
 _connectors = [
     # Pins 1-22
     ("GPIO", "13 14 16 17 20 21 23 25 26 27 28 4 5 8 9 10 11 12"),
@@ -108,7 +105,7 @@ class Platform(LatticePlatform):
     def __init__(self):
         self.osch_routing = OschRouting()    # Internal oscillator routing.
         # Routed during self.do_finalize().
-        LatticePlatform.__init__(self, "LCMXO2-1200HC-4SG32C", _io,
+        LatticePlatform.__init__(self, "LCMXO2-1200HC-4SG32C", [],
                                  _connectors, toolchain="diamond")
 
     # MachXO2 has an internal clock, which is not exposed as an I/O.
