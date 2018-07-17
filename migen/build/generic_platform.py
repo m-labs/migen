@@ -96,8 +96,10 @@ def _resource_type(resource):
 
 
 class ConnectorManager:
-    def __init__(self, connectors):
+    def __init__(self):
         self.connector_table = dict()
+
+    def add_connectors(self, connectors):
         for connector in connectors:
             cit = iter(connector)
             conn_name = next(cit)
@@ -150,10 +152,14 @@ class ConstraintManager:
         self.available = list(io)
         self.matched = []
         self.platform_commands = []
-        self.connector_manager = ConnectorManager(connectors)
+        self.connector_manager = ConnectorManager()
+        self.connector_manager.add_connectors(connectors)
 
     def add_extension(self, io):
         self.available.extend(io)
+
+    def add_connectors(self, connectors):
+        self.connector_manager.add_connectors(connectors)
 
     def request(self, name, number=None):
         resource = _lookup(self.available, name, number)
@@ -260,6 +266,9 @@ class GenericPlatform:
 
     def add_extension(self, *args, **kwargs):
         return self.constraint_manager.add_extension(*args, **kwargs)
+
+    def add_connectors(self, *args, **kwargs):
+        return self.constraint_manager.add_connectors(*args, **kwargs)
 
     def finalize(self, fragment, *args, **kwargs):
         if self.finalized:
