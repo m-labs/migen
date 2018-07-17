@@ -1,4 +1,5 @@
-import os
+import os, sys
+from migen.build import tools
 
 
 class GenericProgrammer:
@@ -15,7 +16,7 @@ class GenericProgrammer:
     def find_flash_proxy(self):
         for d in self.flash_proxy_dirs:
             fulldir = os.path.abspath(os.path.expanduser(d))
-            fullname = os.path.join(fulldir, self.flash_proxy_basename)
+            fullname = tools.cygpath(os.path.join(fulldir, self.flash_proxy_basename))
             if os.path.exists(fullname):
                 return fullname
         raise OSError("Failed to find flash proxy bitstream")
@@ -27,5 +28,3 @@ class GenericProgrammer:
     # must be overloaded by specific programmer
     def flash(self, address, data_file):
         raise NotImplementedError
-
-
