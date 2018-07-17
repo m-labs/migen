@@ -119,19 +119,18 @@ class ConnectorManager:
 
             self.connector_table[conn_name] = pin_list
 
+    def resolve_identifier(self, identifier):
+        if ":" in identifier:
+            conn, pn = identifier.split(":")
+            if pn.isdigit():
+                pn = int(pn)
+            return self.resolve_identifier(self.connector_table[conn][pn])
+        else:
+            return identifier
+
     def resolve_identifiers(self, identifiers):
-        r = []
-        for identifier in identifiers:
-            if ":" in identifier:
-                conn, pn = identifier.split(":")
-                if pn.isdigit():
-                    pn = int(pn)
-
-                r.append(self.connector_table[conn][pn])
-            else:
-                r.append(identifier)
-
-        return r
+        return [self.resolve_identifier(identifier)
+                for identifier in identifiers]
 
 
 def _separate_pins(constraints):
