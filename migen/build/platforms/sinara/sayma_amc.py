@@ -287,7 +287,7 @@ _io = [
         Subsignal("n", Pins("B11")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
-    ("aux_clk", 0
+    ("aux_clk", 0,
         Subsignal("p", Pins("AF10")),
         Subsignal("n", Pins("AG10")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
