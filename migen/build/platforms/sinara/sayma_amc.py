@@ -290,7 +290,7 @@ _io = [
     ("aux_clk", 0,
         Subsignal("p", Pins("AF10")),
         Subsignal("n", Pins("AG10")),
-        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+        IOStandard("LVDS_25")
     ),
 
     # has 100R external termination resistor
