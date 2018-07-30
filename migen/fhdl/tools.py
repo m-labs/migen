@@ -1,5 +1,5 @@
 from migen.fhdl.structure import *
-from migen.fhdl.structure import _Slice, _Assign, _Fragment
+from migen.fhdl.structure import _Slice, _Part, _Assign, _Fragment
 from migen.fhdl.visit import NodeVisitor, NodeTransformer
 from migen.fhdl.bitcontainer import value_bits_sign
 from migen.util.misc import flat_iteration
@@ -130,6 +130,10 @@ def is_variable(node):
         return node.variable
     elif isinstance(node, _Slice):
         return is_variable(node.value)
+    elif isinstance(node, _Part):
+        if is_variable(node.offset) != is_variable(node.value):
+            raise TypeError
+        return is_variable(node.value)
     elif isinstance(node, Cat):
         arevars = list(map(is_variable, node.l))
         r = arevars[0]
@@ -232,6 +236,26 @@ class _ComplexSliceLowerer(_Lowerer):
             node = _Slice(slice_proxy, node.start, node.stop)
         return NodeTransformer.visit_Slice(self, node)
 
+class _ComplexPartLowerer(_Lowerer):
+    def visit_Part(self, node):
+        value_proxy = node.value
+        offset_proxy = node.offset
+        if not isinstance(node.value, Signal):
+            value_proxy = Signal(value_bits_sign(node.value))
+            if self.target_context:
+                a = _Assign(node.value, value_proxy)
+            else:
+                a = _Assign(value_proxy, node.value)
+            self.comb.append(self.visit_Assign(a))
+        if not isinstance(node.offset, Signal):
+            offset_proxy = Signal(value_bits_sign(node.offset))
+            if self.target_context:
+                a = _Assign(node.offset, offset_proxy)
+            else:
+                a = _Assign(offset_proxy, node.offset)
+            self.comb.append(self.visit_Assign(a))
+        node = _Part(value_proxy, offset_proxy, node.width)
+        return NodeTransformer.visit_Part(self, node)
 
 def _apply_lowerer(l, f):
     f = l.visit(f)
@@ -260,6 +284,8 @@ def lower_basics(f):
 def lower_complex_slices(f):
     return _apply_lowerer(_ComplexSliceLowerer(), f)
 
+def lower_complex_parts(f):
+    return _apply_lowerer(_ComplexPartLowerer(), f)
 
 class _ClockDomainRenamer(NodeVisitor):
     def __init__(self, old, new):
