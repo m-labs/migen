@@ -4,7 +4,7 @@ import collections
 import logging
 
 from migen.fhdl.structure import *
-from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment
+from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment, _Part
 from migen.fhdl.tools import *
 from migen.fhdl.namer import build_namespace
 from migen.fhdl.conv_output import ConvOutput
@@ -102,6 +102,10 @@ def _printexpr(ns, node):
             sr = "[" + str(node.start) + "]"
         else:
             sr = "[" + str(node.stop-1) + ":" + str(node.start) + "]"
+        r, s = _printexpr(ns, node.value)
+        return r + sr, s
+    elif isinstance(node, _Part):
+        sr = "[" + _printexpr(ns, node.offset)[0] + "+:" + str(node.width) + "]"
         r, s = _printexpr(ns, node.value)
         return r + sr, s
     elif isinstance(node, Cat):

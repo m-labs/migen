@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from migen.fhdl.structure import *
-from migen.fhdl.structure import _Statement, _Slice, _ArrayProxy
+from migen.fhdl.structure import _Statement, _Slice, _Part, _ArrayProxy
 from migen.fhdl.module import Module, FinalizeError
 from migen.fhdl.visit import NodeTransformer
 from migen.fhdl.bitcontainer import value_bits_sign
@@ -41,6 +41,10 @@ def _target_eq(a, b):
         return (_target_eq(a.value, b.value)
                     and a.start == b.start
                     and a.stop == b.stop)
+    elif ty == _Part:
+        return (_target_eq(a.value, b.value)
+                    and _target_eq(a.offset == b.offset)
+                    and a.width == b.width)
     elif ty == _ArrayProxy:
         return (all(_target_eq(x, y) for x, y in zip(a.choices, b.choices))
                     and _target_eq(a.key, b.key))

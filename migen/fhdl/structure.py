@@ -127,6 +127,25 @@ class _Value(DUID):
         """
         return _Assign(self, r)
 
+    def part(self, offset, width):
+        """Indexed part-select
+        Selects a constant width but variable offset part of a ``_Value``
+
+        Parameters
+        ----------
+        offset : _Value, in
+            start point of the selected bits
+        width : Constant, in
+            number of selected bits
+
+        Returns
+        -------
+        _Part
+            Selected part of the ``_Value``
+        """
+        offset = wrap(offset)
+        return _Part(self, offset, width)
+
     def __hash__(self):
         raise TypeError("unhashable type: '{}'".format(type(self).__name__))
 
@@ -178,6 +197,19 @@ class _Slice(_Value):
         self.start = start
         self.stop = stop
 
+
+class _Part(_Value):
+    def __init__(self, value, offset, width):
+        _Value.__init__(self)
+        if not isinstance(width, int):
+            raise TypeError("Cannot use non int width {} ({}) for part".format(
+                width, repr(width)))
+        if not isinstance(offset, Constant) and not isinstance(offset, _Value):
+            raise TypeError("Must use Value or Constant offset instead of {} ({}) for part".format(
+                offset, repr(offset)))
+        self.value = value
+        self.offset = offset
+        self.width = width
 
 class Cat(_Value):
     """Concatenate values
