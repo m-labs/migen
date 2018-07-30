@@ -1,5 +1,6 @@
 from migen.fhdl.module import Module
 from migen.fhdl.specials import Instance, Tristate
+from migen.fhdl.bitcontainer import value_bits_sign
 from migen.genlib.io import *
 from migen.genlib.resetsync import AsyncResetSynchronizer
 
@@ -59,15 +60,26 @@ class IcestormAsyncResetSynchronizer:
 
 class IcestormTristateImpl(Module):
     def __init__(self, io, o, oe, i):
-        for bit in range(io.nbits):
+        nbits, sign = value_bits_sign(io)
+        if nbits == 1:
             self.specials += \
                 Instance("SB_IO",
                     p_PIN_TYPE=C(0b101001, 6),
-                    io_PACKAGE_PIN=io[bit],
+                    io_PACKAGE_PIN=io,
                     i_OUTPUT_ENABLE=oe,
-                    i_D_OUT_0=o[bit],
-                    o_D_IN_0=i[bit],
+                    i_D_OUT_0=o,
+                    o_D_IN_0=i,
                 )
+        else:
+            for bit in range(nbits):
+                self.specials += \
+                    Instance("SB_IO",
+                        p_PIN_TYPE=C(0b101001, 6),
+                        io_PACKAGE_PIN=io[bit],
+                        i_OUTPUT_ENABLE=oe,
+                        i_D_OUT_0=o[bit],
+                        o_D_IN_0=i[bit],
+                    )
 
 
 class IcestormTristate(Module):
