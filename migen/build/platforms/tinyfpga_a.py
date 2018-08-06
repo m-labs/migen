@@ -95,14 +95,10 @@ class OschRouting(Module):
 
 class Platform(LatticePlatform):
     default_clk_name = "osch_clk"
-    default_clk_period = 1000.0/15.65
-    osch_clk_period = 1000.0/15.65
-    # osch_clk_period is the variable used to set the OSCH period.
-    # If default_clk_name == "osch_clk", default_clk_period should _also_ be
-    # set to osch_clk_period for consistency with the rest of Migen,
-    # which may look for a class variable called default_clk_name.
+    default_clk_period = 1000.0/15.6
 
     def __init__(self):
+        self.osch_clk_period = 1000.0/15.65
         self.osch_routing = OschRouting()    # Internal oscillator routing.
         # Routed during self.do_finalize().
         LatticePlatform.__init__(self, "LCMXO2-1200HC-4SG32C", [],
@@ -147,6 +143,16 @@ class Platform(LatticePlatform):
         # Handle cases where OSCH is either not used or not default.
         if self.default_clk_name != "osch_clk":
             GenericPlatform.do_finalize(self, f, *args, **kwargs)
+
+    def set_osch_period(self, period):
+        # osch_clk_period is the variable used to set the OSCH period.
+        # If default_clk_name == "osch_clk", default_clk_period should _also_
+        # be set to osch_clk_period for consistency with the rest of Migen,
+        # which may look for a class variable called default_clk_name.
+        self.osch_clk_period = period
+
+        if self.default_clk_name == "osch_clk":
+            self.default_clk_period = period
 
     def add_internal_clock_constraint(self, clk, period):
         # Normally clocks are routed from I/O pins and are thus treated as
