@@ -88,7 +88,11 @@ class LatticeIceStormToolchain:
 
     special_overrides = common.icestorm_special_overrides
 
-    def __init__(self):
+    def __init__(self, use_nextpnr=False):
+        # Variables within replacement fields should be backend-aware and
+        # update their syntax accordingly. Currently, only {pnr_pkg_opts}
+        # needs this functionality.
+
         self.yosys_template = [
             "{read_files}",
             "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
@@ -102,11 +106,24 @@ class LatticeIceStormToolchain:
             "icepack {build_name}.txt {build_name}.bin"
         ]
 
+        self.nextpnr_yosys_template = [
+            "{read_files}",
+            "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
+            "synth_ice40 -top top -json {build_name}.json",
+        ]
+
+        self.nextpnr_build_template = [
+            "yosys -q -l {build_name}.rpt {build_name}.ys",
+            "nextpnr-ice40 {pnr_pkg_opts} --pcf {build_name}.pcf --json {build_name}.json --asc {build_name}.txt",
+            "icetime {icetime_pkg_opts} -c {icetime_constraint} -t -p {build_name}.pcf -r {build_name}.tim {build_name}.txt",
+            "icepack {build_name}.txt {build_name}.bin"
+        ]
+
         self.freq_constraints = dict()
 
     # platform.device should be of the form "ice40-{lp384, hx1k, etc}-{tq144, etc}"
     def build(self, platform, fragment, build_dir="build", build_name="top",
-              run=True):
+              use_nextpnr=False, run=True):
         os.makedirs(build_dir, exist_ok=True)
         cwd = os.getcwd()
         os.chdir(build_dir)
@@ -120,9 +137,13 @@ class LatticeIceStormToolchain:
         v_file = build_name + ".v"
         v_output.write(v_file)
 
+        if use_nextpnr:
+            chosen_yosys_template = self.nextpnr_yosys_template
+        else:
+            chosen_yosys_template = self.yosys_template
         ys_contents = "\n".join(_.format(build_name=build_name,
                                          read_files=self.gen_read_files(platform, v_file))
-                                for _ in self.yosys_template)
+                                for _ in chosen_yosys_template)
 
         ys_name = build_name + ".ys"
         tools.write_to_file(ys_name, ys_contents)
@@ -131,14 +152,21 @@ class LatticeIceStormToolchain:
                             _build_pcf(named_sc, named_pc))
         if run:
             (family, series_size, package) = self.parse_device_string(platform.device)
-            pnr_pkg_opts = "-d " + self.get_size_string(series_size) + \
-                           " -P " + package
+            if use_nextpnr:
+                pnr_pkg_opts = "--" + series_size + " --package " + package
+            else:
+                pnr_pkg_opts = "-d " + self.get_size_string(series_size) + \
+                               " -P " + package
             icetime_pkg_opts = "-P " + package + " -d " + series_size
             icetime_constraint = str(max(self.freq_constraints.values(),
                                          default=0.0))
 
-            _run_icestorm(False, self.build_template, build_name, pnr_pkg_opts,
-                          icetime_pkg_opts, icetime_constraint)
+            if use_nextpnr:
+                chosen_build_template = self.nextpnr_build_template
+            else:
+                chosen_build_template = self.build_template
+            _run_icestorm(False, chosen_build_template, build_name,
+                          pnr_pkg_opts, icetime_pkg_opts, icetime_constraint)
 
         os.chdir(cwd)
 
