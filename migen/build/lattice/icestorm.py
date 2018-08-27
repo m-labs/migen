@@ -34,7 +34,7 @@ def _build_pcf(named_sc, named_pc):
 
 
 def _run_icestorm(source, build_template, build_name, pnr_pkg_opts,
-                  icetime_pkg_opts, icetime_constraint):
+                  icetime_pkg_opts, freq_constraint):
     if sys.platform == "win32" or sys.platform == "cygwin":
         script_ext = ".bat"
         shell = ["cmd", "/c"]
@@ -51,7 +51,7 @@ def _run_icestorm(source, build_template, build_name, pnr_pkg_opts,
         build_script_contents += s_fail.format(build_name=build_name,
                                                pnr_pkg_opts=pnr_pkg_opts,
                                                icetime_pkg_opts=icetime_pkg_opts,
-                                               icetime_constraint=icetime_constraint,
+                                               freq_constraint=freq_constraint,
                                                fail_stmt=fail_stmt)
 
     build_script_file = "build_" + build_name + script_ext
@@ -102,7 +102,7 @@ class LatticeIceStormToolchain:
         self.build_template = [
             "yosys -q -l {build_name}.rpt {build_name}.ys",
             "arachne-pnr -q -l {pnr_pkg_opts} -p {build_name}.pcf {build_name}.blif -o {build_name}.txt",
-            "icetime {icetime_pkg_opts} -c {icetime_constraint} -t -p {build_name}.pcf -r {build_name}.tim {build_name}.txt",
+            "icetime {icetime_pkg_opts} -c {freq_constraint} -t -p {build_name}.pcf -r {build_name}.tim {build_name}.txt",
             "icepack {build_name}.txt {build_name}.bin"
         ]
 
@@ -114,8 +114,7 @@ class LatticeIceStormToolchain:
 
         self.nextpnr_build_template = [
             "yosys -q -l {build_name}.rpt {build_name}.ys",
-            "nextpnr-ice40 {pnr_pkg_opts} --pcf {build_name}.pcf --json {build_name}.json --asc {build_name}.txt",
-            "icetime {icetime_pkg_opts} -c {icetime_constraint} -t -p {build_name}.pcf -r {build_name}.tim {build_name}.txt",
+            "nextpnr-ice40 {pnr_pkg_opts} --pcf {build_name}.pcf --json {build_name}.json --asc {build_name}.txt --freq {freq_constraint}",
             "icepack {build_name}.txt {build_name}.bin"
         ]
 
@@ -158,15 +157,15 @@ class LatticeIceStormToolchain:
                 pnr_pkg_opts = "-d " + self.get_size_string(series_size) + \
                                " -P " + package
             icetime_pkg_opts = "-P " + package + " -d " + series_size
-            icetime_constraint = str(max(self.freq_constraints.values(),
-                                         default=0.0))
+            freq_constraint = str(max(self.freq_constraints.values(),
+                                      default=0.0))
 
             if use_nextpnr:
                 chosen_build_template = self.nextpnr_build_template
             else:
                 chosen_build_template = self.build_template
             _run_icestorm(False, chosen_build_template, build_name,
-                          pnr_pkg_opts, icetime_pkg_opts, icetime_constraint)
+                          pnr_pkg_opts, icetime_pkg_opts, freq_constraint)
 
         os.chdir(cwd)
 
