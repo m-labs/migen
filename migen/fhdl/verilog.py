@@ -207,6 +207,7 @@ def _printheader(f, ios, name, ns, attr_translate,
     r = "`default_nettype none\n\n"
     r += "module " + name + "(\n"
     firstp = True
+    initial = ""
     for sig in sorted(ios, key=lambda x: x.duid):
         if not firstp:
             r += ",\n"
@@ -221,6 +222,8 @@ def _printheader(f, ios, name, ns, attr_translate,
                 r += "\toutput " + _printsig(ns, sig)
             else:
                 r += "\toutput reg " + _printsig(ns, sig)
+                initial += "\t" + ns.get_name(sig) + " = " \
+                    + _printexpr(ns, sig.reset)[0] + ";\n"
         else:
             r += "\tinput " + _printsig(ns, sig)
     r += "\n);\n\n"
@@ -232,10 +235,17 @@ def _printheader(f, ios, name, ns, attr_translate,
             r += "wire " + _printsig(ns, sig) + ";\n"
         else:
             if reg_initialization and sig not in comb_regs:
-                r += "reg " + _printsig(ns, sig) + " = " + _printexpr(ns, sig.reset)[0] + ";\n"
+                r += "reg " + _printsig(ns, sig) + ";\n"
+                initial += "\t" + ns.get_name(sig) + " = " \
+                    + _printexpr(ns, sig.reset)[0] + ";\n"
             else:
                 r += "reg " + _printsig(ns, sig) + ";\n"
     r += "\n"
+    if initial != "":
+        r += "initial begin\n"
+        r += initial
+        r += "end\n"
+        r += "\n"
     return r
 
 
