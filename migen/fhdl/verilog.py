@@ -204,7 +204,8 @@ def _printheader(f, ios, name, ns, attr_translate,
     targets = list_targets(f) | special_outs
     wires, comb_regs = _list_comb_wires_regs(f)
     wires |= special_outs
-    r = "module " + name + "(\n"
+    r = "`default_nettype none\n\n"
+    r += "module " + name + "(\n"
     firstp = True
     for sig in sorted(ios, key=lambda x: x.duid):
         if not firstp:
