@@ -208,7 +208,9 @@ class FSM(Module):
 
     def do_finalize(self):
         nstates = len(self.actions)
-        self.encoding = dict((s, n) for n, s in enumerate(self.actions.keys()))
+        nbits = (nstates - 1).bit_length()
+        self.encoding = dict((s, Constant(n, nbits))
+                             for n, s in enumerate(self.actions.keys()))
         self.decoding = {n: s for s, n in self.encoding.items()}
 
         self.state = Signal(max=nstates, reset=self.encoding[self.reset_state])
