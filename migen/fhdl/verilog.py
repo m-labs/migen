@@ -324,7 +324,8 @@ def convert(fi, ios=None, name="top",
   special_overrides=dict(),
   attr_translate=DummyAttrTranslate(),
   create_clock_domains=True,
-  display_run=False, asic_syntax=False, if_to_mux=True):
+  display_run=False, asic_syntax=False,
+  lower_behavioral=True):
     r = ConvOutput()
     f = _Fragment()
     if not isinstance(fi, _Fragment):
@@ -353,8 +354,10 @@ def convert(fi, ios=None, name="top",
     f = lower_basics(f)
     fs, lowered_specials = lower_specials(special_overrides, f.specials)
     f += lower_basics(fs)
-    if if_to_mux:
+    if lower_behavioral:
+        lower_case(f)
         lower_if(f)
+        lower_multiple_assigns(f)
 
     for io in sorted(ios, key=lambda x: x.duid):
         if io.name_override is None:

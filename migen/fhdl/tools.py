@@ -366,6 +366,33 @@ def lower_specials(overrides, specials):
     return f, lowered_specials
 
 
+def _lower_case(comb):
+    for _case in comb:
+        if not isinstance(_case, Case):
+            # Assign or If
+            yield _case
+        else:
+            first_if = None
+            last_if = None
+            default = None
+            for cond, stmts in _case.cases.items():
+                if isinstance(cond, str) and cond == 'default':
+                    default = stmts
+                else:
+                    _if = If(_case.test == cond, *list(_lower_case(stmts)))
+                    if last_if is None:
+                        first_if = last_if = _if
+                    else:
+                        last_if.Else(_if)
+            if default is not None:
+                last_if.Else(*default)
+            yield first_if
+
+
+def lower_case(fragment):
+    fragment.comb = list(_lower_case(fragment.comb))
+
+
 def _lower_if(comb):
     assigns = {}
     for _if in comb:
@@ -398,3 +425,21 @@ def _lower_if(comb):
 
 def lower_if(fragment):
     fragment.comb = list(_lower_if(fragment.comb))
+
+
+def _lower_multiple_assigns(comb):
+    assigns = {}
+    rest = []
+    for _assign in comb:
+        if not isinstance(_assign, _Assign):
+            rest.append(_assign)
+        else:
+            assigns[_assign.l] = _assign
+    for k, assign in assigns.items():
+        yield assign
+    for comb in rest:
+        yield comb
+
+
+def lower_multiple_assigns(fragment):
+    fragment.comb = list(_lower_multiple_assigns(fragment.comb))
