@@ -364,3 +364,37 @@ def lower_specials(overrides, specials):
         lowered_specials |= lowered_specials2
         f.specials -= lowered_specials2
     return f, lowered_specials
+
+
+def _lower_if(comb):
+    assigns = {}
+    for _if in comb:
+        if isinstance(_if, list):
+            yield from _lower_if(_if)
+        elif isinstance(_if, _Assign):
+            assigns[_if.l] = _if.r
+        elif not isinstance(_if, If):
+            # Assign or Case
+            yield _if
+        else:
+            muxes = {}
+            for t in _lower_if(_if.t):
+                muxes[t.l] = (t.r, None)
+            for f in _lower_if(_if.f):
+                muxes[f.l] = (muxes[f.l][0] if f.l in muxes else None, f.r)
+            for l, (t, f) in muxes.items():
+                if l in assigns:
+                    reset = assigns[l]
+                else:
+                    reset = l.reset
+                assigns[l] = Mux(_if.cond,
+                                 t if t is not None else reset,
+                                 f if f is not None else reset)
+    for l, r in assigns.items():
+        yield _Assign(l, r)
+
+
+
+
+def lower_if(fragment):
+    fragment.comb = list(_lower_if(fragment.comb))
