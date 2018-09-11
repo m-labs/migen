@@ -239,56 +239,51 @@ def _printheader(f, ios, name, ns, attr_translate,
     return r
 
 
-def _printcomb(f, ns,
-               display_run,
-               dummy_signal,
-               blocking_assign):
+def _printcomb(f, ns, display_run):
+    dummy_signal = False
+    syn_off = "// synthesis translate_off\n"
+    syn_on = "// synthesis translate_on\n"
+    dummy_s = Signal(name_override="dummy_s")
     r = ""
-    if f.comb:
-        if dummy_signal:
-            explanation = """
+
+    groups = group_by_targets(f.comb)
+
+    for n, g in enumerate(groups):
+        if len(g[1]) == 1 and isinstance(g[1][0], _Assign):
+            r += "assign " + _printnode(ns, _AT_BLOCKING, 0, g[1][0])
+        else:
+            dummy_signal = True
+            dummy_d = Signal(name_override="dummy_d")
+            r += "\n" + syn_off
+            r += "reg " + _printsig(ns, dummy_d) + ";\n"
+            r += syn_on
+
+            r += "always @(*) begin\n"
+            if display_run:
+                r += "\t$display(\"Running comb block #" + str(n) + "\");\n"
+            for t in sorted(g[0], key=lambda x: x.duid):
+                r += "\t" + ns.get_name(t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
+            r += _printnode(ns, _AT_NONBLOCKING, 1, g[1])
+
+            r += syn_off
+            r += "\t" + ns.get_name(dummy_d) + " <= " + ns.get_name(dummy_s) + ";\n"
+            r += syn_on
+            r += "end\n"
+    r += "\n"
+
+    if dummy_signal:
+        ds = """
 // Adding a dummy event (using a dummy signal 'dummy_s') to get the simulator
 // to run the combinatorial process once at the beginning.
 """
-            syn_off = "// synthesis translate_off\n"
-            syn_on = "// synthesis translate_on\n"
-            dummy_s = Signal(name_override="dummy_s")
-            r += explanation
-            r += syn_off
-            r += "reg " + _printsig(ns, dummy_s) + ";\n"
-            r += "initial " + ns.get_name(dummy_s) + " <= 1'd0;\n"
-            r += syn_on
-            r += "\n"
+        ds += syn_off
+        ds += "reg " + _printsig(ns, dummy_s) + ";\n"
+        ds += "initial " + ns.get_name(dummy_s) + " <= 1'd0;\n"
+        ds += syn_on
+        ds += "\n"
 
-        groups = group_by_targets(f.comb)
+        r = ds + r
 
-        for n, g in enumerate(groups):
-            if len(g[1]) == 1 and isinstance(g[1][0], _Assign):
-                r += "assign " + _printnode(ns, _AT_BLOCKING, 0, g[1][0])
-            else:
-                if dummy_signal:
-                    dummy_d = Signal(name_override="dummy_d")
-                    r += "\n" + syn_off
-                    r += "reg " + _printsig(ns, dummy_d) + ";\n"
-                    r += syn_on
-
-                r += "always @(*) begin\n"
-                if display_run:
-                    r += "\t$display(\"Running comb block #" + str(n) + "\");\n"
-                if blocking_assign:
-                    for t in sorted(g[0], key=lambda x: x.duid):
-                        r += "\t" + ns.get_name(t) + " = " + _printexpr(ns, t.reset)[0] + ";\n"
-                    r += _printnode(ns, _AT_BLOCKING, 1, g[1])
-                else:
-                    for t in sorted(g[0], key=lambda x: x.duid):
-                        r += "\t" + ns.get_name(t) + " <= " + _printexpr(ns, t.reset)[0] + ";\n"
-                    r += _printnode(ns, _AT_NONBLOCKING, 1, g[1])
-                if dummy_signal:
-                    r += syn_off
-                    r += "\t" + ns.get_name(dummy_d) + " <= " + ns.get_name(dummy_s) + ";\n"
-                    r += syn_on
-                r += "end\n"
-    r += "\n"
     return r
 
 
@@ -369,9 +364,7 @@ def convert(fi, ios=None, name="top",
     src += _printheader(f, ios, name, ns, attr_translate,
                         reg_initialization=not asic_syntax)
     src += _printcomb(f, ns,
-                      display_run=display_run,
-                      dummy_signal=not asic_syntax,
-                      blocking_assign=asic_syntax)
+                      display_run=display_run)
     src += _printsync(f, ns)
     src += _printspecials(special_overrides, f.specials - lowered_specials,
         ns, r.add_data_file, attr_translate)
