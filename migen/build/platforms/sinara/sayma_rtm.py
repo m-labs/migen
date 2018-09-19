@@ -123,6 +123,13 @@ _io = [
         Subsignal("rst_n", Pins("J5")),
         IOStandard("LVCMOS33")
     ),
+
+    ("clk_mez", 0,
+        Subsignal("gpio", Pins("D18 C17 C18 G17"
+                               "F18 H16 G15 G15"
+                               "F15 G14 F14 H17"
+                               "H18 F17 H14 E18")),
+        IOStandard("LVCMOS33")),
 ]
 
 
