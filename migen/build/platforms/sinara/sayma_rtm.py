@@ -123,13 +123,13 @@ _io = [
         Subsignal("rst_n", Pins("J5")),
         IOStandard("LVCMOS33")
     ),
+]
 
-    ("clk_mez", 0,
-        Subsignal("gpio", Pins("D18 C17 C18 G17"
-                               "F18 H16 G15 G15"
-                               "F15 G14 F14 H17"
-                               "H18 F17 H14 E18")),
-        IOStandard("LVCMOS33")),
+_connectors = [
+    ("clk_mez", {
+        "gpio_{}".format(num): pin for num, pin in enumerate(
+             "D18 C17 C18 G17 F18 H16 G15 G15"
+             "F15 G14 F14 H17 H18 F17 H14 E18".split())}),
 ]
 
 
@@ -138,7 +138,8 @@ class Platform(XilinxPlatform):
     default_clk_period = 20.0
 
     def __init__(self):
-        XilinxPlatform.__init__(self, "xc7a15t-csg325-1", _io, toolchain="vivado")
+        XilinxPlatform.__init__(self, "xc7a15t-csg325-1", _io, _connectors,
+                                toolchain="vivado")
         self.toolchain.bitstream_commands.extend([
             # FIXME: enable this when the XADC reference wiring is fixed
             # "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
