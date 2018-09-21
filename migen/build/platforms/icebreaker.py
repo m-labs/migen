@@ -29,7 +29,7 @@ _io = [
         Subsignal("dq",   Pins("14 17 12 13"), IOStandard("LVCMOS33")),
     ),
 
-    ("PMOD", 0,
+    ("break_off_pmod", 0,
         Subsignal("btn", Pins("20 19 18"), IOStandard("LVCMOS33")),
         Subsignal("ledr", Pins("26"), IOStandard("LVCMOS33")),
         Subsignal("ledg", Pins("27 25 23 21"), IOStandard("LVCMOS33")),
