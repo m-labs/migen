@@ -4,8 +4,10 @@ from migen.build.lattice.programmer import IceStormProgrammer
 
 
 _io = [
+    ("user_led_n",    0, Pins("11"), IOStandard("LVCMOS33")),
+    ("user_led_n",    1, Pins("37"), IOStandard("LVCMOS33")),
     ("user_ledr_n",   0, Pins("11"), IOStandard("LVCMOS33")),
-    ("user_ledg_n",   0, Pins("34"), IOStandard("LVCMOS33")),
+    ("user_ledg_n",   0, Pins("37"), IOStandard("LVCMOS33")),
     ("user_button_n", 0, Pins("10"), IOStandard("LVCMOS33")),
 
     ("serial", 0,
