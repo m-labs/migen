@@ -359,7 +359,16 @@ class Simulator:
                             raise ValueError("Unknown simulator command: '{}'"
                                              .format(request))
                     else:
-                        reply = self._evalexec_nested_lists(request)
+                        try:
+                            reply = self._evalexec_nested_lists(request)
+                        except Exception as e:
+                            tb = inspect.getframeinfo(generator.gi_frame)
+                            print("While evaluating the following generator, an error occurred:")
+                            print("  File {}, line {}, in {}".format(tb.filename, tb.lineno, tb.function))
+                            for c in tb.code_context:
+                                print("    ", c.lstrip())
+                            raise
+
                 except StopIteration:
                     exhausted.append(generator)
                     break
