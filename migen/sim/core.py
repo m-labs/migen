@@ -5,7 +5,7 @@ from functools import wraps
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import (_Value, _Statement,
-                                  _Operator, _Slice, _ArrayProxy,
+                                  _Operator, _Slice, _Part, _ArrayProxy,
                                   _Assign, _Fragment)
 from migen.fhdl.bitcontainer import value_bits_sign
 from migen.fhdl.tools import (list_targets, list_signals,
@@ -132,6 +132,11 @@ class Evaluator:
             v = self.eval(node.value, postcommit)
             idx = range(node.start, node.stop)
             return sum(((v >> i) & 1) << j for j, i in enumerate(idx))
+        elif isinstance(node, _Part):
+            v = self.eval(node.value, postcommit)
+            offset = self.eval(node.offset, postcommit)
+            idx = range(offset, offset + node.width)
+            return sum(((v >> i) & 1) << j for j, i in enumerate(idx))
         elif isinstance(node, Cat):
             shift = 0
             r = 0
@@ -183,6 +188,15 @@ class Evaluator:
             # set them to the new value
             value &= 2**(node.stop - node.start)-1
             full_value |= value << node.start
+            self.assign(node.value, full_value)
+        elif isinstance(node, _Part):
+            full_value = self.eval(node.value, True)
+            offset = self.eval(node.offset, True)
+            start = offset
+            end = offset + node.width
+            full_value &= ~((2**stop-1) - (2**start-1))
+            value &= 2**(stop - start)-1
+            full_value |= value << start
             self.assign(node.value, full_value)
         elif isinstance(node, _ArrayProxy):
             idx = min(len(node.choices) - 1, self.eval(node.key))
@@ -345,7 +359,16 @@ class Simulator:
                             raise ValueError("Unknown simulator command: '{}'"
                                              .format(request))
                     else:
-                        reply = self._evalexec_nested_lists(request)
+                        try:
+                            reply = self._evalexec_nested_lists(request)
+                        except Exception as e:
+                            tb = inspect.getframeinfo(generator.gi_frame)
+                            print("While evaluating the following generator, an error occurred:")
+                            print("  File {}, line {}, in {}".format(tb.filename, tb.lineno, tb.function))
+                            for c in tb.code_context:
+                                print("    ", c.lstrip())
+                            raise
+
                 except StopIteration:
                     exhausted.append(generator)
                     break

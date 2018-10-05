@@ -108,6 +108,8 @@ def value_bits_sign(v):
             raise TypeError
     elif isinstance(v, f._Slice):
         return v.stop - v.start, False
+    elif isinstance(v, f._Part):
+        return v.width, False
     elif isinstance(v, f.Cat):
         return sum(value_bits_sign(sv)[0] for sv in v.l), False
     elif isinstance(v, f.Replicate):

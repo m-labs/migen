@@ -4,7 +4,7 @@ import collections
 import logging
 
 from migen.fhdl.structure import *
-from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment
+from migen.fhdl.structure import _Operator, _Slice, _Assign, _Fragment, _Part
 from migen.fhdl.tools import *
 from migen.fhdl.namer import build_namespace
 from migen.fhdl.conv_output import ConvOutput
@@ -102,6 +102,10 @@ def _printexpr(ns, node):
             sr = "[" + str(node.start) + "]"
         else:
             sr = "[" + str(node.stop-1) + ":" + str(node.start) + "]"
+        r, s = _printexpr(ns, node.value)
+        return r + sr, s
+    elif isinstance(node, _Part):
+        sr = "[" + _printexpr(ns, node.offset)[0] + "+:" + str(node.width) + "]"
         r, s = _printexpr(ns, node.value)
         return r + sr, s
     elif isinstance(node, Cat):
@@ -315,14 +319,16 @@ class DummyAttrTranslate:
         return (k, "true")
 
 
-def convert(f, ios=None, name="top",
+def convert(fi, ios=None, name="top",
   special_overrides=dict(),
   attr_translate=DummyAttrTranslate(),
   create_clock_domains=True,
   display_run=False, asic_syntax=False):
     r = ConvOutput()
-    if not isinstance(f, _Fragment):
-        f = f.get_fragment()
+    f = _Fragment()
+    if not isinstance(fi, _Fragment):
+        fi = fi.get_fragment()
+    f += fi
     if ios is None:
         ios = set()
 

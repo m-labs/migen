@@ -47,7 +47,7 @@ def _build_ucf(named_sc, named_pc):
 def _build_xst_files(device, sources, vincpaths, build_name, xst_opt):
     prj_contents = ""
     for filename, language, library in sources:
-        prj_contents += language + " " + library + " " + filename + "\n"
+        prj_contents += language + " " + library + " " + tools.cygpath(filename) + "\n"
     tools.write_to_file(build_name + ".prj", prj_contents)
 
     xst_contents = """run
@@ -58,7 +58,7 @@ def _build_xst_files(device, sources, vincpaths, build_name, xst_opt):
 -p {device}
 """.format(build_name=build_name, xst_opt=xst_opt, device=device)
     for path in vincpaths:
-        xst_contents += "-vlgincdir " + path + "\n"
+        xst_contents += "-vlgincdir " + tools.cygpath(path) + "\n"
     tools.write_to_file(build_name + ".xst", xst_contents)
 
 
@@ -97,7 +97,7 @@ def _run_ise(build_name, ise_path, source, mode, ngdbuild_opt,
         fail_stmt = ""
     if source:
         settings = common.settings(ise_path, ver, "ISE_DS")
-        build_script_contents += source_cmd + settings + "\n"
+        build_script_contents += source_cmd + tools.cygpath(settings) + "\n"
     if mode == "edif":
         ext = "edif"
     else:

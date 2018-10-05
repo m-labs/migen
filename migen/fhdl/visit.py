@@ -2,7 +2,7 @@ from copy import copy
 from operator import itemgetter
 
 from migen.fhdl.structure import *
-from migen.fhdl.structure import (_Operator, _Slice, _Assign, _ArrayProxy,
+from migen.fhdl.structure import (_Operator, _Slice, _Part, _Assign, _ArrayProxy,
                                   _Fragment)
 
 
@@ -59,6 +59,10 @@ class NodeVisitor:
 
     def visit_Slice(self, node):
         self.visit(node.value)
+
+    def visit_Part(self, node):
+        self.visit(node.value)
+        self.visit(node.offset)
 
     def visit_Cat(self, node):
         for e in node.l:
@@ -122,6 +126,8 @@ class NodeTransformer:
             return self.visit_Operator(node)
         elif isinstance(node, _Slice):
             return self.visit_Slice(node)
+        elif isinstance(node, _Part):
+            return self.visit_Part(node)
         elif isinstance(node, Cat):
             return self.visit_Cat(node)
         elif isinstance(node, Replicate):
@@ -160,6 +166,9 @@ class NodeTransformer:
 
     def visit_Slice(self, node):
         return _Slice(self.visit(node.value), node.start, node.stop)
+
+    def visit_Part(self, node):
+        return _Part(self.visit(node.value), self.visit(node.offset), node.width)
 
     def visit_Cat(self, node):
         return Cat(*[self.visit(e) for e in node.l])

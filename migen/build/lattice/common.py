@@ -1,5 +1,6 @@
 from migen.fhdl.module import Module
-from migen.fhdl.specials import Instance
+from migen.fhdl.specials import Instance, Tristate
+from migen.fhdl.bitcontainer import value_bits_sign
 from migen.genlib.io import *
 from migen.genlib.resetsync import AsyncResetSynchronizer
 
@@ -57,6 +58,36 @@ class IcestormAsyncResetSynchronizer:
         return IcestormAsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
 
 
+class IcestormTristateImpl(Module):
+    def __init__(self, io, o, oe, i):
+        nbits, sign = value_bits_sign(io)
+        if nbits == 1:
+            self.specials += \
+                Instance("SB_IO",
+                    p_PIN_TYPE=C(0b101001, 6),
+                    io_PACKAGE_PIN=io,
+                    i_OUTPUT_ENABLE=oe,
+                    i_D_OUT_0=o,
+                    o_D_IN_0=i,
+                )
+        else:
+            for bit in range(nbits):
+                self.specials += \
+                    Instance("SB_IO",
+                        p_PIN_TYPE=C(0b101001, 6),
+                        io_PACKAGE_PIN=io[bit],
+                        i_OUTPUT_ENABLE=oe,
+                        i_D_OUT_0=o[bit],
+                        o_D_IN_0=i[bit],
+                    )
+
+
+class IcestormTristate(Module):
+    @staticmethod
+    def lower(dr):
+        return IcestormTristateImpl(dr.target, dr.o, dr.oe, dr.i)
+
+
 class IcestormDifferentialOutputImpl(Module):
     def __init__(self, i, o_p, o_n):
         self.specials += Instance("SB_IO",
@@ -79,5 +110,6 @@ class IcestormDifferentialOutput:
 
 icestorm_special_overrides = {
     AsyncResetSynchronizer: IcestormAsyncResetSynchronizer,
+    Tristate:               IcestormTristate,
     DifferentialOutput:     IcestormDifferentialOutput
 }
