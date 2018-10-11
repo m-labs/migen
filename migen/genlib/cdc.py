@@ -107,7 +107,7 @@ class BusSynchronizer(Module):
             self.comb += [
                 self._timeout.wait.eq(~self._ping.i),
                 self._ping.i.eq(starter | self._pong.o | self._timeout.done),
-                self._pong.i.eq(self._ping.i)
+                self._pong.i.eq(self._ping.o)
             ]
 
             ibuffer = Signal(width, reset_less=True)
