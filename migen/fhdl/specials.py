@@ -8,7 +8,7 @@ from migen.fhdl.tracer import get_obj_var_name
 from migen.fhdl.verilog import _printexpr as verilog_printexpr
 
 
-__all__ = ["TSTriple", "Instance", "Memory",
+__all__ = ["TSTriple", "wrap_ts", "Instance", "Memory",
     "READ_FIRST", "WRITE_FIRST", "NO_CHANGE"]
 
 
@@ -77,6 +77,30 @@ class TSTriple:
 
     def get_tristate(self, target):
         return Tristate(target, self.o, self.oe, self.i)
+
+
+def wrap_ts(signal, module, need_i=False):
+    """function to wrap a signal in a tristate
+
+    parameters:
+    signal: Signal(n) or record with fields o, oe and optinally i
+    module: Module
+        objects needed by wrap_ts will be added to the provided module
+    need_i: needs the i field
+        only used when signal is not of type Signal
+    """
+    if isinstance(signal, Signal):
+        ts = TSTriple(len(signal))
+        module.specials += ts.get_tristate(signal)
+    elif hasattr(signal, "o") and hasattr(signal, "oe"):
+        if hasattr(signal, "i"):
+            if len(signal.o) != len(signal.i):
+                raise ValueError("length of signal.o and signal.i don't match")
+        elif need_i:
+            raise("signal.i is needed")
+        ts = signal
+
+    return ts
 
 
 class Instance(Special):
