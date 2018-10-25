@@ -11,8 +11,16 @@ from operator import or_
 #   1. (name, size)
 #   2. (name, size, direction)
 #   3. (name, sublayout)
+#   4. (name, callable)
+#   5. (name, callable, *args)
+#   6. (name, callable, *args, **kwargs)
 # size can be an int, or a (int, bool) tuple for signed numbers
 # sublayout must be a list
+# callable needs to be callable and needs to return the value of the field when called
+#     *args and **kwargs are optional parameter passed when callable is called
+#     layout_len() depends on len returning the width
+#     the return value needs to support connect() method on the Record to work
+#     connect_flat() method on the Record will fail
 
 
 def set_layout_parameters(layout, **layout_dict):
@@ -34,6 +42,8 @@ def set_layout_parameters(layout, **layout_dict):
                 r.append((f[0], resolve(f[1])))
         elif isinstance(f[1], list):  # case 3
             r.append((f[0], set_layout_parameters(f[1], **layout_dict)))
+        elif callable(f[1]):  # cases 4/5/6
+            r.append(f)
         else:
             raise TypeError
     return r
@@ -50,6 +60,10 @@ def layout_len(layout):
         elif isinstance(f[1], list):  # case 3
             fname, fsublayout = f
             fsize = layout_len(fsublayout)
+        elif callable(f[1]):
+            args = f[2] if len(f) > 2 else tuple()
+            kwargs = f[3] if len(f) > 3 else {}
+            r = len(f[1](*args, **kwargs))
         else:
             raise TypeError
         if isinstance(fsize, tuple):
@@ -104,6 +118,11 @@ class Record:
             elif isinstance(f[1], list):  # case 3
                 fname, fsublayout = f
                 finst = Record(fsublayout, prefix + fname, **kwargs)
+            elif callable(f[1]):  # cases 4/5/6
+                fname = f[0]
+                args = f[2] if len(f) > 2 else tuple()
+                kwargs = f[3] if len(f) > 3 else {}
+                finst = f[1](*args, **kwargs)
             else:
                 raise TypeError
             setattr(self, fname, finst)
