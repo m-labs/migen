@@ -78,6 +78,9 @@ class TSTriple:
     def get_tristate(self, target):
         return Tristate(target, self.o, self.oe, self.i)
 
+    def __len__(self):
+        return len(self.o)
+
 
 class Instance(Special):
     class _IO:
