@@ -41,17 +41,34 @@ class Special(DUID):
 class Tristate(Special):
     def __init__(self, target, o, oe, i=None):
         Special.__init__(self)
-        self.target = wrap(target)
+        if isinstance(target, TSTriple):
+            self.target = target
+            self._target_o = target.o
+            self._target_oe = target.oe
+            self._target_i = target.i
+        else:
+            self.target = wrap(target)
         self.o = wrap(o)
         self.oe = wrap(oe)
         self.i = wrap(i) if i is not None else None
 
     def iter_expressions(self):
-        for attr, target_context in [
-          ("target", SPECIAL_INOUT),
-          ("o", SPECIAL_INPUT),
-          ("oe", SPECIAL_INPUT),
-          ("i", SPECIAL_OUTPUT)]:
+        if isinstance(self.target, TSTriple):
+            tri_attr_context = [
+                ("_target_o", SPECIAL_INPUT),
+                ("_target_oe", SPECIAL_INPUT),
+                ("_target_i", SPECIAL_OUTPUT)
+            ]
+        else:
+            tri_attr_context = [
+                ("target", SPECIAL_INOUT)
+            ]
+        tri_attr_context += [
+            ("o", SPECIAL_INPUT),
+            ("oe", SPECIAL_INPUT),
+            ("i", SPECIAL_OUTPUT)
+        ]
+        for attr, target_context in tri_attr_context:
             if getattr(self, attr) is not None:
                 yield self, attr, target_context
 
@@ -59,12 +76,18 @@ class Tristate(Special):
     def emit_verilog(tristate, ns, add_data_file):
         def pe(e):
             return verilog_printexpr(ns, e)[0]
-        w, s = value_bits_sign(tristate.target)
-        r = "assign " + pe(tristate.target) + " = " \
-            + pe(tristate.oe) + " ? " + pe(tristate.o) \
-            + " : " + str(w) + "'bz;\n"
-        if tristate.i is not None:
-            r += "assign " + pe(tristate.i) + " = " + pe(tristate.target) + ";\n"
+        if isinstance(tristate.target, TSTriple):
+            r = "assign {} = {};\n".format(pe(tristate.target.o), pe(tristate.o))
+            r += "assign {} = {};\n".format(pe(tristate.target.oe), pe(tristate.oe))
+            if tristate.i is not None:
+                r += "assign {} = {};\n".format(pe(tristate.i), pe(tristate.target.i))
+        else:
+            w, s = value_bits_sign(tristate.target)
+            r = "assign " + pe(tristate.target) + " = " \
+                + pe(tristate.oe) + " ? " + pe(tristate.o) \
+                + " : " + str(w) + "'bz;\n"
+            if tristate.i is not None:
+                r += "assign " + pe(tristate.i) + " = " + pe(tristate.target) + ";\n"
         r += "\n"
         return r
 
