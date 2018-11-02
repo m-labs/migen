@@ -2,6 +2,7 @@ from operator import itemgetter
 
 from migen.fhdl.structure import *
 from migen.fhdl.structure import _Value
+from migen.fhdl.module import *
 from migen.fhdl.bitcontainer import bits_for, value_bits_sign
 from migen.fhdl.tools import *
 from migen.fhdl.tracer import get_obj_var_name
@@ -38,25 +39,63 @@ class Special(DUID):
         return r
 
 
+class _TristateModule(Module):
+    def __init__(self, target, o, oe, i):
+        self.comb += [
+            target.o.eq(o),
+            target.oe.eq(oe)
+        ]
+        if i is not None:
+            self.comb += i.eq(target.i)
+
+
 class Tristate(Special):
     def __init__(self, target, o, oe, i=None):
         Special.__init__(self)
-        self.target = wrap(target)
+        self._isrecord = hasattr(target, "o") and hasattr(target, "oe")
+        if not self._isrecord:
+            self.target = wrap(target)
+        else:
+            self.target = target
+            self._target_o = target.o
+            self._target_oe = target.oe
+            self._target_i = getattr(target, "i", None)
+            if i is not None and not hasattr(target, "i"):
+                raise ValueError("target has to have i field if parameter i is not None")
         self.o = wrap(o)
         self.oe = wrap(oe)
         self.i = wrap(i) if i is not None else None
 
     def iter_expressions(self):
-        for attr, target_context in [
-          ("target", SPECIAL_INOUT),
-          ("o", SPECIAL_INPUT),
-          ("oe", SPECIAL_INPUT),
-          ("i", SPECIAL_OUTPUT)]:
+        if not self._isrecord:
+            tri_attr_context = [
+                ("target", SPECIAL_INOUT)
+            ]
+        else:
+            tri_attr_context = [
+                ("_target_o", SPECIAL_OUTPUT),
+                ("_target_oe", SPECIAL_OUTPUT),
+                ("_target_i", SPECIAL_INPUT)
+            ]
+        tri_attr_context += [
+            ("o", SPECIAL_INPUT),
+            ("oe", SPECIAL_INPUT),
+            ("i", SPECIAL_OUTPUT)
+        ]
+        for attr, target_context in tri_attr_context:
             if getattr(self, attr) is not None:
                 yield self, attr, target_context
 
     @staticmethod
+    def lower(tristate):
+        if not tristate._isrecord:
+            return None
+        else:
+            return _TristateModule(tristate.target, tristate.o, tristate.oe, tristate.i)
+
+    @staticmethod
     def emit_verilog(tristate, ns, add_data_file):
+        assert(not tristate._isrecord)
         def pe(e):
             return verilog_printexpr(ns, e)[0]
         w, s = value_bits_sign(tristate.target)
