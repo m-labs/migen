@@ -1,5 +1,5 @@
 from migen.build.generic_platform import GenericPlatform
-from migen.build.lattice import common, diamond, icestorm
+from migen.build.lattice import common, diamond, icestorm, prjtrellis
 
 
 class LatticePlatform(GenericPlatform):
@@ -9,6 +9,8 @@ class LatticePlatform(GenericPlatform):
         GenericPlatform.__init__(self, *args, **kwargs)
         if toolchain == "diamond":
             self.toolchain = diamond.LatticeDiamondToolchain()
+        elif toolchain == "prjtrellis":
+            self.toolchain = prjtrellis.LatticePrjTrellisToolchain()
         elif toolchain == "icestorm":
             self.bitstream_ext = ".bin"
             self.toolchain = icestorm.LatticeIceStormToolchain()
