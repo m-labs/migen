@@ -67,8 +67,10 @@ _io = [
     ),
 
     ("ext_clk", 0,
-     Subsignal("p", Pins("A4")),
-     Subsignal("n", Pins("A5"))),
+        Subsignal("p", Pins("A4")),
+        Subsignal("n", Pins("A5")),
+        IOStandard("LVDS")
+    ),
 ]
 
 
