@@ -86,24 +86,8 @@ class Platform(LatticePlatform):
         except ConstraintError:
             pass
 
-    def create_programmer(self):
-        _xcf_template = """
-<?xml version='1.0' encoding='utf-8' ?>
-<!DOCTYPE        ispXCF    SYSTEM    "IspXCF.dtd" >
-<ispXCF version="3.4.1">
-    <Comment></Comment>
-    <Chain>
-        <Comm>JTAG</Comm>
-        <Device>
-            <SelectedProg value="TRUE"/>
-            <Pos>1</Pos>
-            <Vendor>Lattice</Vendor>
-            <Family>ECP5UM5G</Family>
-            <Name>LFE5UM5G-45F</Name>
-            <IDCode>0x81112043</IDCode>
-            <File>{bitstream_file}</File>
-            <Operation>Fast Program</Operation>
-        </Device>
+    def create_programmer(self, with_ispclock=True):
+        _xcf_ispclock = """
         <Device>
             <SelectedProg value="FALSE"/>
             <Pos>2</Pos>
@@ -119,6 +103,25 @@ class Platform(LatticePlatform):
                 <BScanVal>0</BScanVal>
             </Bypass>
         </Device>
+"""
+
+        _xcf_template = """
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE        ispXCF    SYSTEM    "IspXCF.dtd" >
+<ispXCF version="3.4.1">
+    <Comment></Comment>
+    <Chain>
+        <Comm>JTAG</Comm>
+        <Device>
+            <SelectedProg value="TRUE"/>
+            <Pos>1</Pos>
+            <Vendor>Lattice</Vendor>
+            <Family>ECP5UM5G</Family>
+            <Name>LFE5UM5G-45F</Name>
+            <IDCode>0x81112043</IDCode>
+            <File>{{bitstream_file}}</File>
+            <Operation>Fast Program</Operation>
+        </Device>{ispclock}
     </Chain>
     <ProjectOptions>
         <Program>SEQUENTIAL</Program>
@@ -134,6 +137,6 @@ class Platform(LatticePlatform):
         <USBID>LATTICE ECP5_5G VERSA BOARD A Location 0000 Serial Lattice ECP5_5G VERSA Board A</USBID>
     </CableOptions>
 </ispXCF>
-"""
+""".format(ispclock=_xcf_ispclock if with_ispclock else "")
 
         return LatticeProgrammer(_xcf_template)
