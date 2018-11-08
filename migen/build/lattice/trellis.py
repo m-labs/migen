@@ -105,7 +105,7 @@ def yosys_import_sources(platform):
     return "\n".join(reads)
 
 
-class LatticePrjTrellisToolchain:
+class LatticeTrellisToolchain:
     attr_translate = {
         # FIXME: document
         "keep": ("keep", "true"),
@@ -119,7 +119,7 @@ class LatticePrjTrellisToolchain:
         "no_shreg_extract": None
     }
 
-    special_overrides = common.lattice_ecpx_prjtrellis_special_overrides
+    special_overrides = common.lattice_ecpx_trellis_special_overrides
 
     def __init__(self):
         self.yosys_template = [

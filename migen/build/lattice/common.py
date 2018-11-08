@@ -41,7 +41,7 @@ lattice_ecpx_special_overrides = {
 }
 
 
-class LatticeECPXPrjTrellisTristateImpl(Module):
+class LatticeECPXTrellisTristateImpl(Module):
     def __init__(self, io, o, oe, i):
         nbits, sign = value_bits_sign(io)
         for bit in range(nbits):
@@ -54,14 +54,14 @@ class LatticeECPXPrjTrellisTristateImpl(Module):
                     i_T=~oe,
                 )
 
-class LatticeECPXPrjTrellisTristate(Module):
+class LatticeECPXTrellisTristate(Module):
     @staticmethod
     def lower(dr):
-        return LatticeECPXPrjTrellisTristateImpl(dr.target, dr.o, dr.oe, dr.i)
+        return LatticeECPXTrellisTristateImpl(dr.target, dr.o, dr.oe, dr.i)
 
-lattice_ecpx_prjtrellis_special_overrides = {
+lattice_ecpx_trellis_special_overrides = {
     AsyncResetSynchronizer: LatticeECPXAsyncResetSynchronizer,
-    Tristate:               LatticeECPXPrjTrellisTristate,
+    Tristate:               LatticeECPXTrellisTristate,
     DDROutput:              LatticeECPXDDROutput
 }
 
