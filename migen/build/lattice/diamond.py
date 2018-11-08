@@ -14,6 +14,10 @@ from migen.build import tools
 from migen.build.lattice import common
 
 
+def _produces_jedec(device):
+    return device.startswith("LCMX")
+
+
 def _format_constraint(c):
     if isinstance(c, Pins):
         return ("LOCATE COMP ", " SITE " + "\"" + c.identifiers[0] + "\"")
@@ -57,7 +61,8 @@ def _build_files(device, sources, vincpaths, build_name):
     tcl.append("prj_run Map -impl implementation")
     tcl.append("prj_run PAR -impl implementation")
     tcl.append("prj_run Export -impl implementation -task Bitgen")
-    tcl.append("prj_run Export -impl implementation -task Jedecgen")
+    if _produces_jedec(device):
+        tcl.append("prj_run Export -impl implementation -task Jedecgen")
     tools.write_to_file(build_name + ".tcl", "\n".join(tcl))
 
 
