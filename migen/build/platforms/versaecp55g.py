@@ -65,6 +65,10 @@ _io = [
         Subsignal("tx_data", Pins("J17 J16 D19 D20")),
         IOStandard("LVCMOS25")
     ),
+
+    ("ext_clk", 0,
+     Subsignal("p", Pins("A4")),
+     Subsignal("n", Pins("A5"))),
 ]
 
 
