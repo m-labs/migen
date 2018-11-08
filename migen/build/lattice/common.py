@@ -66,7 +66,7 @@ lattice_ecpx_prjtrellis_special_overrides = {
 }
 
 
-class  LatticeiCE40AsyncResetSynchronizerImpl(Module):
+class LatticeiCE40AsyncResetSynchronizerImpl(Module):
     def __init__(self, cd, async_reset):
         rst1 = Signal()
         self.specials += [
@@ -77,7 +77,7 @@ class  LatticeiCE40AsyncResetSynchronizerImpl(Module):
         ]
 
 
-class  LatticeiCE40AsyncResetSynchronizer:
+class LatticeiCE40AsyncResetSynchronizer:
     @staticmethod
     def lower(dr):
         return LatticeiCE40AsyncResetSynchronizerImpl(dr.cd, dr.async_reset)
