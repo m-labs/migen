@@ -79,8 +79,8 @@ class Platform(LatticePlatform):
     default_clk_name = "clk100"
     default_clk_period = 10
 
-    def __init__(self):
-        LatticePlatform.__init__(self, "LFE3-35EA-6FN484C", _io)
+    def __init__(self, **kwargs):
+        LatticePlatform.__init__(self, "LFE3-35EA-6FN484C", _io, **kwargs)
 
     def do_finalize(self, fragment):
         LatticePlatform.do_finalize(self, fragment)
@@ -92,5 +92,6 @@ class Platform(LatticePlatform):
             self.add_period_constraint(self.lookup_request("eth_clocks", 1).rx, 8.0)
         except ConstraintError:
             pass
+
     def create_programmer(self):
         return LatticeProgrammer()
