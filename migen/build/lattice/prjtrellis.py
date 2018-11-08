@@ -119,7 +119,7 @@ class LatticePrjTrellisToolchain:
         "no_shreg_extract": None
     }
 
-    special_overrides = dict()
+    special_overrides = common.lattice_ecpx_prjtrellis_special_overrides
 
     def __init__(self):
         self.yosys_template = [
