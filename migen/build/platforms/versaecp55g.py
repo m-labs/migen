@@ -71,6 +71,16 @@ _io = [
         Subsignal("n", Pins("A5")),
         IOStandard("LVDS")
     ),
+
+    ("pcie_x1", 0,
+        Subsignal("clk_p", Pins("Y11")),
+        Subsignal("clk_n", Pins("Y12")),
+        Subsignal("rx_p", Pins("Y5")),
+        Subsignal("rx_n", Pins("Y6")),
+        Subsignal("tx_p", Pins("W4")),
+        Subsignal("tx_n", Pins("W5")),
+        Subsignal("perst", Pins("A6"), IOStandard("LVCMOS33")),
+    ),
 ]
 
 
