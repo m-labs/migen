@@ -51,18 +51,18 @@ def _build_lpf(named_sc, named_pc):
 
 def _build_files(device, sources, vincpaths, build_name):
     tcl = []
-    tcl.append("prj_project new -name \"{}\" -impl \"implementation\" -dev {} -synthesis \"synplify\"".format(build_name, device))
+    tcl.append("prj_project new -name \"{}\" -impl \"impl\" -dev {} -synthesis \"synplify\"".format(build_name, device))
     for path in vincpaths:
         tcl.append("prj_impl option {include path} {\"" + path + "\"}")
     for filename, language, library in sources:
         tcl.append("prj_src add \"" + filename + "\" -work " + library)
-    tcl.append("prj_run Synthesis -impl implementation -forceOne")
-    tcl.append("prj_run Translate -impl implementation")
-    tcl.append("prj_run Map -impl implementation")
-    tcl.append("prj_run PAR -impl implementation")
-    tcl.append("prj_run Export -impl implementation -task Bitgen")
+    tcl.append("prj_run Synthesis -impl impl -forceOne")
+    tcl.append("prj_run Translate -impl impl")
+    tcl.append("prj_run Map -impl impl")
+    tcl.append("prj_run PAR -impl impl")
+    tcl.append("prj_run Export -impl impl -task Bitgen")
     if _produces_jedec(device):
-        tcl.append("prj_run Export -impl implementation -task Jedecgen")
+        tcl.append("prj_run Export -impl impl -task Jedecgen")
     tools.write_to_file(build_name + ".tcl", "\n".join(tcl))
 
 
@@ -93,7 +93,7 @@ def _build_script(build_name, device, toolchain_path, ver=None):
                                  "{fail_stmt}\n".format(
             copy_stmt=copy_stmt,
             fail_stmt=fail_stmt,
-            diamond_product=os.path.join("implementation", build_name + "_implementation" + ext),
+            diamond_product=os.path.join("impl", build_name + "_impl" + ext),
             migen_product=build_name + ext)
 
     build_script_file = "build_" + build_name + script_ext
