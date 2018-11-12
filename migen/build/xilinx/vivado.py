@@ -89,7 +89,7 @@ class XilinxVivadoToolchain:
         self.clocks = dict()
         self.false_paths = set()
 
-    def _build_batch(self, platform, sources, build_name):
+    def _build_batch(self, platform, sources, edifs, ips, build_name):
         tcl = []
         tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
         for filename, language, library in sources:
@@ -97,6 +97,19 @@ class XilinxVivadoToolchain:
             tcl.append("add_files " + filename_tcl)
             tcl.append("set_property library {} [get_files {}]"
                        .format(library, filename_tcl))
+
+        for filename in edifs:
+            filename_tcl = "{" + filename + "}"
+            tcl.append("read_edif " + filename_tcl)
+
+        for filename in ips:
+            filename_tcl = "{" + filename + "}"
+            ip = os.path.splitext(os.path.basename(filename))[0]
+            tcl.append("read_ip " + filename_tcl)
+            tcl.append("upgrade_ip [get_ips {}]".format(ip))
+            tcl.append("generate_target all [get_ips {}]".format(ip))
+            tcl.append("synth_ip [get_ips {}] -force".format(ip))
+            tcl.append("get_files -all -of_objects [get_files {}]".format(filename_tcl))
 
         tcl.append("read_xdc {}.xdc".format(build_name))
         tcl.extend(c.format(build_name=build_name) for c in self.pre_synthesis_commands)
