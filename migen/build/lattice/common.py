@@ -86,25 +86,15 @@ class LatticeiCE40AsyncResetSynchronizer:
 class LatticeiCE40TristateImpl(Module):
     def __init__(self, io, o, oe, i):
         nbits, sign = value_bits_sign(io)
-        if nbits == 1:
+        for bit in range(nbits):
             self.specials += \
                 Instance("SB_IO",
                     p_PIN_TYPE=C(0b101001, 6),
-                    io_PACKAGE_PIN=io,
+                    io_PACKAGE_PIN=io[bit],
                     i_OUTPUT_ENABLE=oe,
-                    i_D_OUT_0=o,
-                    o_D_IN_0=i,
+                    i_D_OUT_0=o[bit],
+                    o_D_IN_0=i[bit],
                 )
-        else:
-            for bit in range(nbits):
-                self.specials += \
-                    Instance("SB_IO",
-                        p_PIN_TYPE=C(0b101001, 6),
-                        io_PACKAGE_PIN=io[bit],
-                        i_OUTPUT_ENABLE=oe,
-                        i_D_OUT_0=o[bit],
-                        o_D_IN_0=i[bit],
-                    )
 
 
 class LatticeiCE40Tristate(Module):
