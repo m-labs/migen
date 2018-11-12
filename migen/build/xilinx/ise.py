@@ -52,7 +52,7 @@ def _build_xst_files(device, sources, vincpaths, build_name, xst_opt):
 
     xst_contents = """run
 -ifn {build_name}.prj
--top top
+-top {build_name}
 {xst_opt}
 -ofn {build_name}.ngc
 -p {device}
@@ -177,7 +177,7 @@ class XilinxISEToolchain:
         os.chdir(build_dir)
         try:
             if mode in ("xst", "yosys", "cpld"):
-                v_output = platform.get_verilog(fragment)
+                v_output = platform.get_verilog(fragment, name=build_name)
                 vns = v_output.ns
                 named_sc, named_pc = platform.resolve_signals(vns)
                 v_file = build_name + ".v"
