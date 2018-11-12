@@ -199,7 +199,7 @@ class XilinxVivadoToolchain:
         platform.finalize(fragment)
         self._convert_clocks(platform)
         self._constrain(platform)
-        v_output = platform.get_verilog(fragment)
+        v_output = platform.get_verilog(fragment, name=build_name, **kwargs)
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
         v_file = build_name + ".v"
         v_output.write(v_file)
