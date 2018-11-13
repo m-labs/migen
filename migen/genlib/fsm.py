@@ -86,6 +86,7 @@ class _LowerNext(NodeTransformer):
         else:
             return node
 
+
 class FSM(Module):
     """
     Finite state machine
@@ -216,16 +217,6 @@ class FSM(Module):
         self.next_state = Signal(max=nstates)
         self.next_state._enumeration = {n: "{}:{}".format(n, s) for n, s in self.decoding.items()}
 
-        ln = _LowerNext(self.next_state, self.encoding, self.state_aliases)
-        cases = dict((self.encoding[k], ln.visit(v)) for k, v in self.actions.items() if v)
-        self.comb += [
-            self.next_state.eq(self.state),
-            Case(self.state, cases).makedefault(self.encoding[self.reset_state])
-        ]
-        self.sync += self.state.eq(self.next_state)
-        for register, next_value_ce, next_value in ln.registers:
-            self.sync += If(next_value_ce, register.eq(next_value))
-
         # drive entering/leaving signals
         for state, signal in self.before_leaving_signals.items():
             encoded = self.encoding[state]
@@ -235,3 +226,19 @@ class FSM(Module):
         for state, signal in self.before_entering_signals.items():
             encoded = self.encoding[state]
             self.comb += signal.eq(~(self.state == encoded) & (self.next_state == encoded))
+
+        # Allow overriding and extending control functionality (Next*) in subclasses.
+        self._finalize_sync(self._lower_controls())
+
+    def _lower_controls(self):
+        return _LowerNext(self.next_state, self.encoding, self.state_aliases)
+
+    def _finalize_sync(self, ls):
+        cases = dict((self.encoding[k], ls.visit(v)) for k, v in self.actions.items() if v)
+        self.comb += [
+            self.next_state.eq(self.state),
+            Case(self.state, cases).makedefault(self.encoding[self.reset_state])
+        ]
+        self.sync += self.state.eq(self.next_state)
+        for register, next_value_ce, next_value in ls.registers:
+            self.sync += If(next_value_ce, register.eq(next_value))
