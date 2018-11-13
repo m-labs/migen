@@ -193,7 +193,7 @@ class Evaluator:
             full_value = self.eval(node.value, True)
             offset = self.eval(node.offset, True)
             start = offset
-            end = offset + node.width
+            stop = offset + node.width
             full_value &= ~((2**stop-1) - (2**start-1))
             value &= 2**(stop - start)-1
             full_value |= value << start
