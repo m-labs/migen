@@ -7,7 +7,7 @@ from migen.genlib.fsm import FSM
 from migen.test.support import SimCase
 
 
-class SyncFIFOCase(SimCase, unittest.TestCase):
+class FSMCase(SimCase, unittest.TestCase):
     class TestBench(Module):
         def __init__(self):
             self.ctrl   = Signal()
