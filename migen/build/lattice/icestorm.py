@@ -101,7 +101,7 @@ class LatticeIceStormToolchain:
         self.yosys_template = [
             "{read_files}",
             "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
-            "synth_ice40 -top top -blif {build_name}.blif",
+            "synth_ice40 -top {build_name} -blif {build_name}.blif",
         ]
 
         self.build_template = [
@@ -114,7 +114,7 @@ class LatticeIceStormToolchain:
         self.nextpnr_yosys_template = [
             "{read_files}",
             "attrmap -tocase keep -imap keep=\"true\" keep=1 -imap keep=\"false\" keep=0 -remove keep=0",
-            "synth_ice40 -top top -json {build_name}.json",
+            "synth_ice40 -top {build_name} -json {build_name}.json",
         ]
 
         self.nextpnr_build_template = [
