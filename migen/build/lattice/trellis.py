@@ -131,7 +131,7 @@ class LatticeTrellisToolchain:
         self.build_template = [
             "yosys -q -l {build_name}.rpt {build_name}.ys",
             "nextpnr-ecp5 --json {build_name}.json --lpf {build_name}.lpf --textcfg {build_name}.config --basecfg {basecfg} --{architecture} --freq {freq_constraint}",
-            "ecppack {build_name}.config {build_name}.bit"
+            "ecppack --input {build_name}.config --bit {build_name}.bit --svf {build_name}.svf"
         ]
 
         self.freq_constraints = dict()
