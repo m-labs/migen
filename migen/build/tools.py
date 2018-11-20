@@ -1,6 +1,6 @@
 import os
 import struct
-from distutils.version import StrictVersion
+from distutils.version import StrictVersion, LooseVersion
 import re
 import subprocess
 import sys
@@ -28,13 +28,16 @@ def arch_bits():
     return struct.calcsize("P")*8
 
 
-def versions(path):
+def versions(path, strict=True):
     for n in os.listdir(path):
         full = os.path.join(path, n)
         if not os.path.isdir(full):
             continue
         try:
-            yield StrictVersion(n)
+            if strict:
+                yield StrictVersion(n)
+            else:
+                yield LooseVersion(n)
         except ValueError:
             continue
 
