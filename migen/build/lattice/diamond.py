@@ -116,7 +116,11 @@ def _build_script(build_name, device, toolchain_path, source, ver=None):
 
         diamond_product = os.path.join("impl", build_name + "_impl" + ext)
         if sys.platform in ("win32", "cygwin"):
-            # The COPY command on Windows uses forward slash for arguments.
+            # While Windows itself has no problems with forward slashes
+            # in paths, the COPY command on Windows uses forward slash for
+            # arguments. MinGW Python 3 may (it is not consistent) create
+            # paths with forward slashes on Windows, so remove them just in
+            # case.
             diamond_product = diamond_product.replace("/", "\\")
 
         build_script_contents += "{copy_stmt} {diamond_product} {migen_product}" \
