@@ -1,3 +1,4 @@
+import os
 import unittest
 import importlib
 import pkgutil
@@ -5,6 +6,10 @@ import tempfile
 
 from migen import *
 from migen.genlib.cdc import MultiReg
+from migen.build.xilinx.ise import XilinxISEToolchain
+from migen.build.xilinx.vivado import XilinxVivadoToolchain
+from migen.build.altera.quartus import AlteraQuartusToolchain
+from migen.build.lattice.diamond import LatticeDiamondToolchain
 import migen.build.platforms
 
 
@@ -33,6 +38,40 @@ class TestModulePlatform(Module):
 
 class TestExamplesPlatform(unittest.TestCase):
     def test_platforms(self):
+        def mkdir_and_build_source(plat, mod, name):
+            # Test should not fail if toolchain doesn't exist,
+            # which will happen if source=True (the default).
+            curr_exc = None
+            for source in (True, False):
+                cwd = os.getcwd()
+                try:
+                    mkdir_and_build(plat, name, source=source)
+                    break
+                except FileNotFoundError as e:
+                    # Platform will be finalized during first run,
+                    # so get a fresh instance for both iterations.
+                    plat = importlib.import_module(mod).Platform()
+                    curr_exc = e
+                    continue
+                finally:
+                    # If build fails, make sure we return to our
+                    # original directory; mkdir_and_build() will
+                    # purge the build_dir as part of cleanup.
+                    os.chdir(cwd)
+            else:
+                raise curr_exc
+
+        def mkdir_and_build(plat, name, **kwargs):
+            m = TestModulePlatform(plat)
+            with tempfile.TemporaryDirectory(name) as temp_dir:
+                plat.build(m, run=False, build_name=name,
+                           build_dir=temp_dir, **kwargs)
+
+        def supports_sourcing(plat):
+            return isinstance(plat.toolchain, (XilinxISEToolchain,
+                                               XilinxVivadoToolchain,
+                                               LatticeDiamondToolchain))
+
         for mod, name in _find_platforms(migen.build.platforms):
             with self.subTest(mod=mod, name=name):
                 # Roach has no default clock, so expect failure/skip.
@@ -40,7 +79,12 @@ class TestExamplesPlatform(unittest.TestCase):
                     pass
                 else:
                     plat = importlib.import_module(mod).Platform()
-                    m = TestModulePlatform(plat)
-                    with tempfile.TemporaryDirectory(name) as temp_dir:
-                        plat.build(m, run=False, build_name=name,
-                                   build_dir=temp_dir)
+
+                    if supports_sourcing(plat):
+                        mkdir_and_build_source(plat, mod, name)
+                    else:
+                        # Toolchain doesn't support a looking for a script
+                        # setting up an environment (the "source" argument).
+                        # The test will not fail just because the toolchain
+                        # path doesn't exist.
+                        mkdir_and_build(plat, name)
