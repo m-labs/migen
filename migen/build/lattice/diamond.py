@@ -98,8 +98,8 @@ def _build_script(build_name, device, toolchain_path, source, ver=None):
         copy_stmt = "cp"
         fail_stmt = ""
 
-    bindir = _get_bindir(toolchain_path, ver)
     if source:
+        bindir = _get_bindir(toolchain_path, ver)
         if sys.platform in ("win32", "cygwin"):
             build_script_contents += "set PATH={};%PATH%\n".format(bindir)
         else:
