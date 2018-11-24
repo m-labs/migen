@@ -190,7 +190,9 @@ class LatticeIceStormToolchain:
             "hx1k": ["vq100", "cb132", "tq144"],
             "lp8k": ["cm81", "cm81:4k", "cm121", "cm121:4k", "cm225",
                      "cm225:4k"],
-            "hx8k": ["cb132", "cb132:4k", "tq144:4k", "cm225", "ct256"],
+            "hx8k": ["bg121", "bg121:4k", "cb132", "cb132:4k", "cm121",
+                     "cm121:4k", "cm225", "cm225:4k", "cm81", "cm81:4k",
+                     "ct256", "tq144:4k"],
             "up5k": ["sg48"],
         }
 
