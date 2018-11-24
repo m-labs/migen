@@ -81,6 +81,8 @@ class XilinxVivadoToolchain:
         "no_shreg_extract": None
     }
 
+    supports_sourcing = True
+
     def __init__(self):
         self.bitstream_commands = []
         self.additional_commands = []

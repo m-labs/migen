@@ -116,6 +116,8 @@ fi
 
 
 class AlteraQuartusToolchain:
+    supports_sourcing = False
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
               toolchain_path=None, run=True, **kwargs):
         if toolchain_path is None:

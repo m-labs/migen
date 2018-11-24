@@ -162,6 +162,8 @@ class LatticeDiamondToolchain:
 
     special_overrides = common.lattice_ecpx_special_overrides
 
+    supports_sourcing = True
+
     def build(self, platform, fragment, build_dir="build", build_name="top",
               toolchain_path=None, source=True, run=True, ver=None, **kwargs):
         if toolchain_path is None:
