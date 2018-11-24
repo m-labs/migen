@@ -45,11 +45,13 @@ class TestExamplesPlatform(unittest.TestCase):
             for source in (True, False):
                 cwd = os.getcwd()
                 try:
+                    print("{}: Building with source={}.".format(mod, source))
                     mkdir_and_build(plat, name, source=source)
                     break
                 except FileNotFoundError as e:
                     # Platform will be finalized during first run,
                     # so get a fresh instance for both iterations.
+                    print("{}: Toolchain not installed.".format(mod))
                     plat = importlib.import_module(mod).Platform()
                     curr_exc = e
                     continue
@@ -67,24 +69,21 @@ class TestExamplesPlatform(unittest.TestCase):
                 plat.build(m, run=False, build_name=name,
                            build_dir=temp_dir, **kwargs)
 
-        def supports_sourcing(plat):
-            return isinstance(plat.toolchain, (XilinxISEToolchain,
-                                               XilinxVivadoToolchain,
-                                               LatticeDiamondToolchain))
-
         for mod, name in _find_platforms(migen.build.platforms):
             with self.subTest(mod=mod, name=name):
                 # Roach has no default clock, so expect failure/skip.
                 if name == "roach":
-                    pass
+                    print("{}: Skipping build.".format(mod))
                 else:
                     plat = importlib.import_module(mod).Platform()
 
-                    if supports_sourcing(plat):
+                    if plat.toolchain.supports_sourcing:
                         mkdir_and_build_source(plat, mod, name)
                     else:
                         # Toolchain doesn't support a looking for a script
                         # setting up an environment (the "source" argument).
                         # The test will not fail just because the toolchain
                         # path doesn't exist.
+                        print("{}: Build does not require sourcing."
+                              .format(mod))
                         mkdir_and_build(plat, name)
