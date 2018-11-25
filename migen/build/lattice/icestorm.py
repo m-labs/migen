@@ -12,10 +12,6 @@ from migen.build import tools
 from migen.build.lattice import common
 
 
-def _format_constraint(c):
-    pass
-
-
 def _build_pcf(named_sc, named_pc):
     r = ""
     for sig, pins, others, resname in named_sc:
@@ -26,6 +22,13 @@ def _build_pcf(named_sc, named_pc):
             r += "set_io {} {}\n".format(sig, pins[0])
     if named_pc:
         r += "\n" + "\n\n".join(named_pc)
+    return r
+
+
+def _build_pre_pack(vns, freq_cstrs):
+    r = ""
+    for sig in freq_cstrs:
+        r += """ctx.addClock("{}", {})\n""".format(vns.get_name(sig), freq_cstrs[sig])
     return r
 
 
@@ -115,7 +118,7 @@ class LatticeIceStormToolchain:
 
         self.nextpnr_build_template = [
             "yosys -q -l {build_name}.rpt {build_name}.ys",
-            "nextpnr-ice40 {pnr_pkg_opts} --pcf {build_name}.pcf --json {build_name}.json --asc {build_name}.txt --freq {freq_constraint}",
+            "nextpnr-ice40 {pnr_pkg_opts} --pcf {build_name}.pcf --json {build_name}.json --asc {build_name}.txt --pre-pack {build_name}_pre_pack.py",
             "icepack {build_name}.txt {build_name}.bin"
         ]
 
@@ -157,6 +160,13 @@ class LatticeIceStormToolchain:
             pnr_pkg_opts = "-d " + self.get_size_string(series_size) + \
                            " -P " + package
         icetime_pkg_opts = "-P " + package + " -d " + series_size
+
+        if use_nextpnr:
+            tools.write_to_file(build_name + "_pre_pack.py",
+                                _build_pre_pack(v_output.ns, self.freq_constraints))
+        # icetime can only handle a single global constraint, so we test against the fastest
+        # clock; though imprecise, if the global design satisfies the fastest clock, we can
+        # be sure all other constraints are satisfied.
         freq_constraint = str(max(self.freq_constraints.values(),
                                   default=0.0))
 
@@ -216,11 +226,6 @@ class LatticeIceStormToolchain:
                                                     filename))
         return "\n".join(read_files)
 
-    # icetime can only handle a single global constraint. Pending more
-    # finely-tuned analysis features in arachne-pnr and IceStorm, save
-    # all the constraints in a dictionary and test against the fastest clk.
-    # Though imprecise, if the global design satisfies the fastest clock,
-    # we can be sure all other constraints are satisfied.
     def add_period_constraint(self, platform, clk, period):
         new_freq = 1000.0/period
 
