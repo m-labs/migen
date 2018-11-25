@@ -16,18 +16,14 @@ def _format_constraint(c):
     pass
 
 
-def _format_pcf(signame, pin, others, resname):
-    return "set_io " + signame + " " + pin + "\n"
-
-
 def _build_pcf(named_sc, named_pc):
     r = ""
     for sig, pins, others, resname in named_sc:
         if len(pins) > 1:
-            for i, p in enumerate(pins):
-                r += _format_pcf(sig + "[" + str(i) + "]", p, others, resname)
+            for bit, pin in enumerate(pins):
+                r += "set_io {}[{}] {}\n".format(sig, bit, pin)
         else:
-            r += _format_pcf(sig, pins[0], others, resname)
+            r += "set_io {} {}\n".format(sig, pins[0])
     if named_pc:
         r += "\n" + "\n\n".join(named_pc)
     return r
