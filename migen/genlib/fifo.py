@@ -6,6 +6,9 @@ from migen.fhdl.decorators import ClockDomainsRenamer
 from migen.genlib.cdc import MultiReg, GrayCounter
 
 
+__all__ = ["SyncFIFO", "SyncFIFOBuffered", "AsyncFIFO", "AsyncFIFOBuffered"]
+
+
 def _inc(signal, modulo):
     if modulo == 2**len(signal):
         return signal.eq(signal + 1)
