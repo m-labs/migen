@@ -2,6 +2,9 @@ from migen.fhdl.structure import *
 from migen.fhdl.specials import Special
 
 
+__all__ = ["AsyncResetSynchronizer"]
+
+
 class AsyncResetSynchronizer(Special):
     def __init__(self, cd, async_reset):
         Special.__init__(self)
