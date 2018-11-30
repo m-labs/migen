@@ -6,10 +6,6 @@ import tempfile
 
 from migen import *
 from migen.genlib.cdc import MultiReg
-from migen.build.xilinx.ise import XilinxISEToolchain
-from migen.build.xilinx.vivado import XilinxVivadoToolchain
-from migen.build.altera.quartus import AlteraQuartusToolchain
-from migen.build.lattice.diamond import LatticeDiamondToolchain
 import migen.build.platforms
 
 
@@ -41,27 +37,21 @@ class TestExamplesPlatform(unittest.TestCase):
         def mkdir_and_build_source(plat, mod, name):
             # Test should not fail if toolchain doesn't exist,
             # which will happen if source=True (the default).
-            curr_exc = None
-            for source in (True, False):
-                cwd = os.getcwd()
-                try:
-                    print("{}: Building with source={}.".format(mod, source))
-                    mkdir_and_build(plat, name, source=source)
-                    break
-                except FileNotFoundError as e:
-                    # Platform will be finalized during first run,
-                    # so get a fresh instance for both iterations.
-                    print("{}: Toolchain not installed.".format(mod))
-                    plat = importlib.import_module(mod).Platform()
-                    curr_exc = e
-                    continue
-                finally:
-                    # If build fails, make sure we return to our
-                    # original directory; mkdir_and_build() will
-                    # purge the build_dir as part of cleanup.
-                    os.chdir(cwd)
-            else:
-                raise curr_exc
+            cwd = os.getcwd()
+            try:
+                print("{}: Building with source=True.".format(mod))
+                mkdir_and_build(plat, name, source=True)
+            except FileNotFoundError as e:
+                # If build fails, make sure we return to our
+                # original directory; mkdir_and_build() will
+                # purge the build_dir as part of cleanup.
+                os.chdir(cwd)
+                print("{}: Toolchain not installed. Building with source=False."
+                      .format(mod))
+                # Platform will be finalized during first run,
+                # so get a fresh instance for both iterations.
+                plat = importlib.import_module(mod).Platform()
+                mkdir_and_build(plat, name, source=False)
 
         def mkdir_and_build(plat, name, **kwargs):
             m = TestModulePlatform(plat)
