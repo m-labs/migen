@@ -346,21 +346,14 @@ def _lower_specials_step(overrides, specials):
     return f, lowered_specials
 
 
-def _can_lower(overrides, specials):
-    for special in specials:
-        cl = special.__class__
-        if cl in overrides:
-            cl = overrides[cl]
-        if hasattr(cl, "lower"):
-            return True
-    return False
-
-
 def lower_specials(overrides, f):
     lowered_specials = set()
-    while _can_lower(overrides, f.specials):
+    while True:
         fs, lowered_specials_step = _lower_specials_step(overrides, f.specials)
         f += fs
-        lowered_specials |= lowered_specials_step
-        f.specials -= lowered_specials_step
+        if lowered_specials_step:
+            lowered_specials |= lowered_specials_step
+            f.specials -= lowered_specials_step
+        else:
+            break
     return f, lowered_specials
