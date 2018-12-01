@@ -356,11 +356,11 @@ def _can_lower(overrides, specials):
     return False
 
 
-def lower_specials(overrides, specials):
-    f, lowered_specials = _lower_specials_step(overrides, specials)
+def lower_specials(overrides, f):
+    lowered_specials = set()
     while _can_lower(overrides, f.specials):
-        f2, lowered_specials2 = _lower_specials_step(overrides, f.specials)
-        f += f2
-        lowered_specials |= lowered_specials2
-        f.specials -= lowered_specials2
+        fs, lowered_specials_step = _lower_specials_step(overrides, f.specials)
+        f += fs
+        lowered_specials |= lowered_specials_step
+        f.specials -= lowered_specials_step
     return f, lowered_specials
