@@ -70,11 +70,12 @@ class MemoryToArray(ModuleTransformer):
             init = []
             if mem.init is not None:
                 init = mem.init
+            storage_name = lambda: "%s_data_%d" % (mem.name_override, len(storage))
             for d in init:
-                mem_storage = Signal(mem.width, reset=d)
+                mem_storage = Signal(mem.width, reset=d, name_override=storage_name())
                 storage.append(mem_storage)
             for _ in range(mem.depth-len(init)):
-                mem_storage = Signal(mem.width)
+                mem_storage = Signal(mem.width, name_override=storage_name())
                 storage.append(mem_storage)
 
             for port in mem.ports:
