@@ -679,6 +679,7 @@ class Array(list):
         else:
             return list.__getitem__(self, key)
 
+# clock domains
 
 class ClockDomain:
     """Synchronous domain
@@ -750,8 +751,21 @@ class _ClockDomainList(list):
             return list.__contains__(self, cd_or_name)
 
 
+# specials
+
 (SPECIAL_INPUT, SPECIAL_OUTPUT, SPECIAL_INOUT) = range(3)
 
+# simulation
+
+class Display(_Statement):
+    def __init__(self, s, *args):
+        self.s = s
+        self.args = args
+
+class Finish(_Statement):
+    pass
+
+# fragment
 
 class _Fragment:
     def __init__(self, comb=None, sync=None, specials=None, clock_domains=None):
