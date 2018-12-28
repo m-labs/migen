@@ -116,7 +116,7 @@ class FSM(Module):
     >>> fsm.act("DATA",
     ...     self.active.eq(1),
     ...     If(strobe,
-    ...         NextValue(self.bitno, self.bitno + 1)
+    ...         NextValue(self.bitno, self.bitno + 1),
     ...         If(self.bitno == 7,
     ...             NextState("END")
     ...         )
