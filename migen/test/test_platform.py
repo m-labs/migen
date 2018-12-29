@@ -73,7 +73,7 @@ class TestExamplesPlatform(unittest.TestCase):
 
                 m = TestModulePlatform(plat)
                 with tempfile.TemporaryDirectory(name) as temp_dir:
-                    do_build = bool(os.getenv(run_toolchain_var, False))
+                    do_build = os.getenv(run_toolchain_var, False)
                     if not do_build:
                         print("{} not set, not running toolchain for {}."
                               .format(run_toolchain_var, name))
