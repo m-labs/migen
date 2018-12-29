@@ -121,8 +121,6 @@ class LatticeTrellisToolchain:
 
     special_overrides = common.lattice_ecpx_trellis_special_overrides
 
-    supports_sourcing = False
-
     def __init__(self):
         self.yosys_template = [
             "{read_files}",

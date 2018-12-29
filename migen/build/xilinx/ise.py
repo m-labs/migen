@@ -145,8 +145,6 @@ class XilinxISEToolchain:
         "no_shreg_extract": ("shreg_extract", "no")
     }
 
-    supports_sourcing = True
-
     def __init__(self):
         self.xst_opt = """-ifmt MIXED
 -use_new_parser yes

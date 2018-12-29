@@ -93,8 +93,6 @@ class LatticeIceStormToolchain:
 
     special_overrides = common.lattice_ice40_special_overrides
 
-    supports_sourcing = False
-
     def __init__(self):
         # Variables within replacement fields should be backend-aware and
         # update their syntax accordingly. Currently, only {pnr_pkg_opts}
