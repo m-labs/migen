@@ -6,7 +6,28 @@ import tempfile
 
 from migen import *
 from migen.genlib.cdc import MultiReg
+from migen.build.lattice import diamond, icestorm, trellis
+from migen.build.altera import quartus
+from migen.build.xilinx import ise, vivado
 import migen.build.platforms
+
+
+def _toolchain_var(plat):
+    if isinstance(plat.toolchain, diamond.LatticeDiamondToolchain):
+        return "MIGEN_HAS_DIAMOND"
+    elif isinstance(plat.toolchain, icestorm.LatticeIceStormToolchain):
+        return "MIGEN_HAS_ICESTORM"
+    elif isinstance(plat.toolchain, trellis.LatticeTrellisToolchain):
+        return "MIGEN_HAS_TRELLIS"
+    elif isinstance(plat.toolchain, quartus.AlteraQuartusToolchain):
+        return "MIGEN_HAS_QUARTUS"
+    elif isinstance(plat.toolchain, ise.XilinxISEToolchain):
+        return "MIGEN_HAS_ISE"
+    elif isinstance(plat.toolchain, vivado.XilinxVivadoToolchain):
+        return "MIGEN_HAS_VIVADO"
+    else:
+        raise ValueError("Unrecognized toolchain {} for {}"
+                         .format(type(plat.toolchain), type(plat)))
 
 
 def _find_platforms(mod_root):
@@ -34,46 +55,27 @@ class TestModulePlatform(Module):
 
 class TestExamplesPlatform(unittest.TestCase):
     def test_platforms(self):
-        def mkdir_and_build_source(plat, mod, name):
-            # Test should not fail if toolchain doesn't exist,
-            # which will happen if source=True (the default).
-            cwd = os.getcwd()
-            try:
-                print("{}: Building with source=True.".format(mod))
-                mkdir_and_build(plat, name, source=True)
-            except FileNotFoundError as e:
-                # If build fails, make sure we return to our
-                # original directory; mkdir_and_build() will
-                # purge the build_dir as part of cleanup.
-                os.chdir(cwd)
-                print("{}: Toolchain not installed. Building with source=False."
-                      .format(mod))
-                # Platform will be finalized during first run,
-                # so get a fresh instance for both iterations.
-                plat = importlib.import_module(mod).Platform()
-                mkdir_and_build(plat, name, source=False)
-
-        def mkdir_and_build(plat, name, **kwargs):
-            m = TestModulePlatform(plat)
-            with tempfile.TemporaryDirectory(name) as temp_dir:
-                plat.build(m, run=False, build_name=name,
-                           build_dir=temp_dir, **kwargs)
-
         for mod, name in _find_platforms(migen.build.platforms):
             with self.subTest(mod=mod, name=name):
                 # Roach has no default clock, so expect failure/skip.
                 if name == "roach":
-                    print("{}: Skipping build.".format(mod))
-                else:
-                    plat = importlib.import_module(mod).Platform()
+                    raise unittest.SkipTest(
+                                   "Roach has no default clock for test.")
 
-                    if plat.toolchain.supports_sourcing:
-                        mkdir_and_build_source(plat, mod, name)
-                    else:
-                        # Toolchain doesn't support a looking for a script
-                        # setting up an environment (the "source" argument).
-                        # The test will not fail just because the toolchain
-                        # path doesn't exist.
-                        print("{}: Build does not require sourcing."
-                              .format(mod))
-                        mkdir_and_build(plat, name)
+                run_toolchain_var = "MIGEN_RUN_TOOLCHAIN_{}".format(
+                                    name.upper())
+
+                plat = importlib.import_module(mod).Platform()
+                has_toolchain_var = _toolchain_var(plat)
+                if not os.getenv(has_toolchain_var, False):
+                    raise unittest.SkipTest("{} not set for {}."
+                                            .format(has_toolchain_var, name))
+
+                m = TestModulePlatform(plat)
+                with tempfile.TemporaryDirectory(name) as temp_dir:
+                    do_build = bool(os.getenv(run_toolchain_var, False))
+                    if not do_build:
+                        print("{} not set, not running toolchain for {}."
+                              .format(run_toolchain_var, name))
+                    plat.build(m, build_name=name, build_dir=temp_dir,
+                               run=do_build)
