@@ -29,6 +29,9 @@ _io = [
         Subsignal("miso", Pins("D9"), Misc("PULLDOWN=TRUE")),
         IOStandard("LVCMOS33")
     ),
+    # Shared with Si5324 reset. Among many Sayma bugs, those resets
+    # have opposite polarities, so both chips cannot be used at the
+    # same time.
     ("hmc7043_reset", 0, Pins("E17"), IOStandard("LVCMOS33")),
     ("hmc7043_gpo", 0, Pins("D8"), IOStandard("LVCMOS33")),
 
@@ -122,6 +125,29 @@ _io = [
         Subsignal("clk", Pins("K2")),
         Subsignal("rst_n", Pins("J5")),
         IOStandard("LVCMOS33")
+    ),
+
+    ("i2c", 0,
+        Subsignal("scl", Pins("J6")),
+        Subsignal("sda", Pins("K6")),
+        IOStandard("LVCMOS33")
+    ),
+
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("M16")),
+        Subsignal("n", Pins("M17")),
+        IOStandard("DIFF_SSTL18"),
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("B6")),
+        Subsignal("n", Pins("B5"))
+    ),
+    # Slave SATA connector J71
+    ("sata", 0,
+        Subsignal("txp", Pins("D2")),
+        Subsignal("txn", Pins("D1")),
+        Subsignal("rxp", Pins("C4")),
+        Subsignal("rxn", Pins("C3"))
     ),
 ]
 
