@@ -136,7 +136,7 @@ _io = [
     ("si5324_clkin", 0,
         Subsignal("p", Pins("M16")),
         Subsignal("n", Pins("M17")),
-        IOStandard("DIFF_SSTL18"),
+        IOStandard("DIFF_SSTL18_I"),
     ),
     ("si5324_clkout", 0,
         Subsignal("p", Pins("B6")),
