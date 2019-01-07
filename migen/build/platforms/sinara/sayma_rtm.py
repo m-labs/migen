@@ -163,8 +163,9 @@ class Platform(XilinxPlatform):
     default_clk_name = "clk50"
     default_clk_period = 20.0
 
-    def __init__(self):
-        XilinxPlatform.__init__(self, "xc7a15t-csg325-1", _io, _connectors,
+    def __init__(self, larger=False):
+        chip = "xc7a50t-csg325-1" if larger else "xc7a15t-csg325-1"
+        XilinxPlatform.__init__(self, chip, _io, _connectors,
                                 toolchain="vivado")
         self.toolchain.bitstream_commands.extend([
             # FIXME: enable this when the XADC reference wiring is fixed
