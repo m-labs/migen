@@ -74,7 +74,7 @@ _io = [
             Subsignal("tx_data", Pins("A16 J14 A15 D17")),
             Subsignal("rx_dv", Pins("J13")),
             Subsignal("rx_data", Pins("A14 A11 C15 A9")),
-            Subsignal("reset_n", Pins("B14")),
+            Subsignal("reset_n", Pins("B4")),
             Subsignal("mdio", Pins("E16")),
             Subsignal("mdc", Pins("A13")),
             Subsignal("int_n", Pins("B14")),
