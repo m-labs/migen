@@ -181,6 +181,10 @@ _io = [
         Subsignal("n", Pins("G12")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
+    ("gth_clk200", 0,
+        Subsignal("p", Pins("AD6")),
+        Subsignal("n", Pins("AD5"))
+    ),
 
     ("sfp", 0,
         Subsignal("txp", Pins("AN4")),
