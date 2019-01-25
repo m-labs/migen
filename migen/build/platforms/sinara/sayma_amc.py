@@ -292,7 +292,6 @@ _io = [
         Subsignal("rxn", Pins("P1")),
     ),
 
-    # repurposed for siphaser on the DRTIO satellite
     ("adc_sysref", 0,
         Subsignal("p", Pins("C11")),
         Subsignal("n", Pins("B11")),
