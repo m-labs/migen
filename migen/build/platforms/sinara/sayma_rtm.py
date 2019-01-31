@@ -142,6 +142,16 @@ _io = [
         Subsignal("p", Pins("B6")),
         Subsignal("n", Pins("B5"))
     ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("T14")),
+        Subsignal("n", Pins("T15")),
+        IOStandard("LVDS_25")
+    ),
+    ("rtm_master_aux_clk", 0,
+        Subsignal("p", Pins("P14")),
+        Subsignal("n", Pins("R15")),
+        IOStandard("LVDS_25")
+    ),
     # Slave SATA connector J71
     ("sata", 0,
         Subsignal("txp", Pins("D2")),
