@@ -1,4 +1,5 @@
 import builtins as _builtins
+import collections.abc as _collections_abc
 import collections as _collections
 import re as _re
 
@@ -481,7 +482,7 @@ class _Assign(_Statement):
 
 
 def _check_statement(s):
-    if isinstance(s, _collections.Iterable):
+    if isinstance(s, _collections_abc.Iterable):
         return all(_check_statement(ss) for ss in s)
     else:
         return isinstance(s, _Statement)
@@ -588,7 +589,7 @@ class Case(_Statement):
             if (not isinstance(k, Constant)
                     and not (isinstance(k, str) and k == "default")):
                 raise TypeError("Case object is not a Migen constant")
-            if not isinstance(v, _collections.Iterable):
+            if not isinstance(v, _collections_abc.Iterable):
                 v = [v]
             if not _check_statement(v):
                 raise TypeError("Not all objects for case {} "

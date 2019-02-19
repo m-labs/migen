@@ -1,4 +1,4 @@
-import collections
+import collections.abc
 from itertools import combinations
 
 from migen.util.misc import flat_iteration
@@ -15,7 +15,7 @@ class FinalizeError(Exception):
 
 
 def _flat_list(e):
-    if isinstance(e, collections.Iterable):
+    if isinstance(e, collections.abc.Iterable):
         return flat_iteration(e)
     else:
         return [e]

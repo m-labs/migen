@@ -1,10 +1,10 @@
 from math import gcd
-import collections
+import collections.abc
 
 
 def flat_iteration(l):
     for element in l:
-        if isinstance(element, collections.Iterable):
+        if isinstance(element, collections.abc.Iterable):
             for element2 in flat_iteration(element):
                 yield element2
         else:
