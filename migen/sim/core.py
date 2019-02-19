@@ -1,5 +1,5 @@
 import operator
-import collections
+import collections.abc
 import inspect
 from functools import wraps
 
@@ -227,7 +227,7 @@ class Evaluator:
                         break
                 if not found and "default" in s.cases:
                     self.execute(s.cases["default"])
-            elif isinstance(s, collections.Iterable):
+            elif isinstance(s, collections.abc.Iterable):
                 self.execute(s)
             elif isinstance(s, Display):
                 args = []
@@ -279,7 +279,7 @@ class Simulator:
         self.generators = dict()
         self.passive_generators = set()
         for k, v in generators.items():
-            if (isinstance(v, collections.Iterable)
+            if (isinstance(v, collections.abc.Iterable)
                     and not inspect.isgenerator(v)):
                 self.generators[k] = list(v)
             else:
