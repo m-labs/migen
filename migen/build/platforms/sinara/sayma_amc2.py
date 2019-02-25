@@ -157,10 +157,13 @@ _io = [
     ),
 
     ("amc_rtm_serwb", 0,
-        Subsignal("clk", Pins("J8")), # rtm_fpga_usr_io_p
-        Subsignal("tx", Pins("A13")), # rtm_fpga_lvds1_p
-        Subsignal("rx", Pins("C12")), # rtm_fpga_lvds2_p
-        IOStandard("LVCMOS18")
+        Subsignal("clk_p", Pins("J8")), # rtm_fpga_usr_io_p
+        Subsignal("clk_n", Pins("H8")), # rtm_fpga_usr_io_n
+        Subsignal("tx_p", Pins("A13")), # rtm_fpga_lvds1_p
+        Subsignal("tx_n", Pins("A12")), # rtm_fpga_lvds1_n
+        Subsignal("rx_p", Pins("C12"), Misc("DIFF_TERM_ADV=TERM_100")), # rtm_fpga_lvds2_p
+        Subsignal("rx_n", Pins("B12"), Misc("DIFF_TERM_ADV=TERM_100")), # rtm_fpga_lvds2_n
+        IOStandard("LVDS")
     ),
 
     ("si5324", 0,
