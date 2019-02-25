@@ -405,7 +405,7 @@ class Platform(XilinxPlatform):
     def __init__(self):
         XilinxPlatform.__init__(
                 self, "xcku040-ffva1156-1-c", _io, _connectors,
-                toolchain="vivado")
+                toolchain="vivado", name="sayma_amc")
         self.toolchain.bitstream_commands.extend([
             # FIXME: enable this when the XADC reference wiring is fixed
             # "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
