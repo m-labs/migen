@@ -57,11 +57,6 @@ class TestExamplesPlatform(unittest.TestCase):
     def test_platforms(self):
         for mod, name in _find_platforms(migen.build.platforms):
             with self.subTest(mod=mod, name=name):
-                # Roach has no default clock, so expect failure/skip.
-                if name == "roach":
-                    raise unittest.SkipTest(
-                                   "Roach has no default clock for test.")
-
                 run_toolchain_var = "MIGEN_RUN_TOOLCHAIN_{}".format(
                                     name.upper())
 
