@@ -307,13 +307,17 @@ _io = [
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
 
-    # has 100R external termination resistor
-    ("sysclk1_300", 0,
+    # CDR clock, named ddr* as they are used for SDRAM testing with Xilinx MIG
+    ("ddr64_clk", 0,
+        Subsignal("p", Pins("AK17")),
+        Subsignal("n", Pins("AK16")),
+        IOStandard("DIFF_SSTL15_DCI")
+    ),
+    ("ddr32_clk", 0,
         Subsignal("p", Pins("F18")),
         Subsignal("n", Pins("F17")),
-        IOStandard("DIFF_SSTL15_DCI"), Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
+        IOStandard("DIFF_SSTL15_DCI")
     ),
-
 ]
 
 # differences with Sayma v1: CLK1_M2C, DP0_M2C, GBTCLK0_M2C, LA08
