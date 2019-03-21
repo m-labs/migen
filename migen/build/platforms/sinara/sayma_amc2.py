@@ -185,9 +185,25 @@ _io = [
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("gth_clk200", 0,
+        Subsignal("p", Pins("AB6")),
+        Subsignal("n", Pins("AB5"))
+    ),
+
+    ("ddmtd_rec_clk", 0,
         Subsignal("p", Pins("AD6")),
         Subsignal("n", Pins("AD5"))
     ),
+    ("ddmtd_helper_clk", 0,
+        Subsignal("p", Pins("H11")),
+        Subsignal("n", Pins("G11")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+    ("ddmtd_results", 0,
+        Subsignal("rec_clk", Pins("F12"), IOStandard("SSTL18_I")),
+        Subsignal("main_xo", Pins("L9"), IOStandard("SSTL18_I"))
+    ),
+
+    ("tp16", 0, Pins("E12"), IOStandard("LVCMOS18")),
 
     ("sfp", 0,
         Subsignal("txp", Pins("AN4")),
