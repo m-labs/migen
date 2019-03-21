@@ -409,7 +409,7 @@ class Platform(XilinxPlatform):
                 self, "xcku040-ffva1156-1-c", _io, _connectors,
                 toolchain="vivado", name="sayma_amc")
         self.toolchain.bitstream_commands.extend([
-            "set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN Enable [current_design]",
+            "set_property BITSTREAM.CONFIG.OVERTEMPSHUTDOWN Enable [current_design]",
             "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
             "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
             "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]",
