@@ -175,12 +175,11 @@ _io = [
         Subsignal("n", Pins("AF27")),
         IOStandard("LVDS"),
     ),
-    # TODO: rename, this is now muxed with the WR PLL
-    ("si5324_clkout", 0,
+    ("cdr_clk_clean", 0,
         Subsignal("p", Pins("AF6")),
         Subsignal("n", Pins("AF5"))
     ),
-    ("si5324_clkout_fabric", 0,
+    ("cdr_clk_clean_fabric", 0,
         Subsignal("p", Pins("H12")),
         Subsignal("n", Pins("G12")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
