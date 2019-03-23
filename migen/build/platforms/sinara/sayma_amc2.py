@@ -188,6 +188,12 @@ _io = [
         Subsignal("p", Pins("AB6")),
         Subsignal("n", Pins("AB5"))
     ),
+    ("rtm_amc_link", 0,
+        Subsignal("txp", Pins("AK6")),
+        Subsignal("txn", Pins("AK5")),
+        Subsignal("rxp", Pins("AJ4")),
+        Subsignal("rxn", Pins("AJ3"))
+    ),
 
     ("ddmtd_rec_clk", 0,
         Subsignal("p", Pins("AD6")),
