@@ -107,6 +107,10 @@ _io = [
         Subsignal("rxp", Pins("G4")),
         Subsignal("rxn", Pins("G3"))
     ),
+
+    # Bogus AFE pins for testing (TODO)
+    ("allaki0_rfsw0", 0, Pins("E18"), IOStandard("LVCMOS25")),
+    ("allaki0_rfsw1", 0, Pins("F17"), IOStandard("LVCMOS25")),
 ]
 
 class Platform(XilinxPlatform):
