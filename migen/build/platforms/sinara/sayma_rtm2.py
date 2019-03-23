@@ -94,6 +94,12 @@ _io = [
         Subsignal("n", Pins("R1")),
         IOStandard("LVDS_25"), Misc("DIFF_TERM=TRUE")
     ),
+    ("rtm_amc_link", 0,
+        Subsignal("txp", Pins("H2")),
+        Subsignal("txn", Pins("H1")),
+        Subsignal("rxp", Pins("E4")),
+        Subsignal("rxn", Pins("E3"))
+    ),
     # SATA connector J13
     ("sata", 0,
         Subsignal("txp", Pins("B2")),
