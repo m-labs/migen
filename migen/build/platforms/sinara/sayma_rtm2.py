@@ -108,7 +108,7 @@ class Platform(XilinxPlatform):
     default_clk_period = 20.0
 
     def __init__(self, larger=False):
-        chip = "xc7a50t-csg325-1" if larger else "xc7a15t-csg325-1"
+        chip = "xc7a50t-csg325-3" if larger else "xc7a35t-csg325-3"
         XilinxPlatform.__init__(self, chip, _io,
                                 toolchain="vivado", name="sayma_rtm")
         self.toolchain.bitstream_commands.extend([
