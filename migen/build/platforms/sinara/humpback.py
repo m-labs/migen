@@ -40,8 +40,8 @@ _io = [
 
 
 _io += [("sw", i, Pins(p), IOStandard("LVCMOS33"))
-        for i, p in zip(range(12),
-                        "L16 K16 L11 T14 P7 N7 T8 P6 N6 T6 R6 P5".split())]
+        for i, p in enumerate(
+            "L16 K16 L11 T14 P7 N7 T8 P6 N6 T6 R6 P5".split())]
 
 
 _connectors = [
