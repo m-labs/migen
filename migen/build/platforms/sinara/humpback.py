@@ -1,5 +1,4 @@
 from migen.build.generic_platform import *
-from migen.build.generic_programmer import GenericProgrammer
 from migen.build.lattice import LatticePlatform
 
 
