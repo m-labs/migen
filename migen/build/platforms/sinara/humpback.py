@@ -31,6 +31,12 @@ _io = [
         Subsignal("clk", Pins("C8")),
         IOStandard("LVCMOS33"),
         ),
+
+       ("i2c", 0,
+        Subsignal("sda", Pins("T16"), Misc("PULLUP")),
+        Subsignal("scl", Pins("M12"), Misc("PULLUP")),
+        IOStandard("LVCMOS33"),
+        ),
 ]
 
 
