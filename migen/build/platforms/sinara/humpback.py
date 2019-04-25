@@ -7,7 +7,7 @@ _io = [
 
        ("user_led", 0, Pins("H3"), IOStandard("LVCMOS33")),
 
-       ("serial0", 0,
+       ("serial", 0,
         Subsignal("rx", Pins("M13")),
         Subsignal("tx", Pins("T11"), Misc("PULLUP")),
         Subsignal("cts", Pins("T10"), Misc("PULLUP")),
@@ -15,7 +15,7 @@ _io = [
         IOStandard("LVCMOS33"),
         ),
 
-       ("serial1", 0,
+       ("serial", 1,
         Subsignal("rx", Pins("M11")),
         Subsignal("tx", Pins("T13"), Misc("PULLUP")),
         Subsignal("cts", Pins("B16"), Misc("PULLUP")),
