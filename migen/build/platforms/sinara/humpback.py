@@ -40,6 +40,7 @@ _io = [
        ("i2c", 0,
         Subsignal("sda", Pins("T16"), Misc("PULLUP")),
         Subsignal("scl", Pins("M12"), Misc("PULLUP")),
+        Subsignal("rst", Pins("B2")),
         IOStandard("LVCMOS33"),
         ),
 ]
