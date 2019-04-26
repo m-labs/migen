@@ -245,6 +245,16 @@ _connectors = [
 ]
 
 
+for name, ios in _connectors:
+    if name.startswith("eem"):
+        for k in range(8):
+            resource_name = "d{}_{}".format(k, "cc_" if k == 0 else "")
+            _io.append((name, k,
+                        Subsignal("p", Pins(ios[resource_name + "p"])),
+                        Subsignal("n", Pins(ios[resource_name + "n"])),
+                        IOStandard("LVCMOS33")))
+
+
 class Platform(LatticePlatform):
     default_clk_name = "clk25"
     default_clk_period = 40.
