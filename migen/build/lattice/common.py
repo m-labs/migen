@@ -135,8 +135,25 @@ class LatticeiCE40DifferentialOutput:
     def lower(dr):
         return LatticeiCE40DifferentialOutputImpl(dr.i, dr.o_p, dr.o_n)
 
+
+class LatticeiCE40DifferentialInputImpl(Module):
+    def __init__(self, i_p, i_n, o):
+        self.specials += Instance("SB_IO",
+                                  p_PIN_TYPE=C(0b000001, 6),  # simple input pin
+                                  p_IO_STANDARD="SB_LVDS_INPUT",
+                                  io_PACKAGE_PIN=i_n,
+                                  o_D_IN_0=o)
+
+
+class LatticeiCE40DifferentialInput:
+    @staticmethod
+    def lower(dr):
+        return LatticeiCE40DifferentialInputImpl(dr.i_p, dr.i_n, dr.o)
+
+
 lattice_ice40_special_overrides = {
     AsyncResetSynchronizer: LatticeiCE40AsyncResetSynchronizer,
     Tristate:               LatticeiCE40Tristate,
-    DifferentialOutput:     LatticeiCE40DifferentialOutput
+    DifferentialOutput:     LatticeiCE40DifferentialOutput,
+    DifferentialInput:      LatticeiCE40DifferentialInput,
 }
