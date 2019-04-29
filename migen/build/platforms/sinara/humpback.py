@@ -1,5 +1,6 @@
 from migen.build.generic_platform import *
 from migen.build.lattice import LatticePlatform
+from collections import defaultdict
 
 
 _io = [
@@ -245,14 +246,27 @@ _connectors = [
 ]
 
 
-for name, ios in _connectors:
-    if name.startswith("eem"):
-        for k in range(8):
-            resource_name = "d{}_{}".format(k, "cc_" if k == 0 else "")
-            _io.append((name, k,
-                        Subsignal("p", Pins(ios[resource_name + "p"])),
-                        Subsignal("n", Pins(ios[resource_name + "n"])),
-                        IOStandard("LVCMOS33")))
+for eem, ios in _connectors:
+    if eem.startswith("eem"):
+        pins = defaultdict(list)
+        for j in range(8):
+            res_name = "{}:d{}_{}".format(eem, j, "cc_" if j == 0 else "")
+            # platform.request("eem{k}", j) -> Record n:p (1 bit Signals)
+            _io.append((eem, j,
+                        *[Subsignal(p, Pins("{}{}".format(res_name, p)))
+                          for p in "np"],
+                        IOStandard("LVDS25E")))
+            for p in "np":
+                # FIXME: break up EEMs for yosys/nextpnr not to get confused
+                # platform.request("eem{k}_n", j) -> Signal(1)
+                _io.append(("{}_{}".format(eem, p), j,
+                            Pins("{}{}".format(res_name, p))))
+                pins[p].append("{}{}".format(res_name, p))
+
+        # platform.request("eem", k) -> Record n:p (8 bits)
+        _io.append(("eem", int(eem[-1]),
+                    *[Subsignal(p, Pins(" ".join(pins[p]))) for p in "np"],
+                    IOStandard("LVDS25E")))
 
 
 class Platform(LatticePlatform):
