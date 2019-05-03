@@ -141,7 +141,7 @@ class LatticeiCE40DifferentialInputImpl(Module):
         self.specials += Instance("SB_IO",
                                   p_PIN_TYPE=C(0b000001, 6),  # simple input pin
                                   p_IO_STANDARD="SB_LVDS_INPUT",
-                                  io_PACKAGE_PIN=i_n,
+                                  io_PACKAGE_PIN=i_p,
                                   o_D_IN_0=o)
 
 
