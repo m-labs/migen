@@ -138,11 +138,13 @@ class LatticeiCE40DifferentialOutput:
 
 class LatticeiCE40DifferentialInputImpl(Module):
     def __init__(self, i_p, i_n, o):
+        o_n = Signal.like(o)
         self.specials += Instance("SB_IO",
                                   p_PIN_TYPE=C(0b000001, 6),  # simple input pin
                                   p_IO_STANDARD="SB_LVDS_INPUT",
                                   io_PACKAGE_PIN=i_n,
-                                  o_D_IN_0=o)
+                                  o_D_IN_0=o_n)
+        self.comb += o.eq(~o_n)
 
 
 class LatticeiCE40DifferentialInput:
