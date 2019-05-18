@@ -60,7 +60,18 @@ _io = [
         Subsignal("reset_n", Pins("AJ14"), IOStandard("SSTL15")),
         Misc("SLEW=FAST"),
         Misc("OUTPUT_IMPEDANCE=RDRV_40_40")
-    )
+    ),
+
+    ("gth_clk200", 0,
+        Subsignal("p", Pins("Y6")),
+        Subsignal("n", Pins("Y5"))
+    ),
+    ("port0", 0,
+        Subsignal("txp", Pins("B6")),
+        Subsignal("txn", Pins("B5")),
+        Subsignal("rxp", Pins("A4")),
+        Subsignal("rxn", Pins("A3"))
+    ),
 ]
 
 
