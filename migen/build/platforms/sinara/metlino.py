@@ -11,6 +11,15 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
+    # this is the second SPI flash (not containing the bitstream)
+    # clock is shared with the bitstream flash and needs to be accessed
+    # through STARTUPE3
+    ("spiflash", 0,
+        Subsignal("cs_n", Pins("G26")),
+        Subsignal("dq", Pins("M20 L20 R21 R22")),
+        IOStandard("LVCMOS33")
+    ),
+
     ("ddram", 0,
         Subsignal("a", Pins(
             "AE17 AL17 AG16 AG17 AD16 AH14 AD15 AK15",
