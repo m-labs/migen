@@ -81,3 +81,11 @@ class Platform(XilinxPlatform):
 
     def __init__(self):
         XilinxPlatform.__init__(self, "xcku040-ffva1156-1-c", _io, toolchain="vivado")
+        self.toolchain.bitstream_commands.extend([
+            "set_property BITSTREAM.CONFIG.OVERTEMPSHUTDOWN Enable [current_design]",
+            "set_property BITSTREAM.GENERAL.COMPRESS True [current_design]",
+            "set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]",
+            "set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]",
+            "set_property CFGBVS VCCO [current_design]",
+            "set_property CONFIG_VOLTAGE 3.3 [current_design]",
+            ])
