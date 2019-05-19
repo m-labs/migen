@@ -3,11 +3,22 @@ from migen.build.xilinx import XilinxPlatform
 
 
 _io = [
+    ("user_led", 0, Pins("J24"), IOStandard("LVCMOS33")), # sfp0_led1
+    ("user_led", 1, Pins("J25"), IOStandard("LVCMOS33")), # sfp0_led2
+    ("user_led", 2, Pins("L25"), IOStandard("LVCMOS33")), # sfp1_led1
+    ("user_led", 3, Pins("K25"), IOStandard("LVCMOS33")), # sfp1_led2
+
     ("clk50", 0, Pins("N24"), IOStandard("LVCMOS33")),
 
     ("serial", 0,
         Subsignal("tx", Pins("K20")),
         Subsignal("rx", Pins("K22")),
+        IOStandard("LVCMOS33")
+    ),
+
+    ("i2c", 0,
+        Subsignal("scl", Pins("N21")),
+        Subsignal("sda", Pins("M21")),
         IOStandard("LVCMOS33")
     ),
 
@@ -71,6 +82,87 @@ _io = [
         Subsignal("txn", Pins("B5")),
         Subsignal("rxp", Pins("A4")),
         Subsignal("rxn", Pins("A3"))
+    ),
+
+    ("si5324", 0,
+        Subsignal("rst_n", Pins("AL13"), IOStandard("LVCMOS33")),
+        Subsignal("int", Pins("AK13"), IOStandard("LVCMOS33"))
+    ),
+    ("cdr_clk_clean", 0,
+        Subsignal("p", Pins("V6")),
+        Subsignal("n", Pins("V5"))
+    ),
+    ("mch_fabric_d", 0,
+        Subsignal("txp", Pins("AN4")),
+        Subsignal("txn", Pins("AN3")),
+        Subsignal("rxp", Pins("AP2")),
+        Subsignal("rxn", Pins("AP1"))
+    ),
+    ("mch_fabric_d", 1,
+        Subsignal("txp", Pins("AL4")),
+        Subsignal("txn", Pins("AL3")),
+        Subsignal("rxp", Pins("AK2")),
+        Subsignal("rxn", Pins("AK1"))
+    ),
+    ("mch_fabric_d", 2,
+        Subsignal("txp", Pins("AH6")),
+        Subsignal("txn", Pins("AH5")),
+        Subsignal("rxp", Pins("AH2")),
+        Subsignal("rxn", Pins("AH1"))
+    ),
+    ("mch_fabric_d", 3,
+        Subsignal("txp", Pins("AE4")),
+        Subsignal("txn", Pins("AE3")),
+        Subsignal("rxp", Pins("AD2")),
+        Subsignal("rxn", Pins("AD1"))
+    ),
+    ("mch_fabric_d", 4,
+        Subsignal("txp", Pins("AA4")),
+        Subsignal("txn", Pins("AA3")),
+        Subsignal("rxp", Pins("Y2")),
+        Subsignal("rxn", Pins("Y1"))
+    ),
+    ("mch_fabric_d", 5,
+        Subsignal("txp", Pins("U4")),
+        Subsignal("txn", Pins("U3")),
+        Subsignal("rxp", Pins("T2")),
+        Subsignal("rxn", Pins("T1"))
+    ),
+    ("mch_fabric_d", 6,
+        Subsignal("txp", Pins("AM6")),
+        Subsignal("txn", Pins("AM5")),
+        Subsignal("rxp", Pins("AM2")),
+        Subsignal("rxn", Pins("AM1"))
+    ),
+    ("mch_fabric_d", 7,
+        Subsignal("txp", Pins("AK6")),
+        Subsignal("txn", Pins("AK5")),
+        Subsignal("rxp", Pins("AJ4")),
+        Subsignal("rxn", Pins("AJ3"))
+    ),
+    ("mch_fabric_d", 8,
+        Subsignal("txp", Pins("AG4")),
+        Subsignal("txn", Pins("AG3")),
+        Subsignal("rxp", Pins("AF2")),
+        Subsignal("rxn", Pins("AF1"))
+    ),
+    ("mch_fabric_d", 9,
+        Subsignal("txp", Pins("AC4")),
+        Subsignal("txn", Pins("AC3")),
+        Subsignal("rxp", Pins("AB2")),
+        Subsignal("rxn", Pins("AB1"))
+    ),
+    ("mch_fabric_d", 10,
+        Subsignal("txp", Pins("W4")),
+        Subsignal("txn", Pins("W3")),
+        Subsignal("rxp", Pins("V2")),
+        Subsignal("rxn", Pins("V1"))
+    ),
+    ("mch_fabric_d", 11,
+        Subsignal("txp", Pins("R4")),
+        Subsignal("txn", Pins("R3")),
+        Subsignal("rxp", Pins("P2")),
+        Subsignal("rxn", Pins("P1"))
     ),
 ]
 
