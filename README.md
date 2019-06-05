@@ -1,6 +1,6 @@
 ### Migen (Milkymist generator)
 
-<img src="https://github.com/m-labs/migen/blob/master/doc/migen_logo.svg" alt="migen logo" width="150"/>
+<img src="https://github.com/m-labs/migen/raw/master/doc/migen_logo.png" alt="migen logo" width="150"/>
 
 #### A Python toolbox for building complex digital hardware
 
