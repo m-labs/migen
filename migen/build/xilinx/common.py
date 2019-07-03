@@ -31,35 +31,6 @@ if _have_colorama:
     ]
 
 
-def settings(path, ver=None, sub=None):
-    if ver is None:
-        vers = list(tools.versions(path))
-        if not vers:
-            raise OSError("no version directory for Xilinx tools found in "
-                          + path)
-        ver = max(vers)
-
-    full = os.path.join(path, str(ver))
-    if sub:
-        full = os.path.join(full, sub)
-
-    search = [64, 32]
-    if tools.arch_bits() == 32:
-        search.reverse()
-
-    if sys.platform == "win32" or sys.platform == "cygwin":
-        script_ext = "bat"
-    else:
-        script_ext = "sh"
-
-    for b in search:
-        settings = os.path.join(full, "settings{0}.{1}".format(b, script_ext))
-        if os.path.exists(settings):
-            return settings
-
-    raise OSError("no Xilinx tools settings file found")
-
-
 class XilinxMultiRegImpl(MultiRegImpl):
     def __init__(self, *args, **kwargs):
         MultiRegImpl.__init__(self, *args, **kwargs)
