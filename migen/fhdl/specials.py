@@ -146,6 +146,10 @@ class Instance(Special):
             self.value = value
     class PreformattedParam(str):
         pass
+    class Attribute:
+        def __init__(self, name, value):
+            self.name = name
+            self.value = value
 
     def __init__(self, of, *items, name="", synthesis_directive=None,
             attr=None, **kwargs):
@@ -171,7 +175,8 @@ class Instance(Special):
                 "i": Instance.Input,
                 "o": Instance.Output,
                 "io": Instance.InOut,
-                "p": Instance.Parameter
+                "p": Instance.Parameter,
+                "a": Instance.Attribute,
             }[item_type]
             self.items.append(item_class(item_name, v))
 
@@ -191,7 +196,18 @@ class Instance(Special):
 
     @staticmethod
     def emit_verilog(instance, ns, add_data_file):
-        r = instance.of + " "
+        r = ""
+        attributes = list(filter(lambda i: isinstance(i, Instance.Attribute), instance.items))
+        if attributes:
+            r += "(* "
+            for step, a in enumerate(attributes):
+                if step:
+                    r += ", "
+                r += a.name
+                if a.value is not None:
+                    r += "=\"" + a.value + "\""
+            r += " *)\n"
+        r += instance.of + " "
         parameters = list(filter(lambda i: isinstance(i, Instance.Parameter), instance.items))
         if parameters:
             r += "#(\n"
