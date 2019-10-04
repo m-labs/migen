@@ -166,6 +166,7 @@ _io = [
         IOStandard("LVDS")
     ),
 
+    ("filtered_clk_sel", 0, Pins("N23"), IOStandard("LVCMOS33")),
     ("si5324", 0,
         Subsignal("rst_n", Pins("L24"), IOStandard("LVCMOS33")),
         Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
