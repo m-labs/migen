@@ -64,9 +64,9 @@ _io = [
             IOStandard("SSTL15_DCI"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dq", Pins(
-            "C28 B27 A27 C27 D28 E28 A28 D29"
-            "D25 C26 E25 B25 C24 A25 D24 B26"
-            "B20 D21 B22 E23 E22 D20 B21 A20"
+            "C28 B27 A27 C27 D28 E28 A28 D29",
+            "D25 C26 E25 B25 C24 A25 D24 B26",
+            "B20 D21 B22 E23 E22 D20 B21 A20",
             "F23 H21 F24 G21 F22 E21 G22 E20"),
             IOStandard("SSTL15_DCI"),
             Misc("ODT=RTT_40"),
