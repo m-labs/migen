@@ -25,6 +25,8 @@ _io = [
     ),
 
     # HMC clocking chips (830 and 7043)
+    ("hmc830_pwr_en", 0, Pins("V7"), IOStandard("LVCMOS25")),
+    ("hmc7043_out_en", 0, Pins("V8"), IOStandard("LVCMOS25")),
     ("hmc_spi", 0,
         Subsignal("clk", Pins("T18"), Misc("PULLDOWN=TRUE")),
         # cs[0]=830 cs[1]=7043
