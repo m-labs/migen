@@ -117,8 +117,8 @@ class Platform(XilinxPlatform):
     default_clk_name = "clk50"
     default_clk_period = 20.0
 
-    def __init__(self, larger=False):
-        chip = "xc7a50t-csg325-3" if larger else "xc7a35t-csg325-3"
+    def __init__(self):
+        chip = "xc7a50t-csg325-3"
         XilinxPlatform.__init__(self, chip, _io,
                                 toolchain="vivado", name="sayma_rtm")
         self.toolchain.bitstream_commands.extend([
@@ -127,4 +127,3 @@ class Platform(XilinxPlatform):
             "set_property CFGBVS VCCO [current_design]",
             "set_property CONFIG_VOLTAGE 3.3 [current_design]",
         ])
-
