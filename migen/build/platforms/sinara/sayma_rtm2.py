@@ -14,16 +14,6 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
-    ("amc_rtm_serwb", 0,
-        Subsignal("clk_p", Pins("P4"), Misc("DIFF_TERM=TRUE")), # LVDS26_CC_P
-        Subsignal("clk_n", Pins("P3"), Misc("DIFF_TERM=TRUE")), # LVDS26_CC_N
-        Subsignal("tx_p", Pins("V3")),  # LVDS27_P
-        Subsignal("tx_n", Pins("V2")),  # LVDS27_N
-        Subsignal("rx_p", Pins("U2"), Misc("DIFF_TERM=TRUE")),  # LVDS25_P
-        Subsignal("rx_n", Pins("U1"), Misc("DIFF_TERM=TRUE")),  # LVDS25_N
-        IOStandard("LVDS_25")
-    ),
-
     # HMC clocking chips (830 and 7043)
     ("hmc830_pwr_en", 0, Pins("V7"), IOStandard("LVCMOS25")),
     ("hmc7043_out_en", 0, Pins("V8"), IOStandard("LVCMOS25")),
