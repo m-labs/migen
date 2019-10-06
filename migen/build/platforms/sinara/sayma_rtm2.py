@@ -73,8 +73,8 @@ _io = [
     ("ad9154_rst_n", 1, Pins("J5"), IOStandard("LVCMOS25")),
 
     ("i2c", 0,
-        Subsignal("scl", Pins("P16")),
-        Subsignal("sda", Pins("P15")),
+        Subsignal("scl", Pins("P15")),
+        Subsignal("sda", Pins("P16")),
         IOStandard("LVCMOS33")
     ),
 
