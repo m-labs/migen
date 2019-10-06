@@ -9,8 +9,8 @@ _io = [
     ),
 
     ("serial", 0,
-        Subsignal("tx", Pins("T17")),
-        Subsignal("rx", Pins("U17")),
+        Subsignal("tx", Pins("U17")),
+        Subsignal("rx", Pins("T17")),
         IOStandard("LVCMOS33")
     ),
 
