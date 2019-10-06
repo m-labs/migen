@@ -3,7 +3,10 @@ from migen.build.xilinx import XilinxPlatform
 
 
 _io = [
-    ("clk50", 0, Pins("T14"), IOStandard("LVCMOS33")),
+    ("clk125_gtp", 0,
+        Subsignal("p", Pins("D6")),
+        Subsignal("n", Pins("D5")),
+    ),
 
     ("serial", 0,
         Subsignal("tx", Pins("T17")),
