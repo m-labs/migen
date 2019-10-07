@@ -235,13 +235,13 @@ _io = [
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 0,
-        Subsignal("p", Pins("L8")),
-        Subsignal("n", Pins("K8")),
+        Subsignal("p", Pins("J8")),
+        Subsignal("n", Pins("H8")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 1,
-        Subsignal("p", Pins("J9")),
-        Subsignal("n", Pins("H9")),
+        Subsignal("p", Pins("J13")),
+        Subsignal("n", Pins("H13")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
