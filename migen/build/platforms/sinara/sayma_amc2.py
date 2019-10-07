@@ -245,12 +245,12 @@ _io = [
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
-        Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
-        Subsignal("txn", Pins("R3 U3 W3 AA3 AC3 AE3 AG3 AH5"))
-    ),
-    ("dac_jesd", 1,
         Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
         Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
+    ),
+    ("dac_jesd", 1,
+        Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
+        Subsignal("txn", Pins("R3 U3 W3 AA3 AC3 AE3 AG3 AH5"))
     ),
 
     # Raw RTM GTH pairs.
