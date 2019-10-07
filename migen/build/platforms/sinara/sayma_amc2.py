@@ -145,12 +145,12 @@ _io = [
         IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
 
-    ("sma_io", 0,
+    ("mcx_io", 0,
         Subsignal("level", Pins("P26")),
         Subsignal("direction", Pins("K25")),
         IOStandard("LVCMOS33")
     ),
-    ("sma_io", 1,
+    ("mcx_io", 1,
         Subsignal("level", Pins("N24")),
         Subsignal("direction", Pins("L23")),
         IOStandard("LVCMOS33")
