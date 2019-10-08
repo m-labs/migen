@@ -229,7 +229,12 @@ _io = [
         Subsignal("p", Pins("V6")),
         Subsignal("n", Pins("V5")),
     ),
-    ("dac_sysref", 0,
+    ("amc_fpga_sysref", 0,
+        Subsignal("p", Pins("AD25")),
+        Subsignal("n", Pins("AD26")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+    ("amc_fpga_sysref", 1,
         Subsignal("p", Pins("B10")),
         Subsignal("n", Pins("A10")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
