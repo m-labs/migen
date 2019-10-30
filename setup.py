@@ -14,6 +14,7 @@ setup(
     version="0.9.2",
     description="Python toolbox for building complex digital hardware",
     long_description=open("README.md").read(),
+    long_description_content_type='text/markdown',
     author="Sebastien Bourdeauducq",
     author_email="sb@m-labs.hk",
     url="https://m-labs.hk",
