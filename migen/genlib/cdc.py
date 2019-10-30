@@ -101,13 +101,17 @@ class BusSynchronizer(Module):
             starter = Signal(reset=1)
             sync_i += starter.eq(0)
             self.submodules._ping = PulseSynchronizer(idomain, odomain)
+            # Extra flop on i->o to avoid race between data and request
+            # https://github.com/m-labs/nmigen/pull/40#issuecomment-484166790
+            ping_o = Signal()
+            sync_o += ping_o.eq(self._ping.o)
             self.submodules._pong = PulseSynchronizer(odomain, idomain)
             self.submodules._timeout = ClockDomainsRenamer(idomain)(
                 WaitTimer(timeout))
             self.comb += [
                 self._timeout.wait.eq(~self._ping.i),
                 self._ping.i.eq(starter | self._pong.o | self._timeout.done),
-                self._pong.i.eq(self._ping.o)
+                self._pong.i.eq(ping_o)
             ]
 
             ibuffer = Signal(width, reset_less=True)
@@ -115,7 +119,54 @@ class BusSynchronizer(Module):
             sync_i += If(self._pong.o, ibuffer.eq(self.i))
             ibuffer.attr.add("no_retiming")
             self.specials += MultiReg(ibuffer, obuffer, odomain)
-            sync_o += If(self._ping.o, self.o.eq(obuffer))
+            sync_o += If(ping_o, self.o.eq(obuffer))
+
+
+class BlindTransfer(Module):
+    """
+    PulseSynchronizer but with the input "blinded" until the pulse
+    is received in the destination domain.
+
+    This avoids situations where two pulses in the input domain
+    at a short interval (shorter than the destination domain clock
+    period) causes two toggles of the internal PulseSynchronizer
+    signal and no output pulse being emitted.
+
+    With this module, any activity in the input domain will generate
+    at least one pulse at the output.
+
+    An optional data word can be transferred with each registered pulse.
+    """
+    def __init__(self, idomain, odomain, data_width=0):
+        self.i = Signal()
+        self.o = Signal()
+        if data_width:
+            self.data_i = Signal(data_width)
+            self.data_o = Signal(data_width, reset_less=True)
+
+        # # #
+
+        ps = PulseSynchronizer(idomain, odomain)
+        ps_ack = PulseSynchronizer(odomain, idomain)
+        self.submodules += ps, ps_ack
+        blind = Signal()
+        isync = getattr(self.sync, idomain)
+        isync += [
+            If(self.i, blind.eq(1)),
+            If(ps_ack.o, blind.eq(0))
+        ]
+        self.comb += [
+            ps.i.eq(self.i & ~blind),
+            ps_ack.i.eq(ps.o),
+            self.o.eq(ps.o)
+        ]
+
+        if data_width:
+            bxfer_data = Signal(data_width, reset_less=True)
+            isync += If(ps.i, bxfer_data.eq(self.data_i))
+            bxfer_data.attr.add("no_retiming")
+            self.specials += MultiReg(bxfer_data, self.data_o,
+                                      odomain=odomain)
 
 
 class GrayCounter(Module):

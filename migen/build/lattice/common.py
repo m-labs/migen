@@ -136,12 +136,18 @@ class LatticeiCE40DifferentialOutput:
         return LatticeiCE40DifferentialOutputImpl(dr.i, dr.o_p, dr.o_n)
 
 
+# For iCE40 HX/LP devices, 'IO[Bank]_[No]B' is the positive side of the pair.
+# For iCE40 UP devices, 'IO[Bank]_[No]a' is the positive side of the pair.
+# The SB_IO primitive expects the 'B' pin for HX/LP devices
+# and the 'a' pin for UP devices.
+# The output of SB_IO has the polarity of the passed pin.
+# See https://github.com/m-labs/migen/pull/181
 class LatticeiCE40DifferentialInputImpl(Module):
     def __init__(self, i_p, i_n, o):
         self.specials += Instance("SB_IO",
                                   p_PIN_TYPE=C(0b000001, 6),  # simple input pin
                                   p_IO_STANDARD="SB_LVDS_INPUT",
-                                  io_PACKAGE_PIN=i_n,
+                                  io_PACKAGE_PIN=i_p,
                                   o_D_IN_0=o)
 
 

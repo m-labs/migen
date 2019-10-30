@@ -60,22 +60,22 @@ _io = [
         Subsignal("cas_n", Pins("E16"), IOStandard("SSTL15_DCI")),
         Subsignal("we_n", Pins("D16"), IOStandard("SSTL15_DCI")),
         Subsignal("cs_n", Pins("G19"), IOStandard("SSTL15_DCI")),
-        Subsignal("dm", Pins("G21 D21 C24 A28"),
+        Subsignal("dm", Pins("F27 E26 D23 G24"),
             IOStandard("SSTL15_DCI"),
             Misc("DATA_RATE=DDR")),
         Subsignal("dq", Pins(
-            "E20 G22 F25 F22 E21 F20 G24 G20",
-            "E22 C22 E23 A20 D23 B20 C23 C21",
-            "A25 E26 B24 E25 D25 D26 A24 B25",
-            "A29 E27 B29 F27 C27 D28 B27 C28"),
+            "C28 B27 A27 C27 D28 E28 A28 D29",
+            "D25 C26 E25 B25 C24 A25 D24 B26",
+            "B20 D21 B22 E23 E22 D20 B21 A20",
+            "F23 H21 F24 G21 F22 E21 G22 E20"),
             IOStandard("SSTL15_DCI"),
             Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
-        Subsignal("dqs_p", Pins("F24 B22 B26 D29"),
+        Subsignal("dqs_p", Pins("B29 B24 C21 G20"),
             IOStandard("DIFF_SSTL15_DCI"),
             Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
-        Subsignal("dqs_n", Pins("F23 B21 C26 E28"),
+        Subsignal("dqs_n", Pins("A29 A24 C22 F20"),
             IOStandard("DIFF_SSTL15_DCI"),
             Misc("ODT=RTT_40"),
             Misc("DATA_RATE=DDR")),
@@ -145,27 +145,18 @@ _io = [
         IOStandard("LVCMOS33"), Misc("SLEW=FAST"), Drive(16)
     ),
 
-    ("sma_io", 0,
+    ("mcx_io", 0,
         Subsignal("level", Pins("P26")),
         Subsignal("direction", Pins("K25")),
         IOStandard("LVCMOS33")
     ),
-    ("sma_io", 1,
+    ("mcx_io", 1,
         Subsignal("level", Pins("N24")),
         Subsignal("direction", Pins("L23")),
         IOStandard("LVCMOS33")
     ),
 
-    ("amc_rtm_serwb", 0,
-        Subsignal("clk_p", Pins("J8")), # rtm_fpga_usr_io_p
-        Subsignal("clk_n", Pins("H8")), # rtm_fpga_usr_io_n
-        Subsignal("tx_p", Pins("A13")), # rtm_fpga_lvds1_p
-        Subsignal("tx_n", Pins("A12")), # rtm_fpga_lvds1_n
-        Subsignal("rx_p", Pins("C12"), Misc("DIFF_TERM_ADV=TERM_100")), # rtm_fpga_lvds2_p
-        Subsignal("rx_n", Pins("B12"), Misc("DIFF_TERM_ADV=TERM_100")), # rtm_fpga_lvds2_n
-        IOStandard("LVDS")
-    ),
-
+    ("filtered_clk_sel", 0, Pins("N23"), IOStandard("LVCMOS33")),
     ("si5324", 0,
         Subsignal("rst_n", Pins("L24"), IOStandard("LVCMOS33")),
         Subsignal("int", Pins("L22"), IOStandard("LVCMOS33"))
@@ -238,28 +229,33 @@ _io = [
         Subsignal("p", Pins("V6")),
         Subsignal("n", Pins("V5")),
     ),
-    ("dac_sysref", 0,
+    ("amc_fpga_sysref", 0,
+        Subsignal("p", Pins("AD25")),
+        Subsignal("n", Pins("AD26")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+    ("amc_fpga_sysref", 1,
         Subsignal("p", Pins("B10")),
         Subsignal("n", Pins("A10")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 0,
-        Subsignal("p", Pins("L8")),
-        Subsignal("n", Pins("K8")),
+        Subsignal("p", Pins("J8")),
+        Subsignal("n", Pins("H8")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_sync", 1,
-        Subsignal("p", Pins("J9")),
-        Subsignal("n", Pins("H9")),
+        Subsignal("p", Pins("J13")),
+        Subsignal("n", Pins("H13")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
     ("dac_jesd", 0,
-        Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
-        Subsignal("txn", Pins("R3 U3 W3 AA3 AC3 AE3 AG3 AH5"))
-    ),
-    ("dac_jesd", 1,
         Subsignal("txp", Pins("B6 C4 D6 F6 G4 J4 L4 N4")),
         Subsignal("txn", Pins("B5 C3 D5 F5 G3 J3 L3 N3"))
+    ),
+    ("dac_jesd", 1,
+        Subsignal("txp", Pins("R4 U4 W4 AA4 AC4 AE4 AG4 AH6")),
+        Subsignal("txn", Pins("R3 U3 W3 AA3 AC3 AE3 AG3 AH5"))
     ),
 
     # Raw RTM GTH pairs.
