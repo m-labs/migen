@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 import sys
 from setuptools import setup
 from setuptools import find_packages
-
 
 if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
