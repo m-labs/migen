@@ -3,7 +3,6 @@ import sys
 import subprocess
 
 from migen.build.generic_programmer import GenericProgrammer
-from migen.build.xilinx import common
 
 
 def _run_urjtag(cmds):
@@ -108,24 +107,16 @@ quit
         _run_impact(cmds)
 
 
-def _run_vivado(path, ver, cmds):
-    if sys.platform == "win32" or sys.platform == "cygwin":
-        vivado_cmd = "vivado -mode tcl"
-    else:
-        settings = common.settings(path, ver)
-        vivado_cmd = "bash -c \"source " + settings + "&& vivado -mode tcl\""
-    with subprocess.Popen(vivado_cmd, stdin=subprocess.PIPE, shell=True) as process:
+def _run_vivado(cmds):
+    with subprocess.Popen("vivado -mode tcl", stdin=subprocess.PIPE, shell=True) as process:
         process.stdin.write(cmds.encode("ASCII"))
         process.communicate()
 
 
 class VivadoProgrammer(GenericProgrammer):
     needs_bitreverse = False
-    def __init__(self, vivado_path="/opt/Xilinx/Vivado", vivado_ver=None,
-                 flash_part="n25q256-3.3v-spi-x1_x2_x4"):
+    def __init__(self, flash_part="n25q256-3.3v-spi-x1_x2_x4"):
         GenericProgrammer.__init__(self)
-        self.vivado_path = vivado_path
-        self.vivado_ver = vivado_ver
         self.flash_part = flash_part
 
     def load_bitstream(self, bitstream_file, target="", device=0):
@@ -141,7 +132,7 @@ refresh_hw_device [lindex [get_hw_devices] {{{device}}}]
 
 quit
 """.format(target=target, bitstream=bitstream_file, device=device)
-        _run_vivado(self.vivado_path, self.vivado_ver, cmds)
+        _run_vivado(cmds)
 
     # XXX works to flash bitstream, adapt it to flash bios
     def flash(self, address, data_file, device=0):
@@ -171,7 +162,7 @@ endgroup
 
 quit
 """.format(data=data_file, flash_part=self.flash_part, device=device)
-        _run_vivado(self.vivado_path, self.vivado_ver, cmds)
+        _run_vivado(cmds)
 
 
 class Adept(GenericProgrammer):

@@ -1,6 +1,5 @@
 import os
 import struct
-from distutils.version import StrictVersion, LooseVersion
 import re
 import subprocess
 import sys
@@ -22,24 +21,6 @@ def write_to_file(filename, contents, force_unix=False):
         newline = "\n"
     with open(filename, "w", newline=newline) as f:
         f.write(contents)
-
-
-def arch_bits():
-    return struct.calcsize("P")*8
-
-
-def versions(path, strict=True):
-    for n in os.listdir(path):
-        full = os.path.join(path, n)
-        if not os.path.isdir(full):
-            continue
-        try:
-            if strict:
-                yield StrictVersion(n)
-            else:
-                yield LooseVersion(n)
-        except ValueError:
-            continue
 
 
 def sub_rules(line, rules, max_matches=1):
