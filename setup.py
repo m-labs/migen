@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+
 import sys
 from setuptools import setup
 from setuptools import find_packages
+
 
 if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
@@ -12,9 +14,9 @@ requirements = []
 setup(
     name="migen",
     version="0.9.2",
+    long_description_content_type='text/markdown',
     description="Python toolbox for building complex digital hardware",
     long_description=open("README.md").read(),
-    long_description_content_type='text/markdown',
     author="Sebastien Bourdeauducq",
     author_email="sb@m-labs.hk",
     url="https://m-labs.hk",
@@ -32,9 +34,11 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-		'Programming Language :: Python :: 3.7'
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7"
     ],
 )
