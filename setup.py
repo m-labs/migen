@@ -27,14 +27,17 @@ setup(
     test_suite="migen.test",
     license="BSD",
     platforms=["Any"],
-    keywords="HDL ASIC FPGA hardware design",
+    keywords=["HDL", "ASIC", "FPGA", "hardware design"],
     classifiers=[
         "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
         "Environment :: Console",
-        "Development Status :: Beta",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+		'Programming Language :: Python :: 3.7'
     ],
 )
