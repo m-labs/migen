@@ -9,9 +9,7 @@ if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
 
 
-requirements = [
-    "sphinx", "sphinx_rtd_theme", "colorama"
-]
+requirements = []
 
 setup(
     name="migen",
