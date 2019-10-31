@@ -9,7 +9,7 @@ if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
 
 
-requirements = []
+requirements = ["colorama"]
 
 setup(
     name="migen",
