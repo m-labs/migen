@@ -9,13 +9,11 @@ if sys.version_info[:3] < (3, 3):
     raise SystemExit("You need Python 3.3+")
 
 
-requirements = [
-    "sphinx", "sphinx_rtd_theme", "colorama"
-]
+requirements = ["colorama"]
 
 setup(
     name="migen",
-    version="0.9.1",
+    version="0.9.2",
     long_description_content_type='text/markdown',
     description="Python toolbox for building complex digital hardware",
     long_description=open("README.md").read(),
@@ -28,7 +26,7 @@ setup(
     test_suite="migen.test",
     license="BSD",
     platforms=["Any"],
-    keywords="HDL ASIC FPGA hardware design",
+    keywords=["HDL", "ASIC", "FPGA", "hardware design"],
     classifiers=[
         "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
         "Environment :: Console",
