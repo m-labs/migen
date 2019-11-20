@@ -186,6 +186,16 @@ _io = [
         Subsignal("rxn", Pins("AJ3"))
     ),
 
+    ("ddmtd_main_dcxo_oe", 0, Pins("P25"), IOStandard("LVCMOS33")),
+    ("ddmtd_main_dcxo_i2c", 0,
+        Subsignal("scl", Pins("L25")),
+        Subsignal("sda", Pins("N27")),
+        IOStandard("LVCMOS33")),
+    ("ddmtd_helper_dcxo_oe", 0, Pins("N26"), IOStandard("LVCMOS33")),
+    ("ddmtd_helper_dcxo_i2c", 0,
+        Subsignal("scl", Pins("M24")),
+        Subsignal("sda", Pins("K23")),
+        IOStandard("LVCMOS33")),
     ("ddmtd_rec_clk", 0,
         Subsignal("p", Pins("AD6")),
         Subsignal("n", Pins("AD5"))
