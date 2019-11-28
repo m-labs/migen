@@ -205,7 +205,7 @@ _io = [
         Subsignal("n", Pins("G11")),
         IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
     ),
-    ("ddmtd_results", 0,
+    ("ddmtd_inputs", 0,
         Subsignal("rec_clk", Pins("F12"), IOStandard("SSTL18_I")),
         Subsignal("main_xo", Pins("L9"), IOStandard("SSTL18_I"))
     ),
