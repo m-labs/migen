@@ -341,6 +341,73 @@ _io = [
         Subsignal("n", Pins("F17")),
         IOStandard("DIFF_SSTL15_DCI")
     ),
+
+    ("basemod0_adc_spi_p", 0,
+                Subsignal("clk", Pins("D8")),
+                Subsignal("miso", Pins("L8"), Misc("DIFF_TERM_ADV=TERM_100")),
+                IOStandard("LVDS")
+    ),
+    ("basemod0_adc_spi_n", 0,
+        Subsignal("clk", Pins("C8")),
+        Subsignal("miso", Pins("K8"), Misc("DIFF_TERM_ADV=TERM_100")),
+        IOStandard("LVDS")
+    ),
+    ("basemod0_adc_cnv", 0,
+        Subsignal("p", Pins("B9")),
+        Subsignal("n", Pins("A9")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100"),
+     ),
+    ("basemod0_adc_sdr", 0, Pins("D13"), IOStandard("LVCMOS18")),
+    ("basemod0_adc_data_p", 0,
+        Subsignal("clkout", Pins("G10")),
+        Subsignal("sdoa", Pins("L8")),
+        Subsignal("sdob", Pins("C12")),
+        Subsignal("sdoc", Pins("A13")),
+        Subsignal("sdod", Pins("C11")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+    ("basemod0_adc_data_n", 0,
+        Subsignal("clkout", Pins("F10")),
+        Subsignal("sdoa", Pins("K8")),
+        Subsignal("sdob", Pins("B12")),
+        Subsignal("sdoc", Pins("A12")),
+        Subsignal("sdod", Pins("B11")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
+    ("basemod0_led", 0, Pins("AB27"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 1, Pins("AA27"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 2, Pins("AF30"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 3, Pins("AG30"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 4, Pins("E13"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 5, Pins("F13"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 6, Pins("J11"), IOStandard("LVCMOS18")),
+    ("basemod0_led", 7, Pins("K11"), IOStandard("LVCMOS18")),
+    
+    ("basemod1_adc_spi_p", 0,
+                Subsignal("clk", Pins("G9")),
+                Subsignal("miso", Pins("J9"), Misc("DIFF_TERM_ADV=TERM_100")),
+                IOStandard("LVDS")
+    ),
+    ("basemod1_adc_spi_n", 0,
+        Subsignal("clk", Pins("F9")),
+        Subsignal("miso", Pins("H9"), Misc("DIFF_TERM_ADV=TERM_100")),
+        IOStandard("LVDS")
+    ),
+    ("basemod1_adc_cnv", 0,
+        Subsignal("p", Pins("L13")),
+        Subsignal("n", Pins("K13")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100"),
+     ),
+    ("basemod1_adc_sdr", 0, Pins("AE28"), IOStandard("LVCMOS18")),
+
+    ("basemod1_led", 0, Pins("AC27"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 1, Pins("AC26"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 2, Pins("AC24"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 3, Pins("AB24"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 4, Pins("Y27"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 5, Pins("Y26"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 6, Pins("C9"), IOStandard("LVCMOS18")),
+    ("basemod1_led", 7, Pins("D9"), IOStandard("LVCMOS18")),
 ]
 
 # differences with Sayma v1: CLK1_M2C, DP0_C2M, DP0_M2C, GBTCLK0_M2C, LA08
