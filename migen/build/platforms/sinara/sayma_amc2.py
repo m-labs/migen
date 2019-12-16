@@ -343,9 +343,9 @@ _io = [
     ),
 
     ("basemod0_adc_spi_p", 0,
-                Subsignal("clk", Pins("D8")),
-                Subsignal("miso", Pins("L8"), Misc("DIFF_TERM_ADV=TERM_100")),
-                IOStandard("LVDS")
+        Subsignal("clk", Pins("D8")),
+        Subsignal("miso", Pins("L8"), Misc("DIFF_TERM_ADV=TERM_100")),
+        IOStandard("LVDS")
     ),
     ("basemod0_adc_spi_n", 0,
         Subsignal("clk", Pins("C8")),
@@ -384,9 +384,9 @@ _io = [
     ("basemod0_led", 7, Pins("K11"), IOStandard("LVCMOS18")),
     
     ("basemod1_adc_spi_p", 0,
-                Subsignal("clk", Pins("G9")),
-                Subsignal("miso", Pins("J9"), Misc("DIFF_TERM_ADV=TERM_100")),
-                IOStandard("LVDS")
+        Subsignal("clk", Pins("G9")),
+        Subsignal("miso", Pins("J9"), Misc("DIFF_TERM_ADV=TERM_100")),
+        IOStandard("LVDS")
     ),
     ("basemod1_adc_spi_n", 0,
         Subsignal("clk", Pins("F9")),

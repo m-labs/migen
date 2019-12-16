@@ -124,7 +124,7 @@ _io = [
     ("basemod0_rfsw", 2, Pins("V14"), IOStandard("LVCMOS33")),
     ("basemod0_rfsw", 3, Pins("V12"), IOStandard("LVCMOS33")),
 
-    #AFE0 ADC amp
+    # AFE0 ADC amp
     ("basemod0_adc_amp_a0", 0, Pins("H16"), IOStandard("LVCMOS25")),
     ("basemod0_adc_amp_a0", 1, Pins("C17"), IOStandard("LVCMOS25")),
     ("basemod0_adc_amp_a0", 2, Pins("E17"), IOStandard("LVCMOS25")),
@@ -150,7 +150,7 @@ _io = [
     ("basemod1_adc_amp_a1", 2, Pins("C9"), IOStandard("LVCMOS25")),
     ("basemod1_adc_amp_a1", 3, Pins("C8"), IOStandard("LVCMOS25")),
 
-    #Header I/O
+    # Header I/O
     ("header_gpio", 0, Pins("B17"), IOStandard("LVCMOS25")),
     ("header_gpio", 1, Pins("C16"), IOStandard("LVCMOS25")),
     ("header_gpio", 2, Pins("A17"), IOStandard("LVCMOS25")),
