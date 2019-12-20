@@ -118,11 +118,21 @@ _io = [
         Subsignal("rxn", Pins("G3"))
     ),
 
-    # AFE pins (WIP)
+    # NOTE: AFE pins here are numbered after DAC channels and NOT signal indices
+    # See: https://github.com/sinara-hw/BaseMod/issues/29
+    # AFE0 pins
     ("basemod0_rfsw", 0, Pins("U16"), IOStandard("LVCMOS33")),
     ("basemod0_rfsw", 1, Pins("U14"), IOStandard("LVCMOS33")),
     ("basemod0_rfsw", 2, Pins("V14"), IOStandard("LVCMOS33")),
     ("basemod0_rfsw", 3, Pins("V12"), IOStandard("LVCMOS33")),
+    ("basemod0_att", 0,
+        Subsignal("le", Pins("V17")),
+        Subsignal("miso", Pins("V13 V9 U11 U9")),
+        Subsignal("mosi", Pins("R13 T12 U12 V11")),
+        Subsignal("clk", Pins("V16")),
+        Subsignal("rst_n", Pins("T13")),
+        IOStandard("LVCMOS33")
+    ),
 
     # AFE0 ADC amp
     ("basemod0_adc_amp_a0", 0, Pins("H16"), IOStandard("LVCMOS25")),
@@ -134,11 +144,19 @@ _io = [
     ("basemod0_adc_amp_a1", 2, Pins("D18"), IOStandard("LVCMOS25")),
     ("basemod0_adc_amp_a1", 3, Pins("F14"), IOStandard("LVCMOS25")),
 
-    # AFE1 pins (WIP)
+    # AFE1 pins
     ("basemod1_rfsw", 0, Pins("J16"), IOStandard("LVCMOS33")),
     ("basemod1_rfsw", 1, Pins("K15"), IOStandard("LVCMOS33")),
     ("basemod1_rfsw", 2, Pins("L15"), IOStandard("LVCMOS33")),
     ("basemod1_rfsw", 3, Pins("M15"), IOStandard("LVCMOS33")),
+    ("basemod1_att", 0,
+        Subsignal("le", Pins("K17")),
+        Subsignal("miso", Pins("M16 N18 N14 N17")),
+        Subsignal("mosi", Pins("L18 M17 M14 N16")),
+        Subsignal("clk", Pins("K18")),
+        Subsignal("rst_n", Pins("J14")),
+        IOStandard("LVCMOS33")
+    ),
 
     # AFE1 ADC amp
     ("basemod1_adc_amp_a0", 0, Pins("C11"), IOStandard("LVCMOS25")),
