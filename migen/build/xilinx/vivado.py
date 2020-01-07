@@ -92,7 +92,7 @@ class XilinxVivadoToolchain:
         tcl = []
         tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
         tcl.append("set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]")
-        for filename, language, library in sources:
+        for filename, language, library in sorted(sources, key=lambda x: x[0]):
             filename_tcl = "{" + filename + "}"
             tcl.append("add_files " + filename_tcl)
             tcl.append("set_property library {} [get_files {}]"
