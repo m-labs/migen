@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from migen.fhdl.structure import Signal
 from migen.genlib.record import Record
@@ -323,6 +324,39 @@ class GenericPlatform:
             language = tools.language_by_filename(filename)
             if language is not None:
                 self.add_source(filename, language, library)
+
+    # copy all source files to the build_dir to make them
+    # self-contained. returns a new set.
+    def copy_sources(self, build_dir, prefix="imports"):
+        copied_sources = set()
+
+        for filename, language, library in self.sources:
+            name_parts = []
+            name = filename
+            while name != os.path.sep:
+                (name, part) = os.path.split(name)
+                if part == "": break
+                name_parts.append(part)
+            name_parts.reverse()
+            # try to remove Python path for a more legible path
+            try:
+                idx = name_parts.index("site-packages")
+                name_parts = name_parts[(idx + 1):]
+            except ValueError:
+                pass
+
+            # source filenames are assumed relative to the build_dir
+            src = os.path.join(build_dir, filename)
+            # copy to path that starts with build_dir
+            dest = os.path.join(build_dir, prefix, *name_parts)
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            shutil.copyfile(src, dest)
+
+            # return entries relative to build_dir
+            dest_rel = os.path.join(prefix, *name_parts)
+            copied_sources.add((dest_rel, language, library))
+
+        return copied_sources
 
     def add_verilog_include_path(self, path):
         self.verilog_include_paths.add(os.path.abspath(path))

@@ -142,7 +142,7 @@ class LatticeIceStormToolchain:
         else:
             chosen_yosys_template = self.yosys_template
         ys_contents = "\n".join(_.format(build_name=build_name,
-                                         read_files=self.gen_read_files(platform, v_file),
+                                         read_files=self.gen_read_files(platform, v_file, build_dir),
                                          synth_opts=synth_opts)
                                 for _ in chosen_yosys_template)
 
@@ -217,8 +217,8 @@ class LatticeIceStormToolchain:
     def get_size_string(self, series_size_str):
         return series_size_str[2:]
 
-    def gen_read_files(self, platform, main):
-        sources = platform.sources | {(main, "verilog", "work")}
+    def gen_read_files(self, platform, main, build_dir):
+        sources = platform.copy_sources(build_dir) | {(main, "verilog", "work")}
         incflags = ""
         read_files = list()
         for path in platform.verilog_include_paths:
