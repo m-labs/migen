@@ -240,7 +240,6 @@ class GenericPlatform:
             name = self.__module__.split(".")[-1]
         self.name = name
         self.sources = set()
-        self.verilog_include_paths = set()
         self.finalized = False
 
     def request(self, *args, **kwargs):
@@ -306,10 +305,6 @@ class GenericPlatform:
 
         self.sources.add((os.path.abspath(filename), language, library))
 
-    def add_sources(self, path, *filenames, language=None, library=None):
-        for f in filenames:
-            self.add_source(os.path.join(path, f), language, library)
-
     def add_source_dir(self, path, recursive=True, library=None):
         dir_files = []
         if recursive:
@@ -327,39 +322,23 @@ class GenericPlatform:
 
     # copy all source files to the build_dir to make them
     # self-contained. returns a new set.
-    def copy_sources(self, build_dir, prefix="imports"):
+    def copy_sources(self, build_dir, subdir="imports"):
         copied_sources = set()
 
         for filename, language, library in self.sources:
-            name_parts = []
-            name = filename
-            while name != os.path.sep:
-                (name, part) = os.path.split(name)
-                if part == "": break
-                name_parts.append(part)
-            name_parts.reverse()
-            # try to remove Python path for a more legible path
-            try:
-                idx = name_parts.index("site-packages")
-                name_parts = name_parts[(idx + 1):]
-            except ValueError:
-                pass
+            path = _make_local_path(subdir, filename)
 
             # source filenames are assumed relative to the build_dir
             src = os.path.join(build_dir, filename)
             # copy to path that starts with build_dir
-            dest = os.path.join(build_dir, prefix, *name_parts)
+            dest = os.path.join(build_dir, path)
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             shutil.copyfile(src, dest)
 
             # return entries relative to build_dir
-            dest_rel = os.path.join(prefix, *name_parts)
-            copied_sources.add((dest_rel, language, library))
+            copied_sources.add((path, language, library))
 
         return copied_sources
-
-    def add_verilog_include_path(self, path):
-        self.verilog_include_paths.add(os.path.abspath(path))
 
     def resolve_signals(self, vns):
         # resolve signal names in constraints
@@ -392,3 +371,21 @@ class GenericPlatform:
 
     def create_programmer(self):
         raise NotImplementedError
+
+# makes potentially absolute `path` local to `subdir`, possibly
+# removing a python path to improve legibility
+def _make_local_path(subdir, path):
+    path_parts = []
+    while True:
+        (path, part) = os.path.split(path)
+        if part == "": break
+        path_parts.append(part)
+    path_parts.reverse()
+
+    try:
+        idx = path_parts.index("site-packages")
+        path_parts = path_parts[(idx + 1):]
+    except ValueError:
+        pass
+
+    return os.path.join(subdir, *path_parts)

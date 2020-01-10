@@ -49,11 +49,9 @@ def _build_lpf(named_sc, named_pc):
     return r
 
 
-def _build_files(device, sources, vincpaths, build_name):
+def _build_files(device, sources, build_name):
     tcl = []
     tcl.append("prj_project new -name \"{}\" -impl \"impl\" -dev {} -synthesis \"synplify\"".format(build_name, device))
-    for path in vincpaths:
-        tcl.append("prj_impl option {include path} {\"" + path + "\"}")
     for filename, language, library in sources:
         tcl.append("prj_src add \"" + filename + "\" -work " + library)
     tcl.append("prj_impl option top \"{}\"".format(build_name))
@@ -150,7 +148,7 @@ class LatticeDiamondToolchain:
         v_file = build_name + ".v"
         v_output.write(v_file)
         sources = platform.copy_sources(build_dir) | {(v_file, "verilog", "work")}
-        _build_files(platform.device, sources, platform.verilog_include_paths, build_name)
+        _build_files(platform.device, sources, build_name)
 
         tools.write_to_file(build_name + ".lpf", _build_lpf(named_sc, named_pc))
 

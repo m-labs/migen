@@ -44,7 +44,7 @@ def _build_ucf(named_sc, named_pc):
     return r
 
 
-def _build_xst_files(device, sources, vincpaths, build_name, xst_opt):
+def _build_xst_files(device, sources, build_name, xst_opt):
     prj_contents = ""
     for filename, language, library in sources:
         prj_contents += language + " " + library + " " + tools.cygpath(filename) + "\n"
@@ -57,19 +57,12 @@ def _build_xst_files(device, sources, vincpaths, build_name, xst_opt):
 -ofn {build_name}.ngc
 -p {device}
 """.format(build_name=build_name, xst_opt=xst_opt, device=device)
-    if vincpaths:
-        xst_contents += "-vlgincdir {"
-        for path in vincpaths:
-            xst_contents += tools.cygpath(path) + " "
-        xst_contents += "}"
     tools.write_to_file(build_name + ".xst", xst_contents)
 
 
-def _run_yosys(device, sources, vincpaths, build_name):
+def _run_yosys(device, sources, build_name):
     ys_contents = ""
     incflags = ""
-    for path in vincpaths:
-        incflags += " -I" + path
     for filename, language, library in sources:
         ys_contents += "read_{}{} {}\n".format(language, incflags, filename)
 
@@ -174,10 +167,10 @@ class XilinxISEToolchain:
                 v_output.write(v_file)
                 sources = platform.copy_sources(build_dir) | {(v_file, "verilog", "work")}
                 if mode in ("xst", "cpld"):
-                    _build_xst_files(platform.device, sources, platform.verilog_include_paths, build_name, self.xst_opt)
+                    _build_xst_files(platform.device, sources, build_name, self.xst_opt)
                     isemode = mode
                 else:
-                    _run_yosys(platform.device, sources, platform.verilog_include_paths, build_name)
+                    _run_yosys(platform.device, sources, build_name)
                     isemode = "edif"
                     ngdbuild_opt += "-p " + platform.device
 
