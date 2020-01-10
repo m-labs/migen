@@ -95,13 +95,10 @@ def _run_script(script):
 
 
 def yosys_import_sources(platform):
-    includes = ""
     reads = []
-    for path in platform.verilog_include_paths:
-        includes += " -I" + path
     for filename, language, library in platform.copy_sources(build_dir):
-        reads.append("read_{}{} {}".format(
-            language, includes, filename))
+        reads.append("read_{} {}".format(
+            language, filename))
     return "\n".join(reads)
 
 

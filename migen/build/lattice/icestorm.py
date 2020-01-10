@@ -219,13 +219,9 @@ class LatticeIceStormToolchain:
 
     def gen_read_files(self, platform, main, build_dir):
         sources = platform.copy_sources(build_dir) | {(main, "verilog", "work")}
-        incflags = ""
         read_files = list()
-        for path in platform.verilog_include_paths:
-            incflags += " -I" + path
         for filename, language, library in sources:
-            read_files.append("read_{}{} {}".format(language,
-                                                    incflags,
+            read_files.append("read_{} {}".format(language,
                                                     filename))
         return "\n".join(read_files)
 
