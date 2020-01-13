@@ -89,6 +89,7 @@ class XilinxVivadoToolchain:
         self.false_paths = set()
 
     def _build_batch(self, platform, sources, edifs, ips, build_name):
+        # script for step 1: place and route
         tcl = []
         tcl.append("create_project -force -name {} -part {}".format(build_name, platform.device))
         tcl.append("set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]")
@@ -138,12 +139,22 @@ class XilinxVivadoToolchain:
         tcl.append("report_drc -file {}_drc.rpt".format(build_name))
         tcl.append("report_timing_summary -datasheet -max_paths 10 -file {}_timing.rpt".format(build_name))
         tcl.append("report_power -file {}_power.rpt".format(build_name))
+        tools.write_to_file(build_name + "_route.tcl", "\n".join(tcl))
+
+        # script for step 2: bitstream
+        tcl = []
         for bitstream_command in self.bitstream_commands:
             tcl.append(bitstream_command.format(build_name=build_name))
         tcl.append("write_bitstream -force {}.bit ".format(build_name))
         for additional_command in self.additional_commands:
             tcl.append(additional_command.format(build_name=build_name))
         tcl.append("quit")
+        tools.write_to_file(build_name + "_bitstream.tcl", "\n".join(tcl))
+
+        # script that calls above steps
+        tcl = []
+        tcl.append("source \"{}_route.tcl\"".format(build_name))
+        tcl.append("source \"{}_bitstream.tcl\"".format(build_name))
         tools.write_to_file(build_name + ".tcl", "\n".join(tcl))
 
     def _convert_clocks(self, platform):
