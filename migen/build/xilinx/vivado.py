@@ -211,7 +211,7 @@ class XilinxVivadoToolchain:
         v_output.write(v_file)
         sources = platform.copy_sources(build_dir) | {(v_file, "verilog", "work")}
         edifs = platform.edifs
-        ips = platform.ips
+        ips = platform.copy_ips(build_dir)
         self._build_batch(platform, sources, edifs, ips, build_name, build_dir)
         tools.write_to_file(build_name + ".xdc", _build_xdc(named_sc, named_pc))
         if run:
