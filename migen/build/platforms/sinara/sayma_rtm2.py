@@ -159,14 +159,14 @@ _io = [
     ),
 
     # AFE1 ADC amp
-    ("basemod1_adc_amp_a0", 0, Pins("C11"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a0", 1, Pins("B9"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a0", 2, Pins("D9"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a0", 3, Pins("D8"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a1", 0, Pins("B11"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a1", 1, Pins("A9"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a1", 2, Pins("C9"), IOStandard("LVCMOS25")),
-    ("basemod1_adc_amp_a1", 3, Pins("C8"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a0", 0, Pins("D8"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a0", 1, Pins("D9"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a0", 2, Pins("B9"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a0", 3, Pins("C11"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a1", 0, Pins("C8"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a1", 1, Pins("C9"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a1", 2, Pins("A9"), IOStandard("LVCMOS25")),
+    ("basemod1_adc_amp_a1", 3, Pins("B11"), IOStandard("LVCMOS25")),
 
     # Header I/O
     ("header_gpio", 0, Pins("B17"), IOStandard("LVCMOS25")),
