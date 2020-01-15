@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from migen.build.generic_platform import GenericPlatform
 from migen.build.xilinx import common, vivado, ise
@@ -23,6 +24,19 @@ class XilinxPlatform(GenericPlatform):
 
     def add_ip(self, filename):
         self.ips.add((os.path.abspath(filename)))
+
+    def copy_ips(self, build_dir, subdir="ip"):
+        copied_ips = set()
+
+        target = os.path.join(build_dir, subdir)
+        os.makedirs(target, exist_ok=True)
+        for filename in self.ips:
+            path = os.path.join(subdir, os.path.basename(filename))
+            dest = os.path.join(build_dir, path)
+            shutil.copyfile(filename, dest)
+            copied_ips.add(path)
+
+        return copied_ips
 
     def get_verilog(self, *args, special_overrides=dict(), **kwargs):
         so = dict(common.xilinx_special_overrides)
