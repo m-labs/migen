@@ -47,7 +47,7 @@ def _build_ucf(named_sc, named_pc):
 def _build_xst_files(device, sources, build_name, xst_opt):
     prj_contents = ""
     for filename, language, library in sources:
-        prj_contents += language + " " + library + " " + tools.cygpath(filename) + "\n"
+        prj_contents += language + " " + library + " " + filename + "\n"
     tools.write_to_file(build_name + ".prj", prj_contents)
 
     xst_contents = """run

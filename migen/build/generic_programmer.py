@@ -16,7 +16,7 @@ class GenericProgrammer:
     def find_flash_proxy(self):
         for d in self.flash_proxy_dirs:
             fulldir = os.path.abspath(os.path.expanduser(d))
-            fullname = tools.cygpath(os.path.join(fulldir, self.flash_proxy_basename))
+            fullname = os.path.join(fulldir, self.flash_proxy_basename)
             if os.path.exists(fullname):
                 return fullname
         raise OSError("Failed to find flash proxy bitstream")
