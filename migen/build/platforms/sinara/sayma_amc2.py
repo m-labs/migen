@@ -170,6 +170,14 @@ _io = [
         Subsignal("p", Pins("AF6")),
         Subsignal("n", Pins("AF5"))
     ),
+    ("cdr_clk_clean", 1,
+        Subsignal("p", Pins("Y6")),
+        Subsignal("n", Pins("Y5"))
+    ),
+    ("cdr_clk_clean", 2,
+        Subsignal("p", Pins("P6")),
+        Subsignal("n", Pins("P5"))
+    ),
     ("cdr_clk_clean_fabric", 0,
         Subsignal("p", Pins("H12")),
         Subsignal("n", Pins("G12")),
