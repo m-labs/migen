@@ -83,6 +83,24 @@ _io = [
         Subsignal("rxp", Pins("A4")),
         Subsignal("rxn", Pins("A3"))
     ),
+    ("sfp", 0,
+        Subsignal("txp", Pins("D6")),
+        Subsignal("txn", Pins("D5")),
+        Subsignal("rxp", Pins("D2")),
+        Subsignal("rxn", Pins("D1"))
+    ),
+    ("sfp", 1,
+        Subsignal("txp", Pins("C4")),
+        Subsignal("txn", Pins("C3")),
+        Subsignal("rxp", Pins("B2")),
+        Subsignal("rxn", Pins("B1"))
+    ),
+    ("sfp", 2,
+        Subsignal("txp", Pins("F6")),
+        Subsignal("txn", Pins("F5")),
+        Subsignal("rxp", Pins("E4")),
+        Subsignal("rxn", Pins("E3"))
+    ),
 
     ("si5324", 0,
         Subsignal("rst_n", Pins("AL13"), IOStandard("LVCMOS33")),
