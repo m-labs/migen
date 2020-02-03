@@ -74,8 +74,8 @@ _io = [
     ),
 
     ("gth_clk200", 0,
-        Subsignal("p", Pins("T6")),
-        Subsignal("n", Pins("T5"))
+        Subsignal("p", Pins("K6")),
+        Subsignal("n", Pins("K5"))
     ),
     ("port0", 0,
         Subsignal("txp", Pins("B6")),
