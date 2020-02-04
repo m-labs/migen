@@ -234,8 +234,7 @@ _io = [
         Subsignal("rxn", Pins("AM1"))
     ),
     ("sfp_tx_disable", 1, Pins("AM12"), IOStandard("LVCMOS33")),
-    # Master SATA connector J16
-    ("sata", 0,
+    ("fat_pipe", 0,
         Subsignal("txp", Pins("AL4")),
         Subsignal("txn", Pins("AL3")),
         Subsignal("rxp", Pins("AK2")),
