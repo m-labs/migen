@@ -102,6 +102,8 @@ _io = [
         Subsignal("rxn", Pins("E3"))
     ),
 
+    ("input_clk_sel", 0, Pins("AK11"), IOStandard("LVCMOS33")),
+    ("filtered_clk_sel", 0, Pins("AN12"), IOStandard("LVCMOS33")),
     ("si5324", 0,
         Subsignal("rst_n", Pins("AL13"), IOStandard("LVCMOS33")),
         Subsignal("int", Pins("AK13"), IOStandard("LVCMOS33"))
