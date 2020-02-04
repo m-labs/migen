@@ -195,6 +195,11 @@ _io = [
         Subsignal("scl", Pins("AL12")),
         Subsignal("sda", Pins("AM12")),
         IOStandard("LVCMOS33")),
+    ("ddmtd_helper_clk", 0,
+        Subsignal("p", Pins("E18")),
+        Subsignal("n", Pins("E17")),
+        IOStandard("LVDS"), Misc("DIFF_TERM_ADV=TERM_100")
+    ),
 ]
 
 
