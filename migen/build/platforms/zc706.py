@@ -9,9 +9,9 @@ _io = [
     ),
 
     ("user_led", 0, Pins("Y21"), IOStandard("LVCMOS25")),
-    ("user_led", 1, Pins("G2"), IOStandard("LVCMOS25")),
+    ("user_led", 1, Pins("G2"), IOStandard("LVCMOS15")),
     ("user_led", 2, Pins("W21"), IOStandard("LVCMOS25")),
-    ("user_led", 3, Pins("A17"), IOStandard("LVCMOS25")),
+    ("user_led", 3, Pins("A17"), IOStandard("LVCMOS15")),
 
     ("serial", 0,
         Subsignal("tx", Pins("C19")),
