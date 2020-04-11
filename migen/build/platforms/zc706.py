@@ -4,8 +4,8 @@ from migen.build.xilinx import XilinxPlatform
 
 _io = [
     ("clk200", 0,
-     Subsignal("p", Pins("H9"), IOStandard("DIFF_SSTL15")),
-     Subsignal("n", Pins("G9"), IOStandard("DIFF_SSTL15"))
+        Subsignal("p", Pins("H9"), IOStandard("DIFF_SSTL15")),
+        Subsignal("n", Pins("G9"), IOStandard("DIFF_SSTL15"))
     ),
 
     ("user_led", 0, Pins("Y21"), IOStandard("LVCMOS25")),
@@ -14,9 +14,9 @@ _io = [
     ("user_led", 3, Pins("A17"), IOStandard("LVCMOS25")),
 
     ("serial", 0,
-             Subsignal("tx", Pins("C19")),
-             Subsignal("rx", Pins("D18")),
-             IOStandard("LVCMOS18")),
+        Subsignal("tx", Pins("C19")),
+        Subsignal("rx", Pins("D18")),
+        IOStandard("LVCMOS18")),
 ]
 
 
