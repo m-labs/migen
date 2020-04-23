@@ -1,6 +1,7 @@
 from migen.build.generic_platform import *
 from migen.build.xilinx import XilinxPlatform
 
+
 _io_v1_0 = [
     ("user_led", 0, Pins("T16"), IOStandard("LVCMOS25")),  # LED_USER1
 
@@ -9,6 +10,12 @@ _io_v1_0 = [
     ("serial", 0,
         Subsignal("rx", Pins("N13")),  # FPGA input, schematics TxD_2V5
         Subsignal("tx", Pins("N17")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("i2c", 0,
+        Subsignal("scl", Pins("J16")),
+        Subsignal("sda", Pins("F15")),
         IOStandard("LVCMOS25")
     ),
 
@@ -49,6 +56,28 @@ _io_v1_0 = [
         Subsignal("led", Pins("P19")),
         IOStandard("LVCMOS25")
     ),
+
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("U20")),
+        Subsignal("n", Pins("V20")),
+        IOStandard("LVDS_25"),
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("F6")),
+        Subsignal("n", Pins("E6")),
+    ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("Y18")),
+        Subsignal("n", Pins("Y19")),
+        IOStandard("LVDS_25"),
+    ),
+
+    ("sata", 0,
+        Subsignal("txp", Pins("D7")),
+        Subsignal("txn", Pins("C7")),
+        Subsignal("rxp", Pins("D9")),
+        Subsignal("rxn", Pins("C9")),
+    ),
 ]
 
 
@@ -60,6 +89,12 @@ _io_v1_1 = [
     ("serial", 0,
         Subsignal("rx", Pins("M17")),  # FPGA input, schematics TxD_2V5
         Subsignal("tx", Pins("T16")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("i2c", 0,
+        Subsignal("scl", Pins("J16")),
+        Subsignal("sda", Pins("F15")),
         IOStandard("LVCMOS25")
     ),
 
@@ -97,16 +132,69 @@ _io_v1_1 = [
         Subsignal("led", Pins("W20")),
         IOStandard("LVCMOS25")
     ),
+
+    ("si5324_clkin", 0,
+        Subsignal("p", Pins("U20")),
+        Subsignal("n", Pins("V20")),
+        IOStandard("LVDS_25"),
+    ),
+    ("si5324_clkout", 0,
+        Subsignal("p", Pins("F6")),
+        Subsignal("n", Pins("E6")),
+    ),
+    ("si5324_clkout_fabric", 0,
+        Subsignal("p", Pins("Y18")),
+        Subsignal("n", Pins("Y19")),
+        IOStandard("LVDS_25"),
+    ),
+
+    ("sata", 0,
+        Subsignal("txp", Pins("D7")),
+        Subsignal("txn", Pins("C7")),
+        Subsignal("rxp", Pins("D9")),
+        Subsignal("rxn", Pins("C9")),
+    ),
 ]
 
-
-_io_common = [
+_io_v2_0 = [
     ("i2c", 0,
         Subsignal("scl", Pins("J16")),
-        Subsignal("sda", Pins("F15")),
+        Subsignal("sda", Pins("M17")),
         IOStandard("LVCMOS25")
     ),
 
+    ("serial", 0,
+        Subsignal("rx", Pins("P16")),  # FPGA input, schematics TxD_2V5
+        Subsignal("tx", Pins("P17")),  # FPGA output, schematics RxD_2V5
+        IOStandard("LVCMOS25")
+    ),
+
+    ("i2c", 0,
+        Subsignal("scl", Pins("J16")),
+        Subsignal("sda", Pins("M17")),
+        IOStandard("LVCMOS25")
+    ),
+
+    ("user_led", 0, Pins("P14"), IOStandard("LVCMOS25")),
+    ("user_led", 1, Pins("R19"), IOStandard("LVCMOS25")),
+    ("user_led", 2, Pins("R16"), IOStandard("LVCMOS25")),
+    ("error_led", 0, Pins("F15"), IOStandard("LVCMOS25")),
+
+    ("cdr_clk_clean_fabric", 0,
+        Subsignal("p", Pins("Y18")),
+        Subsignal("n", Pins("Y19")),
+        IOStandard("LVDS_25"),
+    ),
+
+    ("sfp", 3,
+        Subsignal("txp", Pins("D7")),
+        Subsignal("txn", Pins("C7")),
+        Subsignal("rxp", Pins("D9")),
+        Subsignal("rxn", Pins("C9")),
+    ),
+]
+
+_io_common = [
     ("spiflash", 0,
         Subsignal("cs_n", Pins("T19")),
         Subsignal("dq", Pins("P22 R22 P21 R21")),
@@ -127,23 +215,6 @@ _io_common = [
         Subsignal("n", Pins("E10")),
     ),
 
-    ("si5324_clkin", 0,
-        Subsignal("p", Pins("U20")),
-        Subsignal("n", Pins("V20")),
-        IOStandard("LVDS_25"),
-    ),
-
-    ("si5324_clkout", 0,
-        Subsignal("p", Pins("F6")),
-        Subsignal("n", Pins("E6")),
-    ),
-
-    ("si5324_clkout_fabric", 0,
-        Subsignal("p", Pins("Y18")),
-        Subsignal("n", Pins("Y19")),
-        IOStandard("LVDS_25"),
-    ),
-
     ("sfp", 0,
         Subsignal("txp", Pins("B4")),
         Subsignal("txn", Pins("A4")),
@@ -161,12 +232,6 @@ _io_common = [
         Subsignal("txn", Pins("A6")),
         Subsignal("rxp", Pins("B10")),
         Subsignal("rxn", Pins("A10")),
-    ),
-    ("sata", 0,
-        Subsignal("txp", Pins("D7")),
-        Subsignal("txn", Pins("C7")),
-        Subsignal("rxp", Pins("D9")),
-        Subsignal("rxn", Pins("C9")),
     ),
 
     ("ddram", 0,
@@ -197,7 +262,7 @@ _io_common = [
 ]
 
 
-_connectors = [
+_connectors_eem = [
     ("eem0", {
         "d0_cc_n": "T4",
         "d0_cc_p": "R4",
@@ -349,7 +414,9 @@ _connectors = [
         "d7_n": "E17",
         "d7_p": "F16",
     }),
+]
 
+_connectors_bp_adapter = [
     ("eem8", {
         "d0_cc_n": "C17",
         "d0_cc_p": "D17",
@@ -427,6 +494,10 @@ _connectors = [
     }),
 ]
 
+_connectors_eem2 = [
+  # TODO
+]
+
 
 class Platform(XilinxPlatform):
     default_clk_name = "clk50"
@@ -436,13 +507,22 @@ class Platform(XilinxPlatform):
     def __init__(self, hw_rev="v1.0"):
         if hw_rev == "v1.0":
             io_rev = _io_v1_0
+            connectors_rev = s_connectors_bp_adapter
+            fpga = "xc7a100t-fgg484-2"
         elif hw_rev == "v1.1":
             io_rev = _io_v1_1
+            connectors_rev = _connectors_bp_adapter
+            fpga = "xc7a100t-fgg484-2"
+        elif hw_rev == "v2.0":
+            io_rev = _io_v2_0
+            connectors_rev = _connectors_eem2
+            fpga = "xc7a100t-fgg484-3"
         else:
             raise ValueError("Unknown hardware revision", hw_rev)
+        self.hw_rev = hw_rev
 
         XilinxPlatform.__init__(
-                self, "xc7a100t-fgg484-2", _io_common + io_rev, _connectors,
+                self, fpga, _io_common + io_rev, _connectors_eem + connectors_rev,
                 toolchain="vivado")
         self.add_platform_command(
                 "set_property INTERNAL_VREF 0.750 [get_iobanks 35]")
