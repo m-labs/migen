@@ -507,7 +507,7 @@ class Platform(XilinxPlatform):
     def __init__(self, hw_rev="v1.0"):
         if hw_rev == "v1.0":
             io_rev = _io_v1_0
-            connectors_rev = s_connectors_bp_adapter
+            connectors_rev = _connectors_bp_adapter
             fpga = "xc7a100t-fgg484-2"
         elif hw_rev == "v1.1":
             io_rev = _io_v1_1
