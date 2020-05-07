@@ -17,6 +17,13 @@ _io = [
         Subsignal("tx", Pins("C19")),
         Subsignal("rx", Pins("D18")),
         IOStandard("LVCMOS18")),
+
+    ("user_sma_clock", 0,
+        Subsignal("p", Pins("AD18"), IOStandard("LVDS_25"),
+            Misc("DIFF_TERM=TRUE")),
+        Subsignal("n", Pins("AD19"), IOStandard("LVDS_25"),
+            Misc("DIFF_TERM=TRUE"))
+    ),
 ]
 
 _connectors = [
