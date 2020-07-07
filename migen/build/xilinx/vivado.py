@@ -31,7 +31,7 @@ def _format_xdc(signame, resname, *constraints):
         fmt_r += "." + resname[2]
     r = " ## {}\n".format(fmt_r)
     for c in fmt_c:
-        r += c + " [get_ports " + signame + "]\n"
+        r += c + " [get_ports {" + signame + "}]\n"
     return r
 
 
