@@ -2,7 +2,7 @@ import os
 import shutil
 
 from migen.build.generic_platform import GenericPlatform
-from migen.build.xilinx import common, vivado, ise
+from migen.build.xilinx import common, vivado, ise, symbiflow
 
 
 class XilinxPlatform(GenericPlatform):
@@ -16,6 +16,8 @@ class XilinxPlatform(GenericPlatform):
             self.toolchain = ise.XilinxISEToolchain()
         elif toolchain == "vivado":
             self.toolchain = vivado.XilinxVivadoToolchain()
+        elif toolchain == "symbiflow":
+            self.toolchain = symbiflow.SymbiflowToolchain()
         else:
             raise ValueError("Unknown toolchain")
 
@@ -67,3 +69,8 @@ class XilinxPlatform(GenericPlatform):
         if hasattr(to, "p"):
             to = to.p
         self.toolchain.add_false_path_constraint(self, from_, to)
+
+    def do_finalize(self, fragment, *args, **kwargs):
+        # Do not create period constraint directly on default clock when using Symbiflow
+        if not isinstance(self.toolchain, symbiflow.SymbiflowToolchain):
+            super().do_finalize(fragment, *args, **kwargs)
