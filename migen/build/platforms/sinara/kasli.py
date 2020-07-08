@@ -169,12 +169,6 @@ _io_v2_0 = [
         IOStandard("LVCMOS25")
     ),
 
-    ("i2c", 0,
-        Subsignal("scl", Pins("J16")),
-        Subsignal("sda", Pins("M17")),
-        IOStandard("LVCMOS25")
-    ),
-
     ("user_led", 0, Pins("P14"), IOStandard("LVCMOS25")),
     ("user_led", 1, Pins("R19"), IOStandard("LVCMOS25")),
     ("user_led", 2, Pins("R16"), IOStandard("LVCMOS25")),
