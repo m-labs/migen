@@ -72,7 +72,7 @@ _io = [
 
     ("filtered_clk_sel", 0, Pins("M5"), IOStandard("LVCMOS25")),
     ("si5324", 0,
-        Subsignal("rst_n", Pins("C14"), IOStandard("LVCMOS25")),
+        Subsignal("rst_n", Pins("L5"), IOStandard("LVCMOS25")),
         Subsignal("int", Pins("V6"), IOStandard("LVCMOS25"))
     ),
     ("si5324_clkin", 0,
