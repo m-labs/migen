@@ -116,9 +116,33 @@ class XilinxDDROutputS6:
     def lower(dr):
         return XilinxDDROutputImplS6(dr.i1, dr.i2, dr.o, dr.clk)
 
+class XilinxDDRInputImplS6(Module):
+    def __init__(self, i, o1, o2, clk):
+        self.specials += Instance("IDDR2",
+            p_DDR_ALIGNMENT = "C0",
+            p_INIT_Q0       = 0,
+            p_INIT_Q1       = 0,
+            p_SRTYPE        = "ASYNC",
+            i_C0 = clk,
+            i_C1 = ~clk,
+            i_CE = 1,
+            i_S  = 0,
+            i_R  = 0,
+            i_D  = i,
+            o_Q0 = o1,
+            o_Q1 = o2
+        )
+
+
+class XilinxDDRInputS6:
+    @staticmethod
+    def lower(dr):
+        return XilinxDDRInputImplS6(dr.i, dr.o1, dr.o2, dr.clk)
+
 
 xilinx_s6_special_overrides = {
-    DDROutput:              XilinxDDROutputS6
+    DDROutput: XilinxDDROutputS6,
+    DDRInput:  XilinxDDRInputS6,
 }
 
 
