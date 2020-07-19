@@ -116,8 +116,6 @@ class XilinxDDROutputS6:
     def lower(dr):
         return XilinxDDROutputImplS6(dr.i1, dr.i2, dr.o, dr.clk)
 
-# Took this from litex/build/xilinx/common.py
-# migen doesn't include a DDR Input for S6
 class XilinxDDRInputImplS6(Module):
     def __init__(self, i, o1, o2, clk):
         self.specials += Instance("IDDR2",
