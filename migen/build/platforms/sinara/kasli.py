@@ -174,6 +174,12 @@ _io_v2_0 = [
     ("user_led", 2, Pins("R16"), IOStandard("LVCMOS25")),
     ("error_led", 0, Pins("F15"), IOStandard("LVCMOS25")),
 
+    ("sma_clkin", 0,
+        Subsignal("p", Pins("U20")),
+        Subsignal("n", Pins("V20")),
+        IOStandard("LVDS_25"), Misc("DIFF_TERM=TRUE")
+    ),
+
     ("cdr_clk", 0,
         Subsignal("p", Pins("R18")),
         Subsignal("n", Pins("T18")),
