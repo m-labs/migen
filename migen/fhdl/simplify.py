@@ -12,7 +12,7 @@ class FullMemoryWE(ModuleTransformer):
     def transform_fragment(self, i, f):
         newspecials = set()
 
-        for orig in f.specials:
+        for orig in sorted(f.specials, key=lambda x: x.duid):
             if not isinstance(orig, Memory):
                 newspecials.add(orig)
                 continue
@@ -60,7 +60,7 @@ class MemoryToArray(ModuleTransformer):
         newspecials = set()
         processed_ports = set()
 
-        for mem in f.specials:
+        for mem in sorted(f.specials, key=lambda x: x.duid):
             if not isinstance(mem, Memory):
                 newspecials.add(mem)
                 continue
@@ -130,7 +130,7 @@ class SplitMemory(ModuleTransformer):
         old_specials, f.specials = f.specials, set()
         old_ports = set()
 
-        for old in old_specials:
+        for old in sorted(old_specials, key=lambda x: x.duid):
             if not isinstance(old, Memory):
                 f.specials.add(old)
                 continue
