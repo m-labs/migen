@@ -13,13 +13,25 @@ from migen.build.lattice import common
 
 
 def _build_pcf(named_sc, named_pc):
+    diamond2trellis_tr = {
+        "PULLUP_RESISTOR" : "-pullup_resistor",
+        "PULLUP" : "-pullup 1",
+    }
     r = ""
     for sig, pins, others, resname in named_sc:
+        misc = ""
+        for other in others:
+            if isinstance(other, Misc):
+                arg = other.misc
+                for diamond_arg in diamond2trellis_tr:
+                    if diamond_arg in arg:
+                        arg = arg.replace(diamond_arg, diamond2trellis_tr[diamond_arg]) 
+                misc += ' ' + arg
         if len(pins) > 1:
             for bit, pin in enumerate(pins):
-                r += "set_io {}[{}] {}\n".format(sig, bit, pin)
+                r += "set_io{} {}[{}] {}\n".format(misc, sig, bit, pin)
         else:
-            r += "set_io {} {}\n".format(sig, pins[0])
+            r += "set_io{} {} {}\n".format(misc, sig, pins[0])
     if named_pc:
         r += "\n" + "\n\n".join(named_pc)
     return r
