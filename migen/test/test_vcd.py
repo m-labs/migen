@@ -1,23 +1,21 @@
 import unittest
 import os
+import tempfile
 
 from migen.sim.vcd import VCDWriter
 
 
 class VcdWriter(unittest.TestCase):
 
-    def setUp(self):
-        self.filename = self.id() + ".vcd"
+    def get_file_path(self, dir):
+        return os.path.join(dir, self.id() + ".vcd")
 
-    def tearDown(self):
+    def check_expectation(self, filename):
         self.vcd.close()
-        with open(self.filename, 'r') as f:
+        with open(filename, 'r') as f:
             self.assertMultiLineEqual(self.expected_file, f.read())
-        os.remove(self.filename)
 
     def test_empty(self):
-
-        self.vcd = VCDWriter(self.filename)
 
         self.expected_file = (
             "$dumpvars\n"
@@ -25,9 +23,12 @@ class VcdWriter(unittest.TestCase):
             "#0\n"
         )
 
-    def test_module_name(self):
+        with tempfile.TemporaryDirectory() as dir:
+            filename = self.get_file_path(dir)
+            self.vcd = VCDWriter(filename)
+            self.check_expectation(filename)
 
-        self.vcd = VCDWriter(self.filename, module_name="name1")
+    def test_module_name(self):
 
         self.expected_file = (
             "$scope module name1 $end\n"
@@ -36,3 +37,8 @@ class VcdWriter(unittest.TestCase):
             "$end\n"
             "#0\n"
         )
+
+        with tempfile.TemporaryDirectory() as dir:
+            filename = self.get_file_path(dir)
+            self.vcd = VCDWriter(filename, module_name="name1")
+            self.check_expectation(filename)
