@@ -36,15 +36,3 @@ class VcdWriter(unittest.TestCase):
             "$end\n"
             "#0\n"
         )
-
-    def test_timescale(self):
-
-        self.vcd = VCDWriter(self.filename, timescale="1ps")
-
-        self.expected_file = (
-            "$timescale 1ps $end\n"
-            "$enddefinitions $end\n"
-            "$dumpvars\n"
-            "$end\n"
-            "#0\n"
-        )
