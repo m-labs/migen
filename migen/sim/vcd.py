@@ -19,10 +19,9 @@ def vcd_codes():
 
 
 class VCDWriter:
-    def __init__(self, filename, module_name=None, timescale=None):
+    def __init__(self, filename, module_name=None):
         self.filename = filename
         self.module_name = module_name
-        self.timescale = timescale
         self.buffer_file = tempfile.TemporaryFile(
             dir=os.path.dirname(filename), mode="w+")
         self.codegen = vcd_codes()
@@ -76,8 +75,6 @@ class VCDWriter:
         try:
             if self.module_name:
                 out.write("$scope module {name} $end\n".format(name=self.module_name))
-            if self.timescale:
-                out.write("$timescale {timescale} $end\n".format(timescale=self.timescale))
             ns = build_namespace(self.codes.keys())
             for signal, code in self.codes.items():
                 name = ns.get_name(signal)
@@ -87,7 +84,7 @@ class VCDWriter:
                     size = len(signal)
                 out.write("$var wire {size} {code} {name} $end\n"
                           .format(name=name, code=code, size=size))
-            if self.module_name or self.timescale:
+            if self.module_name:
                 out.write("$enddefinitions $end\n")
             out.write("$dumpvars\n")
             for signal in self.codes.keys():
