@@ -304,7 +304,7 @@ class Simulator:
         if vcd_name is None:
             self.vcd = DummyVCDWriter()
         else:
-            self.vcd = VCDWriter(vcd_name)
+            self.vcd = VCDWriter(vcd_name, module_name=type(fragment_or_module).__name__)
 
             signals = list_signals(self.fragment)
             for cd in self.fragment.clock_domains:
