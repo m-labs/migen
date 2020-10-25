@@ -102,9 +102,6 @@ _io += [
 
 
 class Platform(XilinxPlatform):
-    default_clk_name = "clk125"
-    default_clk_period = 8.
-
     def __init__(self):
         XilinxPlatform.__init__(self, "xc7z010-clg400-1", _io,
             toolchain="vivado")
