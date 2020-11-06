@@ -9,6 +9,7 @@ from migen.genlib.cdc import MultiReg
 from migen.build.lattice import diamond, icestorm, trellis
 from migen.build.altera import quartus
 from migen.build.xilinx import ise, vivado
+from migen.build.quicklogic import quicklogic
 import migen.build.platforms
 
 
@@ -25,6 +26,8 @@ def _toolchain_var(plat):
         return "MIGEN_HAS_ISE"
     elif isinstance(plat.toolchain, vivado.XilinxVivadoToolchain):
         return "MIGEN_HAS_VIVADO"
+    elif isinstance(plat.toolchain, quicklogic.QuicklogicToolchain):
+        return "MIGEN_HAS_QUICKLOGIC"
     else:
         raise ValueError("Unrecognized toolchain {} for {}"
                          .format(type(plat.toolchain), type(plat)))
