@@ -35,10 +35,16 @@ _io = [
     ("user_dio", 12, Pins("K19"), IOStandard("LVCMOS33")),
 ]
 
+DEVICE_VARIANTS = {
+    "07s": "xc7z007s-clg400-1",
+    "10": "xc7z010-clg400-1",
+}
 
+# Digilent Cora Z7-07S, and Z7-10
 class Platform(XilinxPlatform):
     default_clk_name = "sys_clk"
     default_clk_period = 8
 
-    def __init__(self):
-        XilinxPlatform.__init__(self, "xc7z007s-clg400-1", _io, toolchain="vivado")
+    def __init__(self, device_variant="10"):
+        device = DEVICE_VARIANTS[device_variant]
+        XilinxPlatform.__init__(self, device, _io, toolchain="vivado")
