@@ -91,7 +91,7 @@ class SymbiflowToolchain:
         else:
             object.__setattr__(self, name, value)
 
-    def _generate_build_script(self, platform, sources, build_name):
+    def _generate_build_script(self, platform, bitstream_device, sources, build_name):
         if sys.platform == "win32" or sys.platform == "cygwin":
             # TODO: add support for Windows
             raise NotImplementedError("Windows support is not implemented")
@@ -102,12 +102,12 @@ class SymbiflowToolchain:
             "set -ex", # stop execution when any command fail (e); print each command to stderr (x)
         ]
         escaped_sources = " ".join([shlex.quote(f) for f,language,_ in sources if language in ["verilog", "system_verilog"]])
-        sh.append(f"synth -t {build_name} -v {escaped_sources} -p {platform.device} -x {build_name}.xdc")
-        sh.append(f"pack -e {build_name}.eblif -P {platform.device} -s {build_name}.sdc")
-        sh.append(f"place -e {build_name}.eblif -p {build_name}.pcf -n {build_name}.net -P {platform.device} -s {build_name}.sdc")
-        sh.append(f"route -e {build_name}.eblif -P {platform.device} -s {build_name}.sdc")
-        sh.append(f"write_fasm -e {build_name}.eblif -P {platform.device}")
-        sh.append(f"write_bitstream -f {build_name}.fasm -p {platform.device} -b {build_name}.bit")
+        sh.append(f"symbiflow_synth -t {build_name} -v {escaped_sources} -d {bitstream_device} -p {platform.device} -x {build_name}.xdc")
+        sh.append(f"symbiflow_pack -e {build_name}.eblif -P {platform.device} -s {build_name}.sdc")
+        sh.append(f"symbiflow_place -e {build_name}.eblif -p {build_name}.pcf -n {build_name}.net -P {platform.device} -s {build_name}.sdc")
+        sh.append(f"symbiflow_route -e {build_name}.eblif -P {platform.device} -s {build_name}.sdc")
+        sh.append(f"symbiflow_write_fasm -e {build_name}.eblif -P {platform.device}")
+        sh.append(f"symbiflow_write_bitstream -f {build_name}.fasm -d {bitstream_device} -p {platform.device} -b {build_name}.bit")
         tools.write_to_file(f"build_{build_name}.sh", "\n".join(sh) + "\n")
 
     def _build_clock_constraints(self, platform):
@@ -159,8 +159,18 @@ class SymbiflowToolchain:
         v_output.write(v_file)
         sources = platform.copy_sources(build_dir) | {(v_file, "verilog", "work")}
 
+        if platform.device[3] == 'a':
+            bitstream_device = 'artix7'
+        elif platform.device[3] == 'k':
+            bitstream_device = 'kintex7'
+        elif platform.device[3] == 'z':
+            bitstream_device = 'zynq7'
+        else:
+            raise Exception('Unknown bitstream device')
+
         self._generate_build_script(
             platform   = platform,
+            bitstream_device = bitstream_device,
             sources    = sources,
             build_name = build_name
         )
