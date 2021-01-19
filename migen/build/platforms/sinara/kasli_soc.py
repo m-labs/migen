@@ -15,7 +15,7 @@ _io = [
     ("sma_clkin", 0,
         Subsignal("p", Pins("AD20")),
         Subsignal("n", Pins("AD21")),
-        IOStandard("LVCMOS25"), Misc("DIFF_TERM=TRUE")
+        IOStandard("LVDS_25"), Misc("DIFF_TERM=TRUE")
     ),
 
     ("clk_gtp", 0,
@@ -85,8 +85,8 @@ _io = [
 
 _connectors_eem = [
     ("eem0", {
-        "d0_n": "AD14",
-        "d0_p": "AC14",
+        "d0_cc_n": "AD14",
+        "d0_cc_p": "AC14",
         "d1_n": "AF17",
         "d1_p": "AE17",
         "d2_n": "AA17",
@@ -103,8 +103,8 @@ _connectors_eem = [
         "d7_p": "W16",
     }),
     ("eem1", {
-        "d0_n": "AC22",
-        "d0_p": "AC21",
+        "d0_cc_n": "AC22",
+        "d0_cc_p": "AC21",
         "d1_n": "AD26",
         "d1_p": "AD25",
         "d2_n": "AF25",
@@ -121,8 +121,8 @@ _connectors_eem = [
         "d7_p": "W18",
     }),
     ("eem2", {
-        "d0_n": "H14",
-        "d0_p": "J14",
+        "d0_cc_n": "H14",
+        "d0_cc_p": "J14",
         "d1_n": "D16",
         "d1_p": "E16",
         "d2_n": "A17",
@@ -139,8 +139,8 @@ _connectors_eem = [
         "d7_p": "A15",
     }),
     ("eem3", {
-        "d0_n": "E15",
-        "d0_p": "F15",
+        "d0_cc_n": "E15",
+        "d0_cc_p": "F15",
         "d1_n": "J15",
         "d1_p": "K15",
         "d2_n": "C13",
@@ -158,8 +158,8 @@ _connectors_eem = [
         "d7_p": "E10",
     }),
     ("eem4", {
-        "d0_n": "D14",
-        "d0_p": "D15",
+        "d0_cc_n": "D14",
+        "d0_cc_p": "D15",
         "d1_n": "F14",
         "d2_n": "E13",
         "d2_p": "F13",
@@ -175,8 +175,8 @@ _connectors_eem = [
         "d7_p": "G10",
     }),
     ("eem5", {
-        "d0_n": "E7",
-        "d0_p": "F8",
+        "d0_cc_n": "E7",
+        "d0_cc_p": "F8",
         "d1_n": "A10",
         "d1_p": "B10",
         "d2_n": "H8",
@@ -193,8 +193,8 @@ _connectors_eem = [
         "d7_p": "H7",
     }),
     ("eem6", {
-        "d0_n": "C6",
-        "d0_p": "D6",
+        "d0_cc_n": "C6",
+        "d0_cc_p": "D6",
         "d1_n": "A7",
         "d1_p": "B7",
         "d2_n": "B4",
@@ -211,8 +211,8 @@ _connectors_eem = [
         "d7_p": "B2",
     }),
     ("eem7", {
-        "d0_n": "K3",
-        "d0_p": "L3",
+        "d0_cc_n": "K3",
+        "d0_cc_p": "L3",
         "d1_n": "D3",
         "d1_p": "D4",
         "d2_n": "F2",
@@ -229,8 +229,8 @@ _connectors_eem = [
         "d7_p": "H4",
     }),
     ("eem8", {
-        "d0_n": "AD11",
-        "d0_p": "AC12",
+        "d0_cc_n": "AD11",
+        "d0_cc_p": "AC12",
         "d1_n": "AC11",
         "d1_p": "AB12",
         "d2_n": "AA10",
@@ -247,8 +247,8 @@ _connectors_eem = [
         "d7_p": "AE16",
     }),
     ("eem9", {
-        "d0_n": "AD13",
-        "d0_p": "AC13",
+        "d0_cc_n": "AD13",
+        "d0_cc_p": "AC13",
         "d1_n": "AF13",
         "d1_p": "AE13",
         "d2_n": "AD10",
@@ -265,8 +265,8 @@ _connectors_eem = [
         "d7_p": "AF15",
     }),
     ("eem10", {
-        "d0_n": "J3",
-        "d0_p": "J4",
+        "d0_cc_n": "J3",
+        "d0_cc_p": "J4",
         "d1_n": "G1",
         "d1_p": "H2",
         "d2_n": "K1",
@@ -283,8 +283,8 @@ _connectors_eem = [
         "d7_p": "M2",
     }),
     ("eem11", {
-        "d0_n": "M5",
-        "d0_p": "M6",
+        "d0_cc_n": "M5",
+        "d0_cc_p": "M6",
         "d1_n": "M1",
         "d1_p": "N1",
         "d2_n": "L7",
