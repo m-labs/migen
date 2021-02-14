@@ -386,8 +386,9 @@ class Memory(Special):
 
         if memory.init is not None:
             content = ""
+            formatter = "{:0" + str(int(memory.width / 4)) + "X}\n"
             for d in memory.init:
-                content += "{:x}\n".format(d)
+                content += formatter.format(d)
             memory_filename = add_data_file(gn(memory) + ".init", content)
 
             r += "initial begin\n"
