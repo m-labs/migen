@@ -388,7 +388,7 @@ class Memory(Special):
             content = ""
             formatter = "{:0" + str(int(memory.width / 4)) + "X}\n"
             for d in memory.init:
-                content += formatter.format(d)
+                content += formatter.format(d).zfill(int(memory.width / 4))
             memory_filename = add_data_file(gn(memory) + ".init", content)
 
             r += "initial begin\n"
