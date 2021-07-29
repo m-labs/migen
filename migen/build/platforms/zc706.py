@@ -24,6 +24,17 @@ _io = [
         Subsignal("n", Pins("AD19"), IOStandard("LVDS_25"),
             Misc("DIFF_TERM=TRUE"))
     ),
+
+    # signals same as on kc705, different pins
+    ("sfp_tx", 0,
+        Subsignal("p", Pins("W4")),
+        Subsignal("n", Pins("W3"))
+    ),
+    ("sfp_rx", 0,
+        Subsignal("p", Pins("Y6")),
+        Subsignal("n", Pins("Y5"))
+    ),
+    ("sfp_tx_disable_n", 0, Pins("AA18"), IOStandard("LVCMOS25")),
 ]
 
 _connectors = [
