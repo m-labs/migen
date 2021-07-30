@@ -25,7 +25,6 @@ _io = [
             Misc("DIFF_TERM=TRUE"))
     ),
 
-    # signals same as on kc705, different pins
     ("sfp_tx", 0,
         Subsignal("p", Pins("W4")),
         Subsignal("n", Pins("W3"))
