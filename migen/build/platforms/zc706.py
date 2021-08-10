@@ -25,13 +25,11 @@ _io = [
             Misc("DIFF_TERM=TRUE"))
     ),
 
-    ("sfp_tx", 0,
-        Subsignal("p", Pins("W4")),
-        Subsignal("n", Pins("W3"))
-    ),
-    ("sfp_rx", 0,
-        Subsignal("p", Pins("Y6")),
-        Subsignal("n", Pins("Y5"))
+    ("sfp", 0,
+        Subsignal("txp", Pins("W4")),
+        Subsignal("txn", Pins("W3")),
+        Subsignal("rxp", Pins("Y6")),
+        Subsignal("rxn", Pins("Y5"))
     ),
     ("sfp_tx_disable_n", 0, Pins("AA18"), IOStandard("LVCMOS25")),
 

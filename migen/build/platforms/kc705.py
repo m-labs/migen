@@ -205,21 +205,17 @@ _io = [
         Subsignal("p", Pins("G8")),
         Subsignal("n", Pins("G7"))
     ),
-    ("user_sma_mgt_tx", 0,
-        Subsignal("p", Pins("K2")),
-        Subsignal("n", Pins("K1"))
+    ("user_sma_mgt", 0,
+        Subsignal("txp", Pins("K2")),
+        Subsignal("txn", Pins("K1")),
+        Subsignal("rxp", Pins("K6")),
+        Subsignal("rxn", Pins("K5"))
     ),
-    ("user_sma_mgt_rx", 0,
-        Subsignal("p", Pins("K6")),
-        Subsignal("n", Pins("K5"))
-    ),
-    ("sfp_tx", 0,  # inverted prior to HW rev 1.1
-        Subsignal("p", Pins("H2")),
-        Subsignal("n", Pins("H1"))
-    ),
-    ("sfp_rx", 0,  # inverted prior to HW rev 1.1
-        Subsignal("p", Pins("G4")),
-        Subsignal("n", Pins("G3"))
+    ("sfp", 0,  # inverted prior to HW rev 1.1
+        Subsignal("txp", Pins("H2")),
+        Subsignal("txn", Pins("H1")),
+        Subsignal("rxp", Pins("G4")),
+        Subsignal("rxn", Pins("G3"))
     ),
     ("sfp_tx_disable_n", 0, Pins("Y20"), IOStandard("LVCMOS25")),
     ("sfp_rx_los", 0, Pins("P19"), IOStandard("LVCMOS25")),
