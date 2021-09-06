@@ -50,6 +50,15 @@ _io = [
         IOStandard("LVCMOS33")
     ),
 
+    # CPU <-> FPGA communication (connects to LPC1776 SSP1)
+    ("ssp1", 0,
+        Subsignal("clk", Pins("H24")),
+        Subsignal("cs_n", Pins("J26")),
+        Subsignal("miso", Pins("H26")),
+        Subsignal("mosi", Pins("J24")),
+        IOStandard("LVCMOS33")
+    ),
+
     ("ddram_32", 0,
         Subsignal("a", Pins(
             "E15 D15 J16 K18 H16 K17 K16 J15",
