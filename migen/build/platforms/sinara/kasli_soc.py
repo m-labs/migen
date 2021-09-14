@@ -59,7 +59,7 @@ _io = [
     ("cdr_clk", 0,
         Subsignal("p", Pins("G7")),
         Subsignal("n", Pins("F7")),
-        IOStandard("LVDS_18"),
+        IOStandard("LVDS"),
     ),
     ("cdr_clk_clean_fabric", 0,
         Subsignal("p", Pins("AD23")),
