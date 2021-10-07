@@ -25,6 +25,13 @@ _io = [
             Misc("DIFF_TERM=TRUE"))
     ),
 
+    ("user_sma_mgt", 0,
+        Subsignal("txp", Pins("Y2")),
+        Subsignal("txn", Pins("Y1")),
+        Subsignal("rxp", Pins("AB6")),
+        Subsignal("rxn", Pins("AB5"))  
+    ),
+
     ("sfp", 0,
         Subsignal("txp", Pins("W4")),
         Subsignal("txn", Pins("W3")),
