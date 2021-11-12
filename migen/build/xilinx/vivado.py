@@ -84,6 +84,7 @@ class XilinxVivadoToolchain:
         self.bitstream_commands = []
         self.additional_commands = []
         self.pre_synthesis_commands = []
+        self.explore_opt_design = False
         self.with_phys_opt = False
         self.clocks = dict()
         self.false_paths = set()
@@ -118,7 +119,10 @@ class XilinxVivadoToolchain:
         tcl.append("report_timing_summary -file {}_timing_synth.rpt".format(build_name))
         tcl.append("report_utilization -hierarchical -file {}_utilization_hierarchical_synth.rpt".format(build_name))
         tcl.append("report_utilization -file {}_utilization_synth.rpt".format(build_name))
-        tcl.append("opt_design")
+        if self.explore_opt_design:
+            tcl.append("opt_design -directive ExploreWithRemap")
+        else:
+            tcl.append("opt_design")
         tcl.append("place_design")
         if self.with_phys_opt:
             tcl.append("phys_opt_design -directive AddRetime")
