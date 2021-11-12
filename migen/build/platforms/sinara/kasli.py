@@ -634,3 +634,5 @@ class Platform(XilinxPlatform):
             "set_property CFGBVS VCCO [current_design]",
             "set_property CONFIG_VOLTAGE 2.5 [current_design]",
             ])
+        if hw_rev == "v2.0":
+            self.toolchain.explore_opt_design = True
