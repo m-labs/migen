@@ -130,7 +130,7 @@ _connectors = [
         "LA17_CC_N": "W24",
         "LA23_P": "P25",
         "LA23_N": "P26",
-        "LA26_P": "P28",
+        "LA26_P": "R28",
         "LA26_N": "T28",
         "PG_M2C": "U16.16",
         # ZC706 User Guide p. 68 col. 1
