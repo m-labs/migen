@@ -20,21 +20,32 @@ elif version_info[1] < 7:
 else:
     _call_opcodes["CALL_FUNCTION_EX"] = 2
     _call_opcodes["CALL_METHOD"] = 2
+    _call_opcodes["CALL"] = 2
 
 _load_build_opcodes = {
     "LOAD_GLOBAL" : _bytecode_length_version_guard(3),
+    "LOAD_NAME" : _bytecode_length_version_guard(3),
     "LOAD_ATTR" : _bytecode_length_version_guard(3),
     "LOAD_FAST" : _bytecode_length_version_guard(3),
     "LOAD_DEREF" : _bytecode_length_version_guard(3),
     "DUP_TOP" : _bytecode_length_version_guard(1),
     "BUILD_LIST" : _bytecode_length_version_guard(3),
+    "CACHE" : _bytecode_length_version_guard(3),
+    "COPY" : _bytecode_length_version_guard(3),
 }
 
 
 def get_var_name(frame):
     code = frame.f_code
     call_index = frame.f_lasti
-    call_opc = opname[code.co_code[call_index]]
+    while call_index > 0 and opname[code.co_code[call_index]] == "CACHE":
+        call_index -= 2
+    while True:
+        call_opc = opname[code.co_code[call_index]]
+        if call_opc in("EXTENDED_ARG",):
+            call_index += 2
+        else:
+            break
     if call_opc not in _call_opcodes:
         return None
     index = call_index+_call_opcodes[call_opc]
@@ -48,6 +59,8 @@ def get_var_name(frame):
             return code.co_varnames[name_index]
         elif opc == "STORE_DEREF":
             name_index = int(code.co_code[index+1])
+            if version_info >= (3, 11):
+                name_index -= code.co_nlocals
             return code.co_cellvars[name_index]
         elif opc in _load_build_opcodes:
             index += _load_build_opcodes[opc]
