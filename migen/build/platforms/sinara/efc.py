@@ -49,13 +49,13 @@ _ios = [
         IOStandard("LVDS_25")
     ),
     ("fmc_clk_bdir", 0,
-        Subsignal("p", Pins("Y19")),
-        Subsignal("n", Pins("Y18")),
+        Subsignal("p", Pins("Y18")),
+        Subsignal("n", Pins("Y19")),
         IOStandard("LVDS_25")
     ),
     ("fmc_clk_bdir", 1,
-        Subsignal("p", Pins("W20")),
-        Subsignal("n", Pins("W19")),
+        Subsignal("p", Pins("W19")),
+        Subsignal("n", Pins("W20")),
         IOStandard("LVDS_25")
     ),
 
