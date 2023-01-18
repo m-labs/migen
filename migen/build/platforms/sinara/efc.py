@@ -253,7 +253,7 @@ _connectors = [
         "HB12_N": "AA3",
         "HB11_N": "Y2",
         "HB10_N": "AB2",
-        "HB09_N": "V7",
+        "HB09_N": "Y7",
         "HB08_N": "V8",
         "HB07_N": "W5",
         "HB06_CC_N": "W4",
