@@ -77,6 +77,8 @@ class XilinxVivadoToolchain:
         "mr_ff": ("mr_ff", "true"),  # user-defined attribute
         "ars_ff1": ("ars_ff1", "true"),  # user-defined attribute
         "ars_ff2": ("ars_ff2", "true"),  # user-defined attribute
+        "oob_ff1": ("oob_ff1", "true"),  # user-defined attribute
+        "oob_ff2": ("oob_ff2", "true"),  # user-defined attribute
         "no_shreg_extract": None
     }
 
@@ -190,6 +192,11 @@ class XilinxVivadoToolchain:
             "-to [get_pins -filter {{REF_PIN_NAME == PRE}} "
                 "-of [get_cells -filter {{ars_ff1 == TRUE || ars_ff2 == TRUE}}]]"
         )
+        platform.add_platform_command(
+            "set_false_path -quiet "
+            "-to [get_pins -filter {{REF_PIN_NAME == CLR}} "
+                "-of [get_cells -filter {{oob_ff1 == TRUE}}]]"
+        )
         # clock_period-2ns to resolve metastability on the wire between the
         # AsyncResetSynchronizer FFs
         platform.add_platform_command(
@@ -198,6 +205,14 @@ class XilinxVivadoToolchain:
                 "-of [get_cells -filter {{ars_ff1 == TRUE}}]] "
             "-to [get_pins -filter {{REF_PIN_NAME == D}} "
                 "-of [get_cells -filter {{ars_ff2 == TRUE}}]]"
+        )
+        # clock_period-2ns to capture transition detected by FF1 in FF2_D
+        platform.add_platform_command(
+            "set_max_delay 2 -quiet "
+            "-from [get_pins -filter {{REF_PIN_NAME == Q}} "
+                "-of [get_cells -filter {{oob_ff1 == TRUE}}]] "
+            "-to [get_pins -filter {{REF_PIN_NAME == D}} "
+                "-of [get_cells -filter {{oob_ff2 == TRUE}}]]"
         )
 
     def build(self, platform, fragment, build_dir="build", build_name="top",
