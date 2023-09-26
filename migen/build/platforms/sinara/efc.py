@@ -378,10 +378,10 @@ _extensions = [
 class Platform(XilinxPlatform):
     userid = 0xffffffff
 
-    def __init__(self):
+    def __init__(self, name=None):
         XilinxPlatform.__init__(
             self, "xc7a100t-fgg484-3", _ios, _connectors,
-            toolchain="vivado")
+            toolchain="vivado", name=name)
         self.add_extension(_extensions)
 
         # https://support.xilinx.com/s/article/42036?language=en_US
