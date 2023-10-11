@@ -294,5 +294,5 @@ class Platform(XilinxPlatform):
     default_clk_period = 5  # 200 MHz
 
     def __init__(self):
-        XilinxPlatform.__init__(self, "xc7z045-ffg900-1", _io, _connectors,
+        XilinxPlatform.__init__(self, "xc7z045-ffg900-2", _io, _connectors,
             toolchain="vivado")
