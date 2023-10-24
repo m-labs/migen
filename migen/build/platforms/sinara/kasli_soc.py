@@ -5,6 +5,7 @@ from migen.build.xilinx import XilinxPlatform
 _io = [
     ("user_led", 0, Pins("AF19"), IOStandard("LVCMOS25")),
     ("user_led", 1, Pins("AF23"), IOStandard("LVCMOS25")),
+    ("user_led", 2, Pins("A23"), IOStandard("LVCMOS25")),
 
     ("serial", 0,
         Subsignal("tx", Pins("Y18")),
