@@ -54,9 +54,9 @@ class Platform(QuicklogicPlatform):
         self.programmer = programmer
 
     def create_programmer(self):
-        if self.programmer is "jlink":
+        if self.programmer == "jlink":
             return JLinkProgrammer()
-        elif self.programmer is "openocd":
+        elif self.programmer == "openocd":
             return OpenOCD()
         else:
             raise ValueError("{} programmer is not supported"
