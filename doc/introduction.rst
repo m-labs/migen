@@ -55,11 +55,11 @@ Migen is made up of several related components:
 Installing Migen
 ****************
 
-Either run the ``setup.py`` installation script or simply set ``PYTHONPATH`` to the root of the source directory.
+Either run ``python3 -m pip install .`` or simply set ``PYTHONPATH`` to the root of the source directory.
 
-If you wish to contribute patches, the suggest way to install is;
+If you wish to contribute patches, the suggested way to install is;
    #. Clone from the git repository at https://github.com/m-labs/migen
-   #. Install using ``python3 ./setup.py develop --user``
+   #. Install using the ``-e`` pip option, or set ``PYTHONPATH`` to the root of the checked-out directory.
    #. Edit the code in your git checkout.
 
 Alternative install methods
