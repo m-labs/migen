@@ -12,7 +12,7 @@ Background
 
 Even though the Milkymist system-on-chip [mm]_ had many successes, it suffers from several limitations stemming from its implementation in manually written Verilog HDL:
 
-.. [mm] http://m-labs.hk
+.. [mm] https://m-labs.hk/gateware/m1/
 
 #. The "event-driven" paradigm of today's dominant hardware descriptions languages (Verilog and VHDL, collectively referred to as "V*HDL" in the rest of this document) is often too general. Today's FPGA architectures are optimized for the implementation of fully synchronous circuits. This means that the bulk of the code for an efficient FPGA design falls into three categories:
 
@@ -40,8 +40,8 @@ Even though the Milkymist system-on-chip [mm]_ had many successes, it suffers fr
    #. Many hardware acceleration problems can fit into the dataflow programming model. Manual dataflow implementation in V*HDL has, again, a lot of redundancy and potential for human errors. See the Milkymist texture mapping unit [mthesis]_ [mxcell]_ for an example of this. The amount of detail to deal with manually also makes the design space exploration difficult, and therefore hinders the design of efficient architectures.
    #. Pre-computation of values, such as filter coefficients for DSP or even simply trigonometric tables, must often be done using external tools whose results are copy-and-pasted (in the best case, automatically) into the V*HDL source.
 
-.. [mthesis] http://m-labs.hk/thesis/thesis.pdf
-.. [mxcell] http://www.xilinx.com/publications/archives/xcell/Xcell77.pdf p30-35
+.. [mthesis] https://m-labs.hk/thesis/thesis.pdf
+.. [mxcell] https://www.xilinx.com/publications/archives/xcell/Xcell77.pdf p30-35
    
 Enter Migen, a Python toolbox for building complex digital hardware. We could have designed a brand new programming language, but that would have been reinventing the wheel instead of being able to benefit from Python's rich features and immense library. The price to pay is a slightly cluttered syntax at times when writing descriptions in FHDL, but we believe this is totally acceptable, particularly when compared to VHDL ;-)
 
@@ -58,7 +58,7 @@ Installing Migen
 Either run the ``setup.py`` installation script or simply set ``PYTHONPATH`` to the root of the source directory.
 
 If you wish to contribute patches, the suggest way to install is;
-   #. Clone from the git repository at http://github.com/m-labs/migen
+   #. Clone from the git repository at https://github.com/m-labs/migen
    #. Install using ``python3 ./setup.py develop --user``
    #. Edit the code in your git checkout.
 
@@ -66,8 +66,8 @@ Alternative install methods
 ===========================
 
  * Migen is available for the Anaconda Python distribution. The package can be found at at https://anaconda.org/m-labs/migen
- * Migen can be referenced in a requirements.txt file (used for ``pip install -r requirements.txt``) via ``-e git+http://github.com/m-labs/migen.git#egg=migen``. See the pip documentation for more information.
+ * Migen can be referenced in a requirements.txt file (used for ``pip install -r requirements.txt``) via ``-e git+https://github.com/m-labs/migen.git#egg=migen``. See the pip documentation for more information.
 
 Feedback
 ********
-Feedback concerning Migen or this manual should be sent to the M-Labs developers' mailing list ``devel`` on lists.m-labs.hk.
+Feedback concerning Migen or this manual should be sent to the M-Labs forum at https://forum.m-labs.hk or in GitHub issues.
