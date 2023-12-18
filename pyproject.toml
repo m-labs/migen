@@ -35,3 +35,7 @@ dependencies = [
 Documentation = "https://m-labs.hk/migen/manual"
 "Source code" = "https://github.com/m-labs/migen"
 "Issue tracker" = "https://github.com/m-labs/migen/issues"
+
+[build-system]
+requires = ["setuptools>=65.5"]
+build-backend = "setuptools.build_meta"
