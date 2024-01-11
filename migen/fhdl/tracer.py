@@ -1,38 +1,8 @@
 import inspect
+import sys
 from sys import version_info
 from opcode import opname
 from collections import defaultdict
-
-# All opcodes are 2 bytes in length in Python 3.6
-def _bytecode_length_version_guard(old_len):
-    return old_len if version_info[1] < 6 else 2
-
-_call_opcodes = {
-    "CALL_FUNCTION" : _bytecode_length_version_guard(3),
-    "CALL_FUNCTION_KW" : _bytecode_length_version_guard(3),
-}
-
-if version_info[1] < 6:
-    _call_opcodes["CALL_FUNCTION_VAR"] = 3
-    _call_opcodes["CALL_FUNCTION_VAR_KW"] = 3
-elif version_info[1] < 7:
-    _call_opcodes["CALL_FUNCTION_EX"] = 2
-else:
-    _call_opcodes["CALL_FUNCTION_EX"] = 2
-    _call_opcodes["CALL_METHOD"] = 2
-    _call_opcodes["CALL"] = 2
-
-_load_build_opcodes = {
-    "LOAD_GLOBAL" : _bytecode_length_version_guard(3),
-    "LOAD_NAME" : _bytecode_length_version_guard(3),
-    "LOAD_ATTR" : _bytecode_length_version_guard(3),
-    "LOAD_FAST" : _bytecode_length_version_guard(3),
-    "LOAD_DEREF" : _bytecode_length_version_guard(3),
-    "DUP_TOP" : _bytecode_length_version_guard(1),
-    "BUILD_LIST" : _bytecode_length_version_guard(3),
-    "CACHE" : _bytecode_length_version_guard(3),
-    "COPY" : _bytecode_length_version_guard(3),
-}
 
 
 def get_var_name(frame):
@@ -42,28 +12,44 @@ def get_var_name(frame):
         call_index -= 2
     while True:
         call_opc = opname[code.co_code[call_index]]
-        if call_opc in("EXTENDED_ARG",):
+        if call_opc in ("EXTENDED_ARG",):
             call_index += 2
         else:
             break
-    if call_opc not in _call_opcodes:
+    if call_opc not in ("CALL_FUNCTION", "CALL_FUNCTION_KW", "CALL_FUNCTION_EX",
+                        "CALL_METHOD", "CALL", "CALL_KW"):
         return None
-    index = call_index+_call_opcodes[call_opc]
+
+    index = call_index + 2
+    imm = 0
     while True:
         opc = opname[code.co_code[index]]
-        if opc == "STORE_NAME" or opc == "STORE_ATTR":
-            name_index = int(code.co_code[index+1])
-            return code.co_names[name_index]
+        if opc == 'EXTENDED_ARG':
+            imm |= int(code.co_code[index + 1])
+            imm <<= 8
+            index += 2
+        elif opc in ("STORE_NAME", "STORE_ATTR"):
+            imm |= int(code.co_code[index + 1])
+            return code.co_names[imm]
         elif opc == "STORE_FAST":
-            name_index = int(code.co_code[index+1])
-            return code.co_varnames[name_index]
+            imm |= int(code.co_code[index + 1])
+            if sys.version_info >= (3, 11):
+                return code._varname_from_oparg(imm)
+            else:
+                return code.co_varnames[imm]
         elif opc == "STORE_DEREF":
-            name_index = int(code.co_code[index+1])
-            if version_info >= (3, 11):
-                name_index -= code.co_nlocals
-            return code.co_cellvars[name_index]
-        elif opc in _load_build_opcodes:
-            index += _load_build_opcodes[opc]
+            imm |= int(code.co_code[index + 1])
+            if sys.version_info >= (3, 11):
+                return code._varname_from_oparg(imm)
+            else:
+                if imm < len(code.co_cellvars):
+                    return code.co_cellvars[imm]
+                else:
+                    return code.co_freevars[imm - len(code.co_cellvars)]
+        elif opc in ("LOAD_GLOBAL", "LOAD_NAME", "LOAD_ATTR", "LOAD_FAST", "LOAD_DEREF",
+                     "DUP_TOP", "BUILD_LIST", "CACHE", "COPY"):
+            imm = 0
+            index += 2
         else:
             return None
 
