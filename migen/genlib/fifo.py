@@ -33,6 +33,10 @@ class _FIFOInterface:
         Bit width for the data.
     depth : int
         Depth of the FIFO.
+    fwft : bool (optional)
+        Enable the FIFO to have "first word fall through". The first
+        word written to an otherwise empty FIFO will be put on the
+        output without doing a read first.
 
     Attributes
     ----------
@@ -51,7 +55,8 @@ class _FIFOInterface:
         Acknowledge `dout`. If asserted, the next entry will be
         available on the next cycle (if `readable` is high then).
     """
-    def __init__(self, width, depth):
+
+    def __init__(self, width, depth, fwft=False):
         self.we = Signal()
         self.writable = Signal()  # not full
         self.re = Signal()
@@ -97,7 +102,7 @@ class SyncFIFO(Module, _FIFOInterface):
     __doc__ = __doc__.format(interface=_FIFOInterface.__doc__)
 
     def __init__(self, width, depth, fwft=True):
-        _FIFOInterface.__init__(self, width, depth)
+        _FIFOInterface.__init__(self, width, depth, fwft)
 
         self.level = Signal(max=depth+1)
         self.replace = Signal()
@@ -149,11 +154,18 @@ class SyncFIFO(Module, _FIFOInterface):
 
 
 class SyncFIFOBuffered(Module, _FIFOInterface):
-    """Has an interface compatible with SyncFIFO with fwft=True,
-    but does not use asynchronous RAM reads that are not compatible
-    with block RAMs. Increases latency by one cycle."""
-    def __init__(self, width, depth):
-        _FIFOInterface.__init__(self, width, depth)
+    """SyncFIFO compatible with "first word fall through" without using async memory.
+
+    The SyncFIFOBuffered has an interface compatible with SyncFIFO with
+    `fwft=True` but does not use asynchronous RAM reads that are not compatible
+    with block RAMs. Increases latency by one cycle.
+
+    This is useful for providing a SyncFIFO when the FPGA part doesn't provide
+    block ram with an asynchronous read port, like the Lattice iCE40 parts.
+    """
+    def __init__(self, width, depth, fwft=True):
+        assert fwft, "fwft should be set, otherwise just use a SyncFIFO."
+        _FIFOInterface.__init__(self, width, depth, False)
         self.submodules.fifo = fifo = SyncFIFO(width, depth, False)
 
         self.writable = fifo.writable
@@ -185,8 +197,9 @@ class AsyncFIFO(Module, _FIFOInterface):
     """
     __doc__ = __doc__.format(interface=_FIFOInterface.__doc__)
 
-    def __init__(self, width, depth):
-        _FIFOInterface.__init__(self, width, depth)
+    def __init__(self, width, depth, fwft=False):
+        assert not fwft, "fwft is not supported on the AsyncFIFO."
+        _FIFOInterface.__init__(self, width, depth, fwft=False)
 
         ###
 
@@ -238,8 +251,8 @@ class AsyncFIFOBuffered(Module, _FIFOInterface):
     """Improves timing when it breaks due to sluggish clock-to-output
     delay in e.g. Xilinx block RAMs. Increases latency by one cycle."""
     def __init__(self, width, depth):
-        _FIFOInterface.__init__(self, width, depth)
-        self.submodules.fifo = fifo = AsyncFIFO(width, depth)
+        _FIFOInterface.__init__(self, width, depth, fwft=False)
+        self.submodules.fifo = fifo = AsyncFIFO(width, depth, fwft)
 
         self.writable = fifo.writable
         self.din = fifo.din
