@@ -5,7 +5,8 @@ import os
 import subprocess
 import sys
 
-from migen.fhdl.structure import _Fragment
+from migen.fhdl.structure import ClockSignal, _Fragment
+from migen.fhdl.specials import Instance
 from migen.build.generic_platform import *
 from migen.build import tools
 from migen.build.xilinx import common
@@ -159,17 +160,41 @@ class XilinxVivadoToolchain:
         tcl.append("source \"{}_bitstream.tcl\"".format(build_name))
         tools.write_to_file(build_name + ".tcl", "\n".join(tcl))
 
-    def _convert_clocks(self, platform):
+    def _convert_clocks(self, platform, fragment):
+        # vivado may not keep the name of nets during synthesis
+        # Clock constraints should be added to pins instead of nets
+        instance_driver_map = dict()
+        for instance in filter(lambda s: isinstance(s, Instance), fragment.specials):
+            for output in filter(lambda i: isinstance(i, Instance.Output), instance.items):
+                if isinstance(output.expr, Signal):
+                    instance_driver_map[output.expr] = (instance, output.name)
+                elif isinstance(output.expr, ClockSignal):
+                    clk_sig = fragment.clock_domains[output.expr.cd].clk
+                    instance_driver_map[clk_sig] = (instance, output.name)
+
+        clocks_with_known_driver = []
         for clk, period in sorted(self.clocks.items(), key=lambda x: x[0].duid):
-            platform.add_platform_command(
-                "create_clock -name {clk} -period " + str(period) +
-                " [get_nets {clk}]", clk=clk)
+            key = fragment.clock_domains[clk.cd].clk if isinstance(clk, ClockSignal) else clk
+            driver = instance_driver_map.get(key)
+            if driver is not None:
+                instance, pin = driver
+                platform.add_platform_command(
+                    "create_clock -name {clk} -period " + str(period) +
+                    " [get_pins {instance}/" + pin + "]", clk=clk, instance=instance)
+                clocks_with_known_driver.append(clk)
+            else:
+                platform.add_platform_command(
+                    "create_clock -name {clk} -period " + str(period) +
+                    " [get_nets {clk}]", clk=clk)
+
         for from_, to in sorted(self.false_paths,
                                 key=lambda x: (x[0].duid, x[1].duid)):
+            from_clk = "{from_}" if from_ in clocks_with_known_driver else "-of [get_nets {from_}]"
+            to_clk = "{to}" if to in clocks_with_known_driver else "-of [get_nets {to}]"
             platform.add_platform_command(
                 "set_clock_groups "
-                "-group [get_clocks -include_generated_clocks -of [get_nets {from_}]] "
-                "-group [get_clocks -include_generated_clocks -of [get_nets {to}]] "
+                "-group [get_clocks -include_generated_clocks " + from_clk + "] "
+                "-group [get_clocks -include_generated_clocks " + to_clk + "] "
                 "-asynchronous",
                 from_=from_, to=to)
 
@@ -209,7 +234,7 @@ class XilinxVivadoToolchain:
         if not isinstance(fragment, _Fragment):
             fragment = fragment.get_fragment()
         platform.finalize(fragment)
-        self._convert_clocks(platform)
+        self._convert_clocks(platform, fragment)
         self._constrain(platform)
         v_output = platform.get_verilog(fragment, name=build_name, **kwargs)
         named_sc, named_pc = platform.resolve_signals(v_output.ns)
