@@ -183,3 +183,27 @@ class Module:
     def do_exit(self, *args, **kwargs):
         for name, submodule in self._submodules:
             submodule.do_exit(*args, **kwargs)
+
+    def print_hierarchy(self, indent=4, include_anon=False):
+        """Prints a hierarchy tree for the Module.
+        
+        This method iterates over each submodule in the design and prints out an 
+        indented hierarchy. By default it ignores any anonymous modules but this can be 
+        overridden by passing include_anon=True.
+
+        Note that by default, with include_anon=False, all hierarchy below an anonymous
+        module will be skipped.  It is assumed that the user will only use anonymous 
+        instantiations for leaf cells such as CSRs, synchronisers, etc where we don't
+        particularly care about printing them in a hierarchy view.
+        
+        """
+        if indent == 4:
+            print(self.__class__.__name__)
+        for name, submodule in self._submodules:
+            if name is None:
+                if not include_anon:
+                    # all hierarchy below an anonymous module is skipped
+                    continue
+                name = "anon"
+            print("{}{}:{}".format(" " * indent, name, submodule.__class__.__name__))
+            submodule.print_hierarchy(indent+4, include_anon)
