@@ -216,6 +216,13 @@ _io_v2_0 = [
     ),
 ]
 
+_io_v2_1 = _io_v2_0 + [
+    ("default_flash", 0, Pins("T20"), IOStandard("LVCMOS25")),
+
+    ("eem_power_en", 0, Pins("U21"), IOStandard("LVCMOS25")),
+    ("eem_fault_n", 0, Pins("V22"), IOStandard("LVCMOS25"), Misc("PULLUP True")),  # No external pullup
+]
+
 _io_common = [
     ("spiflash", 0,
         Subsignal("cs_n", Pins("T19")),
@@ -613,6 +620,10 @@ class Platform(XilinxPlatform):
             io_rev = _io_v2_0
             connectors_rev = _connectors_eem2
             fpga = "xc7a100t-fgg484-3"
+        elif hw_rev == "v2.1":
+            io_rev = _io_v2_1
+            connectors_rev = _connectors_eem2
+            fpga = "xc7a100t-fgg484-3"
         else:
             raise ValueError("Unknown hardware revision", hw_rev)
         self.hw_rev = hw_rev
@@ -634,5 +645,5 @@ class Platform(XilinxPlatform):
             "set_property CFGBVS VCCO [current_design]",
             "set_property CONFIG_VOLTAGE 2.5 [current_design]",
             ])
-        if hw_rev == "v2.0":
+        if hw_rev in ("v2.0", "v2.1"):
             self.toolchain.explore_opt_design = True
