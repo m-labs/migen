@@ -6,6 +6,9 @@ _io = [
     ("user_led", 0, Pins("AF19"), IOStandard("LVCMOS25")),
     ("user_led", 1, Pins("AF23"), IOStandard("LVCMOS25")),
 
+    ("gpio_int", 0, Pins("D23"), IOStandard("LVCMOS33")),
+    ("gpio_int", 1, Pins("C24"), IOStandard("LVCMOS33")),
+
     ("serial", 0,
         Subsignal("tx", Pins("Y18")),
         Subsignal("rx", Pins("AA18")),
