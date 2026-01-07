@@ -114,11 +114,15 @@ class _Value(DUID):
                 raise IndexError
             if key < 0:
                 key += n
+            if key == 0 and n == 1:
+                return self
             return _Slice(self, key, key+1)
         elif isinstance(key, slice):
             start, stop, step = key.indices(n)
             if step != 1:
                 return Cat(self[i] for i in range(start, stop, step))
+            if start == 0 and stop == n:
+                return self
             return _Slice(self, start, stop)
         else:
             raise TypeError("Cannot use type {} ({}) as key".format(
