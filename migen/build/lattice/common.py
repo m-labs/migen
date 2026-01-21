@@ -45,14 +45,24 @@ class LatticeECPXTrellisTristateImpl(Module):
     def __init__(self, io, o, oe, i):
         nbits, sign = value_bits_sign(io)
         for bit in range(nbits):
-            self.specials += \
-                Instance("TRELLIS_IO",
-                    p_DIR="BIDIR",
-                    i_B=io[bit],
-                    i_I=o[bit],
-                    o_O=i[bit],
-                    i_T=~oe,
-                )
+            if len(oe) == 1:
+                self.specials += \
+                    Instance("TRELLIS_IO",
+                        p_DIR="BIDIR",
+                        i_B=io[bit],
+                        i_I=o[bit],
+                        o_O=i[bit],
+                        i_T=~oe,
+                    )
+            else:
+                self.specials += \
+                    Instance("TRELLIS_IO",
+                        p_DIR="BIDIR",
+                        i_B=io[bit],
+                        i_I=o[bit],
+                        o_O=i[bit],
+                        i_T=~oe[bit],
+                    )
 
 class LatticeECPXTrellisTristate(Module):
     @staticmethod
@@ -99,15 +109,24 @@ class LatticeiCE40TristateImpl(Module):
                 )
         else:
             for bit in range(nbits):
-                self.specials += \
-                    Instance("SB_IO",
-                        p_PIN_TYPE=C(0b101001, 6),
-                        io_PACKAGE_PIN=io[bit],
-                        i_OUTPUT_ENABLE=oe,
-                        i_D_OUT_0=o[bit],
-                        o_D_IN_0=i[bit],
-                    )
-
+                if len(oe) == 1:
+                    self.specials += \
+                        Instance("SB_IO",
+                                 p_PIN_TYPE=C(0b101001, 6),
+                                 io_PACKAGE_PIN=io[bit],
+                                 i_OUTPUT_ENABLE=oe,
+                                 i_D_OUT_0=o[bit],
+                                 o_D_IN_0=i[bit],
+                        )
+                else:
+                    self.specials += \
+                        Instance("SB_IO",
+                                 p_PIN_TYPE=C(0b101001, 6),
+                                 io_PACKAGE_PIN=io[bit],
+                                 i_OUTPUT_ENABLE=oe[bit],
+                                 i_D_OUT_0=o[bit],
+                                 o_D_IN_0=i[bit],
+                        )
 
 class LatticeiCE40Tristate(Module):
     @staticmethod
