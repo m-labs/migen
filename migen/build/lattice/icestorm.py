@@ -84,7 +84,10 @@ class LatticeIceStormToolchain:
         "ars_false_path": None,  # user-defined attribute
 
         # ice40 does not have a shift register primitive.
-        "no_shreg_extract": None
+        "no_shreg_extract": None,
+
+        # ice40 I/O registers must be declared by PIN_TYPE of SB_IO
+        "iob": None
     }
 
     special_overrides = common.lattice_ice40_special_overrides

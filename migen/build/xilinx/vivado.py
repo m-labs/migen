@@ -75,6 +75,7 @@ class XilinxVivadoToolchain:
         "keep": ("dont_touch", "true"),
         "no_retiming": ("dont_touch", "true"),
         "async_reg": ("async_reg", "true"),
+        "iob": ("iob", "true"),
         "mr_ff": ("mr_ff", "true"),  # user-defined attribute
         "ars_ff1": ("ars_ff1", "true"),  # user-defined attribute
         "ars_ff2": ("ars_ff2", "true"),  # user-defined attribute
