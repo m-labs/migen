@@ -9,5 +9,5 @@ class SimCase:
     def test_to_verilog(self):
         verilog.convert(self.tb)
 
-    def run_with(self, generator):
-        run_simulation(self.tb, generator)
+    def run_with(self, generator, **kwargs):
+        run_simulation(self.tb, generator, **kwargs)
